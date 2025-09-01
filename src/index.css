@@ -1,0 +1,293 @@
+@import '@radix-ui/themes/styles.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  body {
+    @apply bg-neutral-50 text-neutral-900;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+}
+
+/* Custom component styles */
+@layer components {
+  .sudoku-cell {
+    @apply w-[4.33rem] h-[4.33rem] flex items-center justify-center cursor-pointer select-none;
+    aspect-ratio: 1;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+    position: relative;
+    transition: background-color 0.05s ease, border-color 0.05s ease, transform 0.05s ease;
+  }
+
+  /* Smooth hover effect */
+  .sudoku-cell:hover:not([data-selected="true"]):not([data-fixed="true"]) {
+    background-color: rgb(249 250 251) !important; /* bg-neutral-50 */
+  }
+
+  /* Subtle click effect */
+  .sudoku-cell:active {
+    transform: scale(0.98);
+  }
+
+  /* Force full cell highlighting with maximum specificity */
+  div.sudoku-cell[data-selected="true"],
+  .sudoku-cell[data-selected="true"] {
+    background-color: rgb(219 234 254) !important; /* bg-primary-100 */
+    background: rgb(219 234 254) !important;
+  }
+
+  /* Force full cell highlighting for related cells */
+  div.sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-same-number="true"]),
+  .sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-same-number="true"]) {
+    background-color: rgb(239 246 255) !important; /* bg-primary-50 */
+    background: rgb(239 246 255) !important;
+  }
+
+  /* Highlighting for cells with the same number */
+  div.sudoku-cell[data-same-number="true"]:not([data-selected="true"]),
+  .sudoku-cell[data-same-number="true"]:not([data-selected="true"]) {
+    background-color: rgb(254 249 195) !important; /* bg-yellow-100 */
+    background: rgb(254 249 195) !important;
+    border-color: rgb(251 191 36) !important; /* border-yellow-400 */
+  }
+
+  /* Fixed cells styling */
+  div.sudoku-cell[data-fixed="true"],
+  .sudoku-cell[data-fixed="true"] {
+    background-color: rgb(249 250 251) !important; /* bg-neutral-50 */
+    background: rgb(249 250 251) !important;
+    font-weight: 700 !important;
+    color: rgb(31 41 55) !important; /* text-neutral-800 */
+  }
+
+  /* Correct/incorrect states */
+  div.sudoku-cell[data-correct="true"],
+  .sudoku-cell[data-correct="true"] {
+    background-color: rgb(209 250 229) !important; /* bg-success-100 */
+    background: rgb(209 250 229) !important;
+    border-color: rgb(34 197 94) !important; /* border-success-500 */
+  }
+
+  div.sudoku-cell[data-correct="false"],
+  .sudoku-cell[data-correct="false"] {
+    background-color: rgb(254 226 226) !important; /* bg-error-100 */
+    background: rgb(254 226 226) !important;
+    border-color: rgb(239 68 68) !important; /* border-error-500 */
+  }
+
+  /* Incorrect cells styling (new validation system) */
+  div.sudoku-cell[data-incorrect="true"],
+  .sudoku-cell[data-incorrect="true"] {
+    background-color: rgb(254 226 226) !important; /* bg-red-100 */
+    background: rgb(254 226 226) !important;
+    border-color: rgb(239 68 68) !important; /* border-red-500 */
+  }
+
+  .number-button {
+    @apply transition-all duration-150;
+  }
+
+  .control-button {
+    @apply transition-all duration-150;
+  }
+
+  /* Horizontal Number Pad Styling */
+  .number-pad-horizontal {
+    @apply transition-all duration-200;
+  }
+
+  .number-button-horizontal {
+    @apply transition-all duration-100;
+    border-radius: 0.5rem;
+  }
+
+  .number-button-horizontal:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .control-button-horizontal {
+    @apply transition-all duration-100;
+    border-radius: 0.5rem;
+  }
+
+  .control-button-horizontal:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .game-controls {
+    @apply flex flex-col gap-3;
+  }
+
+  /* Navbar styles */
+  .navbar-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  /* Card shadows and borders */
+  .card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .card-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Responsive cell sizing */
+  @media (min-width: 640px) {
+    .sudoku-cell {
+      @apply w-[5.41rem] h-[5.41rem]; /* 5.25rem + 3% = 5.41rem */
+    }
+    .sudoku-grid-container {
+      grid-template-columns: repeat(9, 5.41rem) !important;
+      grid-template-rows: repeat(9, 5.41rem) !important;
+    }
+    .sudoku-grid-container > div {
+      width: 5.41rem !important;
+      height: 5.41rem !important;
+      min-width: 5.41rem !important;
+      min-height: 5.41rem !important;
+      max-width: 5.41rem !important;
+      max-height: 5.41rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .sudoku-cell {
+      @apply w-[6.49rem] h-[6.49rem]; /* 6.3rem + 3% = 6.49rem */
+    }
+    .sudoku-grid-container {
+      grid-template-columns: repeat(9, 6.49rem) !important;
+      grid-template-rows: repeat(9, 6.49rem) !important;
+    }
+    .sudoku-grid-container > div {
+      width: 6.49rem !important;
+      height: 6.49rem !important;
+      min-width: 6.49rem !important;
+      min-height: 6.49rem !important;
+      max-width: 6.49rem !important;
+      max-height: 6.49rem !important;
+    }
+  }
+
+  /* Grid container with gentle shadow */
+  .sudoku-grid-container {
+    width: fit-content !important;
+    height: fit-content !important;
+    grid-template-columns: repeat(9, 4.33rem) !important;
+    grid-template-rows: repeat(9, 4.33rem) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Ensure grid cells don't stretch */
+  .sudoku-grid-container > div {
+    width: 4.33rem !important;
+    height: 4.33rem !important;
+    min-width: 4.33rem !important;
+    min-height: 4.33rem !important;
+    max-width: 4.33rem !important;
+    max-height: 4.33rem !important;
+  }
+
+  /* Remove the last row bottom border since cells now have individual borders */
+  /* .sudoku-grid-container > div:last-child {
+    border-bottom: 1px solid rgb(229 231 235);
+  } */
+
+  /* Completion animation styles */
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-10px) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0.3) rotate(-10deg);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes grid-completion-wave {
+    0% {
+      background-color: transparent;
+      transform: scale(1);
+    }
+    50% {
+      background-color: rgba(34, 197, 94, 0.3);
+      transform: scale(1.02);
+    }
+    100% {
+      background-color: transparent;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes completion-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(34, 197, 94, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.6), 0 0 40px rgba(34, 197, 94, 0.3);
+    }
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+  }
+
+  .animate-completion-wave {
+    animation: grid-completion-wave 0.8s ease-in-out;
+  }
+
+  .animate-completion-glow {
+    animation: completion-glow 2s ease-in-out infinite;
+  }
+}
