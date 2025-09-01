@@ -164,14 +164,14 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
                         <div className="space-y-3">
                             <button
                                 onClick={handleStartNewGame}
-                                className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+                                className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 cursor-pointer"
                             >
                                 🎯 Start New Game
                             </button>
 
                             <button
                                 onClick={handleAnimationComplete}
-                                className="w-full py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                                className="w-full py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 cursor-pointer"
                             >
                                 ✨ Admire My Solution
                             </button>

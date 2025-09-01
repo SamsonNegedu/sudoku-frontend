@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
+import { Button } from '@radix-ui/themes';
 import { SudokuGrid } from './SudokuGrid';
 import { NumberPad } from './NumberPad';
 import { GameSidebar } from './GameSidebar';
@@ -22,7 +23,27 @@ export const GameBoard: React.FC = () => {
         undoMove,
         useHint,
         setInputMode,
+        getCompletedNumbers,
     } = useGameStore();
+
+    // Prevent body scrolling when game is paused
+    useEffect(() => {
+        if (currentGame?.isPaused) {
+            // Store original overflow values
+            const originalStyle = window.getComputedStyle(document.body);
+            const originalOverflow = originalStyle.overflow;
+
+            // Prevent scrolling
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+
+            // Cleanup function to restore scrolling
+            return () => {
+                document.body.style.overflow = originalOverflow;
+                document.documentElement.style.overflow = '';
+            };
+        }
+    }, [currentGame?.isPaused]);
 
     // Handle keyboard input for the selected cell
     const handleCellKeyDown = useCallback((row: number, col: number, event: React.KeyboardEvent) => {
@@ -245,6 +266,58 @@ export const GameBoard: React.FC = () => {
 
     return (
         <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-neutral-50 to-neutral-100">
+            {/* Full-Screen Pause Overlay - Prevents scrolling on mobile */}
+            {currentGame?.isPaused && (
+                <div
+                    className="fixed bg-black/50 backdrop-blur-md z-40 flex items-center justify-center"
+                    style={{
+                        position: 'fixed',
+                        top: '4rem', // Start below navbar (navbar height is h-16 = 4rem)
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        overflow: 'hidden',
+                        touchAction: 'none' // Prevent touch scrolling
+                    }}
+                    onTouchMove={(e) => e.preventDefault()} // Prevent scroll on touch
+                    onWheel={(e) => e.preventDefault()} // Prevent scroll on wheel
+                >
+                    <div className="bg-white rounded-2xl p-8 mx-4 shadow-2xl max-w-sm w-full text-center">
+                        <div className="mb-6">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                                </svg>
+                            </div>
+                            <h2 className="text-2xl font-bold text-neutral-800 mb-2">Game Paused</h2>
+                            <p className="text-neutral-600 text-sm">
+                                Your progress is saved. Resume when you're ready!
+                            </p>
+                        </div>
+
+                        <Button
+                            onClick={resumeGame}
+                            size="4"
+                            variant="solid"
+                            color="green"
+                            className="w-full flex items-center justify-center gap-2 mb-4"
+                        >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            Resume Game
+                        </Button>
+
+                        <p className="text-neutral-500 text-xs flex items-center justify-center gap-1">
+                            Or use the Resume button in the navbar
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 14l5-5 5 5z" />
+                            </svg>
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Main Game Area */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 sm:pb-6">
                 <div className="flex flex-col gap-4 sm:gap-8">
@@ -292,13 +365,11 @@ export const GameBoard: React.FC = () => {
                                     selectedCell={selectedCell}
                                     onCellClick={handleCellClick}
                                     onCellKeyDown={handleCellKeyDown}
-                                    isPaused={currentGame.isPaused}
-                                    onResume={resumeGame}
                                 />
                             </div>
 
                             {/* Number Pad - Directly below grid */}
-                            <div className="w-full max-w-4xl">
+                            <div className="w-full number-pad-container">
                                 <NumberPad
                                     onNumberClick={handleNumberClick}
                                     onClear={handleClearCell}
@@ -310,6 +381,7 @@ export const GameBoard: React.FC = () => {
                                     canUndo={currentGame.moves.length > 0}
                                     hintsUsed={currentGame.hintsUsed}
                                     maxHints={currentGame.maxHints}
+                                    completedNumbers={getCompletedNumbers()}
                                 />
                             </div>
                         </div>

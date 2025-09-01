@@ -72,38 +72,53 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
             data-incorrect={isIncorrect}
             style={{
                 overflow: 'hidden',
-                contain: 'layout style paint'
+                contain: 'layout style paint',
+                position: 'relative', // Ensure proper positioning context for notes
             }}
         >
-            {/* Main number value */}
+            {/* Main number value - absolutely positioned and centered */}
             {value && (
-                <span className={cn(
-                    "text-2xl font-bold",
-                    {
-                        "text-neutral-900": !isIncorrect,
-                        "text-red-700": isIncorrect,
-                    }
-                )}>
-                    {value}
-                </span>
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <span className={cn(
+                        "text-2xl font-bold",
+                        {
+                            "text-neutral-900": !isIncorrect,
+                            "text-red-700": isIncorrect,
+                        }
+                    )}>
+                        {value}
+                    </span>
+                </div>
             )}
 
-            {/* Notes (pencil marks) */}
-            {!value && notes.length > 0 && (
-                <div className="grid grid-cols-3 gap-0 w-full h-full p-1">
+            {/* Notes (pencil marks) - always present for stable layout */}
+            {!value && (
+                <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-0 notes">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                         <div
                             key={num}
-                            className={cn(
-                                'flex items-center justify-center text-xs text-neutral-600',
-                                'min-w-0 min-h-0',
-                                {
-                                    'text-neutral-400': !notes.includes(num),
-                                    'text-neutral-700 font-medium': notes.includes(num),
-                                }
-                            )}
+                            className="flex items-center justify-center leading-none"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                minWidth: 0,
+                                minHeight: 0,
+                                fontSize: 'max(0.4rem, min(0.6rem, 2vw))', // Smaller, consistent font size
+                                padding: '1px', // Minimal, consistent padding
+                            }}
                         >
-                            {notes.includes(num) ? num : ''}
+                            {notes.includes(num) && (
+                                <span
+                                    className="text-neutral-700 font-medium select-none"
+                                    style={{
+                                        lineHeight: 1,
+                                        display: 'block',
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    {num}
+                                </span>
+                            )}
                         </div>
                     ))}
                 </div>

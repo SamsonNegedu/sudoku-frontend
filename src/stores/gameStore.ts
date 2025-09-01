@@ -47,6 +47,7 @@ interface GameStore {
   updateBoardValidation: () => void;
   getMistakeCount: () => number;
   getPuzzleStats: () => any;
+  getCompletedNumbers: () => number[];
 }
 
 // Helper function to create initial board
@@ -965,6 +966,33 @@ export const useGameStore = create<GameStore>()(
 
       setInputMode: (mode: 'pen' | 'pencil') => {
         set({ inputMode: mode });
+      },
+
+      getCompletedNumbers: () => {
+        const state = get();
+        if (!state.currentGame) return [];
+
+        // Count occurrences of each number (1-9) on the board
+        const numberCounts = new Array(10).fill(0); // Index 0 unused, 1-9 for numbers
+
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            const cell = state.currentGame.board[row][col];
+            if (cell.value && cell.value >= 1 && cell.value <= 9) {
+              numberCounts[cell.value]++;
+            }
+          }
+        }
+
+        // Return numbers that appear exactly 9 times (completed)
+        const completedNumbers: number[] = [];
+        for (let i = 1; i <= 9; i++) {
+          if (numberCounts[i] === 9) {
+            completedNumbers.push(i);
+          }
+        }
+
+        return completedNumbers;
       },
     }),
     {

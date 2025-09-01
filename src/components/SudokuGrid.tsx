@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { SudokuCell } from './SudokuCell';
 import type { SudokuBoard } from '../types';
 import { areCellsRelated } from '../utils';
-import { PlayIcon } from '@radix-ui/react-icons';
-import { Button } from '@radix-ui/themes';
 import { useGameStore } from '../stores/gameStore';
 
 interface SudokuGridProps {
@@ -11,8 +9,6 @@ interface SudokuGridProps {
     selectedCell: { row: number; col: number } | null;
     onCellClick: (row: number, col: number) => void;
     onCellKeyDown: (row: number, col: number, event: React.KeyboardEvent) => void;
-    isPaused: boolean;
-    onResume?: () => void;
 }
 
 const SudokuGridComponent: React.FC<SudokuGridProps> = ({
@@ -20,8 +16,6 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
     selectedCell,
     onCellClick,
     onCellKeyDown,
-    isPaused,
-    onResume,
 }) => {
     const { currentGame } = useGameStore();
     const [showCompletionGlow, setShowCompletionGlow] = useState(false);
@@ -55,13 +49,10 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
     };
 
     return (
-        <div className="flex justify-center items-center w-full">
-            <div>
+        <div className="flex justify-center items-center w-full px-2">
+            <div className="max-w-[95vw] w-full">
                 <div
-                    className={`grid grid-cols-9 gap-0 bg-white rounded-2xl overflow-hidden sudoku-grid-container w-full aspect-square ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
-                    style={{
-                        gap: '0'
-                    }}
+                    className={`sudoku-grid-container bg-white rounded-2xl overflow-hidden ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
                     role="grid"
                     aria-label="Sudoku puzzle grid"
                 >
@@ -82,29 +73,7 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
                     ))}
                 </div>
 
-                {/* Pause Overlay */}
-                {isPaused && (
-                    <div className="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center z-10">
-                        <div className="text-center">
-                            <h2 className="text-2xl font-bold text-neutral-800 mb-6">Game Paused</h2>
 
-                            <Button
-                                onClick={onResume}
-                                size="4"
-                                variant="solid"
-                                color="green"
-                                className="flex items-center gap-2 mx-auto"
-                            >
-                                <PlayIcon className="w-6 h-6" />
-                                Resume Game
-                            </Button>
-
-                            <p className="text-neutral-600 mt-4 text-sm">
-                                Click the play button or use the navbar to continue
-                            </p>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );

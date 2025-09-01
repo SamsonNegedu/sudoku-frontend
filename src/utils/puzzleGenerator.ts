@@ -24,14 +24,33 @@ export class SudokuPuzzleGenerator {
   /**
    * Generate a complete puzzle with specified difficulty
    */
-  static generatePuzzle(difficulty: Difficulty): GeneratedPuzzle {
+  static generatePuzzle(
+    difficulty: Difficulty,
+    attempts: number = 0
+  ): GeneratedPuzzle {
     // 1. Generate a complete solved board
     const solution = this.generateSolvedBoard();
 
     // 2. Create puzzle by removing numbers based on difficulty
     const puzzle = this.createPuzzleFromSolution(solution, difficulty);
 
-    // 3. Calculate difficulty score and techniques
+    // 3. Final validation: ensure unique solution (critical for puzzle quality)
+    if (!this.hasUniqueSolution(puzzle)) {
+      if (attempts < 5) {
+        console.warn(
+          `Generated ${difficulty} puzzle lacks unique solution, regenerating... (attempt ${attempts + 1}/5)`
+        );
+        return this.generatePuzzle(difficulty, attempts + 1); // Retry generation
+      } else {
+        console.error(
+          `Failed to generate valid ${difficulty} puzzle after 5 attempts, using fallback`
+        );
+        // Return a basic valid puzzle as fallback
+        return this.generateBasicPuzzle(difficulty);
+      }
+    }
+
+    // 4. Calculate difficulty score and techniques
     const difficultyScore = this.calculateDifficultyScore(puzzle);
     const techniquesRequired = this.getRequiredTechniques(puzzle);
     const clueCount = this.countClues(puzzle);
@@ -43,6 +62,54 @@ export class SudokuPuzzleGenerator {
       difficultyScore,
       techniquesRequired,
       clueCount,
+    };
+  }
+
+  /**
+   * Generate a basic fallback puzzle when normal generation fails
+   */
+  private static generateBasicPuzzle(difficulty: Difficulty): GeneratedPuzzle {
+    // Use a simpler, conservative approach for fallback
+    const solution = this.generateSolvedBoard();
+    const puzzle = solution.map(row => [...row]);
+
+    // Conservative removal counts to ensure solvability
+    const conservativeRemovals = {
+      easy: 35,
+      medium: 45,
+      hard: 50,
+      difficult: 55,
+      extreme: 60,
+    };
+
+    const targetRemovals = conservativeRemovals[difficulty] || 45;
+    let removed = 0;
+
+    // Simple random removal with frequent uniqueness checks
+    while (removed < targetRemovals) {
+      const row = Math.floor(Math.random() * 9);
+      const col = Math.floor(Math.random() * 9);
+
+      if (puzzle[row][col] === 0) continue;
+
+      const originalValue = puzzle[row][col];
+      puzzle[row][col] = 0;
+
+      if (!this.hasUniqueSolution(puzzle)) {
+        puzzle[row][col] = originalValue;
+        continue;
+      }
+
+      removed++;
+    }
+
+    return {
+      puzzle,
+      solution,
+      difficulty,
+      difficultyScore: this.calculateDifficultyScore(puzzle),
+      techniquesRequired: this.getRequiredTechniques(puzzle),
+      clueCount: this.countClues(puzzle),
     };
   }
 
@@ -319,9 +386,23 @@ export class SudokuPuzzleGenerator {
         const originalValue = puzzle[row][col];
         puzzle[row][col] = 0;
 
-        // Check uniqueness less frequently for performance
-        const shouldCheckUniqueness =
-          difficulty === 'extreme' && removed % 20 === 0 && removed > 40;
+        // Check uniqueness based on difficulty - more frequent for easier puzzles
+        const shouldCheckUniqueness = (() => {
+          switch (difficulty) {
+            case 'easy':
+              return removed % 3 === 0; // Check every 3 removals for easy
+            case 'medium':
+              return removed % 5 === 0; // Check every 5 removals for medium
+            case 'hard':
+              return removed % 8 === 0; // Check every 8 removals for hard
+            case 'difficult':
+              return removed % 12 === 0; // Check every 12 removals for difficult
+            case 'extreme':
+              return removed % 20 === 0 && removed > 40; // Original logic for extreme
+            default:
+              return removed % 5 === 0;
+          }
+        })();
 
         if (shouldCheckUniqueness && !this.hasUniqueSolution(puzzle)) {
           puzzle[row][col] = originalValue;
@@ -349,20 +430,6 @@ export class SudokuPuzzleGenerator {
     );
 
     return puzzle;
-  }
-
-  /**
-   * Get target number of clues for difficulty level
-   */
-  private static getTargetClueCount(difficulty: Difficulty): number {
-    const clueTargets = {
-      easy: 36, // 45-50% filled
-      medium: 32, // 35-40% filled
-      hard: 28, // 30-35% filled
-      difficult: 24, // 25-30% filled
-      extreme: 22, // 20-25% filled
-    };
-    return clueTargets[difficulty];
   }
 
   /**
