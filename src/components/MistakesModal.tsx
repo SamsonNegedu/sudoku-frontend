@@ -13,7 +13,6 @@ interface MistakesModalProps {
 
 export const MistakesModal: React.FC<MistakesModalProps> = ({
     isVisible,
-    difficulty,
     mistakes,
     maxMistakes,
     onRestart,

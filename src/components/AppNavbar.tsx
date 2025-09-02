@@ -7,7 +7,8 @@ import {
     PlusIcon,
     GearIcon,
     ChevronDownIcon,
-    HamburgerMenuIcon
+    HamburgerMenuIcon,
+    BarChartIcon
 } from '@radix-ui/react-icons';
 import type { Difficulty } from '../types';
 import { DifficultyConfigManager } from '../config/difficulty';
@@ -16,6 +17,7 @@ interface AppNavbarProps {
     onNewGame: (difficulty: Difficulty) => void;
     onRestart: () => void;
     onShowSettings: () => void;
+    onShowAnalytics: () => void;
     onPause: () => void;
     onResume: () => void;
     currentDifficulty?: Difficulty;
@@ -35,6 +37,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     onNewGame,
     onRestart,
     onShowSettings,
+    onShowAnalytics,
     onPause,
     onResume,
     currentDifficulty,
@@ -306,6 +309,17 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                 </DropdownMenu.Root>
                             </>
                         )}
+
+                        <Button
+                            onClick={onShowAnalytics}
+                            size="2"
+                            variant="ghost"
+                            color="gray"
+                            aria-label="Analytics Dashboard"
+                            className="mr-2"
+                        >
+                            <BarChartIcon />
+                        </Button>
 
                         <Button
                             onClick={onShowSettings}

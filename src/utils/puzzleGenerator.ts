@@ -350,7 +350,7 @@ export class SudokuPuzzleGenerator {
 
         // Check uniqueness based on difficulty - more frequent for easier puzzles
         const shouldCheckUniqueness = (() => {
-          if (difficulty === 'extreme') {
+          if (['extreme', 'master', 'grandmaster'].includes(difficulty)) {
             return (
               removed % config.uniquenessCheckFrequency === 0 && removed > 40
             );

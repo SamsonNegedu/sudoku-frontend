@@ -7,7 +7,9 @@ import { GameTimer } from './GameTimer';
 import { HintDisplay } from './HintDisplay';
 import { useGameStore } from '../stores/gameStore';
 import { DifficultyConfigManager } from '../config/difficulty';
+import { useGameAnalytics } from './AnalyticsProvider';
 import type { Difficulty, Hint } from '../types';
+import { PageLayout } from './PageLayout';
 
 export const GameBoard: React.FC = () => {
     const {
@@ -27,6 +29,9 @@ export const GameBoard: React.FC = () => {
         getCompletedNumbers,
     } = useGameStore();
 
+    // Get analytics functions
+    const { recordHintUsage, recordGameMove } = useGameAnalytics();
+
     // Local state for hint display
     const [currentHint, setCurrentHint] = useState<Hint | null>(null);
     const [showHint, setShowHint] = useState(false);
@@ -35,16 +40,55 @@ export const GameBoard: React.FC = () => {
     const handleUseHint = useCallback(() => {
         const hint = useHint();
         if (hint) {
+
             setCurrentHint(hint);
             setShowHint(true);
+            // Record hint usage for analytics
+            recordHintUsage(hint.type);
         }
-    }, [useHint]);
+    }, [useHint, recordHintUsage]);
 
     // Handle hint dismissal
     const handleCloseHint = useCallback(() => {
         setShowHint(false);
         setTimeout(() => setCurrentHint(null), 200);
     }, []);
+
+    // Enhanced setCellValue with analytics
+    const setCellValueWithAnalytics = useCallback((row: number, col: number, value: number | null) => {
+        if (!currentGame) return;
+
+
+
+        const cell = currentGame.board[row][col];
+        const boardBefore = currentGame.board.map(row => row.map(cell => ({ ...cell })));
+        const previousValue = cell.value;
+
+        // Call the original function
+        setCellValue(row, col, value);
+
+        // Record the move for analytics
+        const move = {
+            row,
+            col,
+            value,
+            isNote: false,
+            timestamp: new Date(),
+            previousValue,
+            previousNotes: [...cell.notes],
+        };
+
+        const gameContext = {
+            isCorrect: value !== null ? currentGame.solution[row][col] === value : null,
+            boardBefore,
+            emptyCellsRemaining: currentGame.board.flat().filter(cell => cell.value === null).length,
+            mistakes: currentGame.mistakes,
+            hintsUsed: currentGame.hintsUsed,
+        };
+
+
+        recordGameMove(move, gameContext);
+    }, [currentGame, setCellValue, recordGameMove]);
 
     // Prevent body scrolling when game is paused
     useEffect(() => {
@@ -86,7 +130,7 @@ export const GameBoard: React.FC = () => {
             case '9': {
                 const number = parseInt(event.key);
                 if (inputMode === 'pen') {
-                    setCellValue(row, col, number);
+                    setCellValueWithAnalytics(row, col, number);
                 } else {
                     toggleNote(row, col, number);
                 }
@@ -115,7 +159,7 @@ export const GameBoard: React.FC = () => {
                 }
                 break;
         }
-    }, [currentGame, inputMode, setCellValue, toggleNote, clearCell, setInputMode, undoMove]);
+    }, [currentGame, inputMode, setCellValueWithAnalytics, toggleNote, clearCell, setInputMode, undoMove]);
 
     // Handle cell selection
     const handleCellClick = useCallback((row: number, col: number) => {
@@ -136,7 +180,7 @@ export const GameBoard: React.FC = () => {
                         // Auto-select this cell and place the number
                         selectCell(row, col);
                         if (inputMode === 'pen') {
-                            setCellValue(row, col, number);
+                            setCellValueWithAnalytics(row, col, number);
                         } else {
                             toggleNote(row, col, number);
                         }
@@ -163,11 +207,11 @@ export const GameBoard: React.FC = () => {
         if (cell.isFixed) return;
 
         if (inputMode === 'pen') {
-            setCellValue(row, col, number);
+            setCellValueWithAnalytics(row, col, number);
         } else {
             toggleNote(row, col, number);
         }
-    }, [selectedCell, currentGame, inputMode, setCellValue, toggleNote, selectCell]);
+    }, [selectedCell, currentGame, inputMode, setCellValueWithAnalytics, toggleNote, selectCell]);
 
     // Handle clear cell
     const handleClearCell = useCallback(() => {
@@ -235,7 +279,10 @@ export const GameBoard: React.FC = () => {
 
     if (!currentGame || isGeneratingPuzzle) {
         return (
-            <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center py-2 sm:py-4 px-4 overflow-hidden">
+            <PageLayout
+                centered={true}
+                className="bg-gradient-to-br from-neutral-50 to-neutral-100 p-4"
+            >
                 <div className="max-w-md w-full">
                     {isGeneratingPuzzle ? (
                         <div className="text-center">
@@ -247,30 +294,30 @@ export const GameBoard: React.FC = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="text-center mb-4 sm:mb-6">
-                                <h1 className="text-xl sm:text-2xl font-bold text-neutral-800 mb-1 sm:mb-2">
+                            <div className="text-center mb-4">
+                                <h1 className="text-2xl font-bold text-neutral-800 mb-2">
                                     Choose your challenge level
                                 </h1>
-                                <p className="text-sm sm:text-base text-neutral-600">Select a difficulty to start playing</p>
+                                <p className="text-neutral-600">Select a difficulty to start playing</p>
                             </div>
 
-                            <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-6 relative">
-                                <h3 className="text-sm sm:text-lg font-semibold text-neutral-800 mb-2 sm:mb-4">Select Difficulty</h3>
-                                <div className="grid grid-cols-1 gap-2 sm:gap-3">
+                            <div className="bg-white rounded-2xl shadow-xl p-6 relative">
+                                <h3 className="text-lg font-semibold text-neutral-800 mb-4">Select Difficulty</h3>
+                                <div className="grid grid-cols-1 gap-3">
                                     {DifficultyConfigManager.getDifficultyOptions().map(({ value, label, description, color }) => (
                                         <button
                                             key={value}
                                             onClick={() => handleNewGame(value)}
                                             disabled={isGeneratingPuzzle}
-                                            className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all duration-200 text-left ${isGeneratingPuzzle
+                                            className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all duration-200 text-left ${isGeneratingPuzzle
                                                 ? 'border-neutral-100 bg-neutral-50 cursor-not-allowed opacity-60'
                                                 : 'border-neutral-200 hover:border-indigo-300 hover:bg-indigo-50'
                                                 }`}
                                         >
-                                            <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${color}`} />
+                                            <div className={`w-3 h-3 rounded-full ${color}`} />
                                             <div className="flex-1">
-                                                <div className="font-medium text-sm sm:text-base text-neutral-800">{label}</div>
-                                                <div className="text-xs sm:text-sm text-neutral-600">{description}</div>
+                                                <div className="font-medium text-base text-neutral-800">{label}</div>
+                                                <div className="text-sm text-neutral-600">{description}</div>
                                             </div>
                                         </button>
                                     ))}
@@ -320,12 +367,12 @@ export const GameBoard: React.FC = () => {
                         </>
                     )}
                 </div>
-            </div>
+            </PageLayout>
         );
     }
 
     return (
-        <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-neutral-50 to-neutral-100">
+        <PageLayout className="bg-gradient-to-br from-neutral-50 to-neutral-100">
             {/* Full-Screen Pause Overlay - Prevents scrolling on mobile */}
             {currentGame?.isPaused && (
                 <div
@@ -457,6 +504,6 @@ export const GameBoard: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </PageLayout>
     );
 };

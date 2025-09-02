@@ -30,7 +30,7 @@ export class LocalStorageService implements IStorageService {
     // TODO: Implement local puzzle retrieval by ID
     // For now, generate a new puzzle with the same difficulty
     console.log(`Retrieving puzzle with ID: ${id}`);
-    return this.getPuzzle('easy'); // Default fallback
+    return this.getPuzzle('beginner'); // Default fallback
   }
 
   async validateMove(
