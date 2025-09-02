@@ -4,6 +4,7 @@ import { Theme } from '@radix-ui/themes';
 import { AppNavbar } from './components/AppNavbar';
 import { GameBoard } from './components/GameBoard';
 import { CompletionAnimation } from './components/CompletionAnimation';
+import { MistakesModal } from './components/MistakesModal';
 import { useGameStore } from './stores/gameStore';
 import type { Difficulty } from './types';
 import './index.css';
@@ -13,9 +14,12 @@ function App() {
     currentGame,
     isGeneratingPuzzle,
     showCompletionAnimation,
+    showMistakesModal,
     startNewGame,
     forceStopGeneration,
     hideCompletionAnimation,
+    hideMistakesModal,
+    continueWithUnlimitedMistakes,
     pauseGame,
     resumeGame
   } = useGameStore();
@@ -43,6 +47,19 @@ function App() {
     if (currentGame?.difficulty) {
       handleNewGame(currentGame.difficulty);
     }
+  };
+
+  const handleRestartFromMistakes = () => {
+    // Restart with the same difficulty and hide the modal
+    if (currentGame?.difficulty) {
+      handleNewGame(currentGame.difficulty);
+    }
+    hideMistakesModal();
+  };
+
+  const handleContinueWithMistakes = () => {
+    // Continue with unlimited mistakes
+    continueWithUnlimitedMistakes();
   };
 
   const formatCompletionTime = () => {
@@ -167,6 +184,18 @@ function App() {
             difficulty={currentGame.difficulty}
             completionTime={formatCompletionTime()}
             mistakes={currentGame.mistakes || 0}
+          />
+        )}
+
+        {/* Mistakes Modal */}
+        {currentGame && (
+          <MistakesModal
+            isVisible={showMistakesModal}
+            difficulty={currentGame.difficulty}
+            mistakes={currentGame.mistakes}
+            maxMistakes={currentGame.maxMistakes}
+            onRestart={handleRestartFromMistakes}
+            onContinue={handleContinueWithMistakes}
           />
         )}
       </div>

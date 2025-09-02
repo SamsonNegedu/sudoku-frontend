@@ -61,8 +61,8 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                         <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-lg">9</span>
                         </div>
-                        <div className="hidden sm:block">
-                            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                        <div className="block">
+                            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                                 Sudoku Master
                             </h1>
                         </div>
@@ -98,27 +98,55 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                         {(isPlaying || isPaused) && (
                             <>
                                 {isPaused ? (
-                                    <Button
-                                        onClick={onResume}
-                                        size="2"
-                                        variant="solid"
-                                        color="green"
-                                        className="hidden sm:inline-flex"
-                                    >
-                                        <PlayIcon className="mr-2" />
-                                        Resume
-                                    </Button>
+                                    <>
+                                        {/* Mobile Resume Button - Icon Only */}
+                                        <Button
+                                            onClick={onResume}
+                                            size="2"
+                                            variant="solid"
+                                            color="green"
+                                            className="sm:hidden"
+                                            aria-label="Resume Game"
+                                        >
+                                            <PlayIcon />
+                                        </Button>
+                                        {/* Desktop Resume Button - With Text */}
+                                        <Button
+                                            onClick={onResume}
+                                            size="2"
+                                            variant="solid"
+                                            color="green"
+                                            className="hidden sm:inline-flex"
+                                        >
+                                            <PlayIcon className="mr-2" />
+                                            Resume
+                                        </Button>
+                                    </>
                                 ) : (
-                                    <Button
-                                        onClick={onPause}
-                                        size="2"
-                                        variant="solid"
-                                        color="blue"
-                                        className="hidden sm:inline-flex"
-                                    >
-                                        <PauseIcon className="mr-2" />
-                                        Pause
-                                    </Button>
+                                    <>
+                                        {/* Mobile Pause Button - Icon Only */}
+                                        <Button
+                                            onClick={onPause}
+                                            size="2"
+                                            variant="solid"
+                                            color="blue"
+                                            className="sm:hidden"
+                                            aria-label="Pause Game"
+                                        >
+                                            <PauseIcon />
+                                        </Button>
+                                        {/* Desktop Pause Button - With Text */}
+                                        <Button
+                                            onClick={onPause}
+                                            size="2"
+                                            variant="solid"
+                                            color="blue"
+                                            className="hidden sm:inline-flex"
+                                        >
+                                            <PauseIcon className="mr-2" />
+                                            Pause
+                                        </Button>
+                                    </>
                                 )}
 
                                 <DropdownMenu.Root>

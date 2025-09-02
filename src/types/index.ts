@@ -43,6 +43,7 @@ export interface GameState {
   pausedElapsedTime?: number;
   mistakes: number; // Track number of mistakes made
   maxMistakes: number; // Maximum allowed mistakes
+  mistakeLimitDisabled: boolean; // Whether mistake limit has been disabled
 }
 
 // Game move

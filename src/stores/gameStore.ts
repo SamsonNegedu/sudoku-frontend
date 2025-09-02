@@ -20,11 +20,14 @@ interface GameStore {
   inputMode: 'pen' | 'pencil';
   isGeneratingPuzzle: boolean;
   showCompletionAnimation: boolean;
+  showMistakesModal: boolean;
 
   // Actions
   startNewGame: (difficulty: Difficulty) => void;
   forceStopGeneration: () => void;
   hideCompletionAnimation: () => void;
+  hideMistakesModal: () => void;
+  continueWithUnlimitedMistakes: () => void;
   pauseGame: () => void;
   resumeGame: () => void;
   selectCell: (row: number, col: number) => void;
@@ -376,6 +379,7 @@ export const useGameStore = create<GameStore>()(
       inputMode: 'pen',
       isGeneratingPuzzle: false,
       showCompletionAnimation: false,
+      showMistakesModal: false,
 
       // Actions
       startNewGame: (difficulty: Difficulty) => {
@@ -448,6 +452,7 @@ export const useGameStore = create<GameStore>()(
               pausedElapsedTime: undefined,
               mistakes: 0,
               maxMistakes: 3, // Allow 3 mistakes before game over
+              mistakeLimitDisabled: false,
             };
 
             set({
@@ -470,6 +475,26 @@ export const useGameStore = create<GameStore>()(
 
       hideCompletionAnimation: () => {
         set({ showCompletionAnimation: false });
+      },
+
+      hideMistakesModal: () => {
+        set({ showMistakesModal: false });
+      },
+
+      continueWithUnlimitedMistakes: () => {
+        const state = get();
+        if (!state.currentGame) return;
+
+        // Disable mistake limit instead of setting arbitrary high number
+        const updatedGame: GameState = {
+          ...state.currentGame,
+          mistakeLimitDisabled: true,
+        };
+
+        set({
+          currentGame: updatedGame,
+          showMistakesModal: false,
+        });
       },
 
       pauseGame: () => {
@@ -609,6 +634,8 @@ export const useGameStore = create<GameStore>()(
 
         // Check if game is completed using the UPDATED board
         let completionTriggered = false;
+        let mistakesModalTriggered = false;
+
         if (value !== null) {
           // Check completion with the updated board, not the old state!
           const isCompleted = SudokuValidator.isPuzzleComplete(updatedBoard);
@@ -618,10 +645,20 @@ export const useGameStore = create<GameStore>()(
           }
         }
 
+        // Check if maximum mistakes reached (but not if game is completed or limit disabled)
+        if (
+          mistakeCount >= updatedGame.maxMistakes &&
+          !updatedGame.isCompleted &&
+          !updatedGame.mistakeLimitDisabled
+        ) {
+          mistakesModalTriggered = true;
+        }
+
         set({
           currentGame: updatedGame,
           isPlaying: !updatedGame.isCompleted,
           showCompletionAnimation: completionTriggered,
+          showMistakesModal: mistakesModalTriggered,
         });
       },
 

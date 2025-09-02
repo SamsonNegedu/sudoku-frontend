@@ -35,7 +35,6 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
         'relative',
 
         'focus:outline-none',
-        'border-r border-b border-neutral-200',
         'aspect-square',
         {
             // Default state - no inline background colors
@@ -43,13 +42,11 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
         }
     );
 
-    // Determine border styling for 3x3 box boundaries and edge cases
+    // Add thicker borders for 3x3 box boundaries  
     const borderClasses = cn(
         {
             'border-r-2 border-r-neutral-400': col === 2 || col === 5, // Right border for 3x3 boxes
             'border-b-2 border-b-neutral-400': row === 2 || row === 5, // Bottom border for 3x3 boxes
-            'border-r-0': col === 8, // No right border for rightmost column
-            'border-b-0': row === 8, // No bottom border for bottom row
         }
     );
 

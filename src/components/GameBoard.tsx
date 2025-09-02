@@ -6,6 +6,7 @@ import { GameSidebar } from './GameSidebar';
 import { GameTimer } from './GameTimer';
 import { HintDisplay } from './HintDisplay';
 import { useGameStore } from '../stores/gameStore';
+import { DifficultyConfigManager } from '../config/difficulty';
 import type { Difficulty, Hint } from '../types';
 
 export const GameBoard: React.FC = () => {
@@ -234,7 +235,7 @@ export const GameBoard: React.FC = () => {
 
     if (!currentGame || isGeneratingPuzzle) {
         return (
-            <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center pt-8 pb-4 px-4">
+            <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center py-2 sm:py-4 px-4 overflow-hidden">
                 <div className="max-w-md w-full">
                     {isGeneratingPuzzle ? (
                         <div className="text-center">
@@ -246,37 +247,30 @@ export const GameBoard: React.FC = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="text-center mb-8">
-                                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                    <span className="text-white font-bold text-2xl">9</span>
-                                </div>
-                                <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                                    Sudoku Master
+                            <div className="text-center mb-4 sm:mb-6">
+                                <h1 className="text-xl sm:text-2xl font-bold text-neutral-800 mb-1 sm:mb-2">
+                                    Choose your challenge level
                                 </h1>
-                                <p className="text-neutral-600">Choose your challenge level</p>
+                                <p className="text-sm sm:text-base text-neutral-600">Select a difficulty to start playing</p>
                             </div>
 
-                            <div className="bg-white rounded-2xl shadow-xl p-6 relative">
-                                <h3 className="text-lg font-semibold text-neutral-800 mb-4">Select Difficulty</h3>
-                                <div className="grid grid-cols-1 gap-3">
-                                    {['easy', 'medium', 'hard', 'difficult', 'extreme'].map((difficulty) => (
+                            <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-6 relative">
+                                <h3 className="text-sm sm:text-lg font-semibold text-neutral-800 mb-2 sm:mb-4">Select Difficulty</h3>
+                                <div className="grid grid-cols-1 gap-2 sm:gap-3">
+                                    {DifficultyConfigManager.getDifficultyOptions().map(({ value, label, description, color }) => (
                                         <button
-                                            key={difficulty}
-                                            onClick={() => handleNewGame(difficulty as Difficulty)}
+                                            key={value}
+                                            onClick={() => handleNewGame(value)}
                                             disabled={isGeneratingPuzzle}
-                                            className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all duration-200 text-left ${isGeneratingPuzzle
+                                            className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all duration-200 text-left ${isGeneratingPuzzle
                                                 ? 'border-neutral-100 bg-neutral-50 cursor-not-allowed opacity-60'
                                                 : 'border-neutral-200 hover:border-indigo-300 hover:bg-indigo-50'
                                                 }`}
                                         >
-                                            <div className={`w-3 h-3 rounded-full ${difficulty === 'easy' ? 'bg-green-500' :
-                                                difficulty === 'medium' ? 'bg-yellow-500' :
-                                                    difficulty === 'hard' ? 'bg-orange-500' :
-                                                        difficulty === 'difficult' ? 'bg-red-500' :
-                                                            'bg-purple-500'
-                                                }`} />
+                                            <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${color}`} />
                                             <div className="flex-1">
-                                                <div className="font-medium text-neutral-800 capitalize">{difficulty}</div>
+                                                <div className="font-medium text-sm sm:text-base text-neutral-800">{label}</div>
+                                                <div className="text-xs sm:text-sm text-neutral-600">{description}</div>
                                             </div>
                                         </button>
                                     ))}
@@ -393,34 +387,25 @@ export const GameBoard: React.FC = () => {
 
             {/* Main Game Area */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 sm:pb-6">
-                <div className="flex flex-col gap-4 sm:gap-8">
-                    {/* Mobile Timer - Only visible on small screens */}
+                <div className="flex flex-col gap-2 sm:gap-8">
+                    {/* Ultra-Compact Mobile Timer */}
                     {currentGame && (
                         <div className="lg:hidden -mx-4 sm:mx-0">
-                            <div className="bg-white rounded-xl p-3 shadow-sm border border-neutral-200">
-                                <div className="flex items-center justify-center gap-3 sm:gap-6 text-sm flex-wrap">
-                                    <div className="flex items-center gap-2">
-                                        <GameTimer
-                                            startTime={currentGame.startTime}
-                                            isPaused={currentGame.isPaused}
-                                            isCompleted={currentGame.isCompleted}
-                                            pauseStartTime={currentGame.pauseStartTime}
-                                            totalPausedTime={currentGame.totalPausedTime}
-                                            pausedElapsedTime={currentGame.pausedElapsedTime}
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-neutral-600">Difficulty:</span>
+                            <div className="bg-white rounded-lg px-3 py-1.5 shadow-sm border border-neutral-200">
+                                <div className="flex items-center justify-between text-xs">
+                                    <GameTimer
+                                        startTime={currentGame.startTime}
+                                        isPaused={currentGame.isPaused}
+                                        isCompleted={currentGame.isCompleted}
+                                        pauseStartTime={currentGame.pauseStartTime}
+                                        totalPausedTime={currentGame.totalPausedTime}
+                                        pausedElapsedTime={currentGame.pausedElapsedTime}
+                                    />
+                                    <div className="flex items-center gap-3">
                                         <span className="font-medium capitalize">{currentGame.difficulty}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-neutral-600">Hints:</span>
-                                        <span className="font-medium">{currentGame.hintsUsed}/{currentGame.maxHints}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-neutral-600">Mistakes:</span>
-                                        <span className={`font-medium ${currentGame.mistakes > 0 ? 'text-red-600' : 'text-neutral-800'}`}>
-                                            {currentGame.mistakes}/{currentGame.maxMistakes}
+                                        <span>H: {currentGame.hintsUsed}/{currentGame.maxHints}</span>
+                                        <span className={currentGame.mistakes > 0 ? 'text-red-600' : 'text-neutral-800'}>
+                                            M: {currentGame.mistakes}{currentGame.mistakeLimitDisabled ? '/∞' : `/${currentGame.maxMistakes}`}
                                         </span>
                                     </div>
                                 </div>
@@ -431,7 +416,7 @@ export const GameBoard: React.FC = () => {
                     {/* Grid and Sidebar Container - Same Level */}
                     <div className="flex flex-col lg:flex-row gap-4 sm:gap-8">
                         {/* Sudoku Grid + NumberPad Column */}
-                        <div className="flex-1 flex flex-col items-center gap-4">
+                        <div className="flex-1 flex flex-col items-center gap-2 sm:gap-4">
                             <div className="w-full">
                                 <SudokuGrid
                                     board={currentGame.board}

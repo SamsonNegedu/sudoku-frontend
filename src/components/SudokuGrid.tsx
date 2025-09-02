@@ -49,10 +49,10 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
     };
 
     return (
-        <div className="flex justify-center items-center w-full px-2">
-            <div className="max-w-[95vw] w-full">
+        <div className="flex justify-center items-center w-full px-0.5 sm:px-2">
+            <div className="max-w-[99vw] sm:max-w-[95vw] w-full">
                 <div
-                    className={`sudoku-grid-container bg-white rounded-2xl overflow-hidden ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
+                    className={`sudoku-grid-container bg-white rounded-lg overflow-hidden ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
                     role="grid"
                     aria-label="Sudoku puzzle grid"
                 >
