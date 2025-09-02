@@ -13,6 +13,7 @@ import { DifficultyConfigManager } from '../config/difficulty';
 
 interface AppNavbarProps {
     onNewGame: (difficulty: Difficulty) => void;
+    onRestart: () => void;
     onShowSettings: () => void;
     onPause: () => void;
     onResume: () => void;
@@ -31,6 +32,7 @@ interface AppNavbarProps {
 
 export const AppNavbar: React.FC<AppNavbarProps> = ({
     onNewGame,
+    onRestart,
     onShowSettings,
     onPause,
     onResume,
@@ -63,7 +65,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                         </div>
                         <div className="block">
                             <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                                Sudoku Master
+                                Grid Logic
                             </h1>
                         </div>
                     </div>
@@ -178,8 +180,30 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                         sideOffset={8}
                                         className="w-56 max-w-56 p-2 bg-white border border-neutral-200 rounded-xl shadow-lg"
                                     >
+                                        {/* Restart Current Puzzle Option */}
+                                        <DropdownMenu.Item
+                                            onSelect={onRestart}
+                                            className="px-3 py-3 rounded-lg cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <svg className="w-4 h-4 text-neutral-600" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                                                </svg>
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="font-semibold text-neutral-900 text-sm">
+                                                        Restart This Puzzle
+                                                    </div>
+                                                    <div className="text-xs text-neutral-500 leading-normal">
+                                                        Reset to starting state
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </DropdownMenu.Item>
+
+                                        <DropdownMenu.Separator className="my-2" />
+
                                         <DropdownMenu.Label className="px-2 py-1.5 text-xs font-semibold text-neutral-600 uppercase tracking-wide">
-                                            Choose Difficulty
+                                            New Puzzle
                                         </DropdownMenu.Label>
                                         <DropdownMenu.Separator className="my-2" />
 

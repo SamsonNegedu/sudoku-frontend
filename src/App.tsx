@@ -81,6 +81,7 @@ function App() {
       <div className="App relative">
         <AppNavbar
           onNewGame={handleNewGame}
+          onRestart={restartCurrentGame}
           onShowSettings={handleShowSettings}
           onPause={pauseGame}
           onResume={resumeGame}

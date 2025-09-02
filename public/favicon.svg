@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background with gradient -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded background -->
+  <rect width="32" height="32" rx="6" ry="6" fill="url(#grad)"/>
+  
+  <!-- Clean 3x3 grid (simplified for favicon size) -->
+  <g fill="none" stroke="white" stroke-width="1">
+    <!-- Outer border -->
+    <rect x="8" y="8" width="16" height="16" rx="1" ry="1"/>
+    
+    <!-- 3x3 grid lines -->
+    <line x1="13.33" y1="8" x2="13.33" y2="24"/>
+    <line x1="18.67" y1="8" x2="18.67" y2="24"/>
+    <line x1="8" y1="13.33" x2="24" y2="13.33"/>
+    <line x1="8" y1="18.67" x2="24" y2="18.67"/>
+  </g>
+  
+  <!-- Strategic filled squares to suggest Sudoku -->
+  <g fill="white">
+    <!-- Top row -->
+    <rect x="9" y="9" width="3.33" height="3.33" rx="0.5"/>
+    <rect x="19.67" y="9" width="3.33" height="3.33" rx="0.5"/>
+    
+    <!-- Middle row -->
+    <rect x="14.33" y="14.33" width="3.33" height="3.33" rx="0.5"/>
+    
+    <!-- Bottom row -->
+    <rect x="9" y="19.67" width="3.33" height="3.33" rx="0.5"/>
+    <rect x="19.67" y="19.67" width="3.33" height="3.33" rx="0.5"/>
+  </g>
+</svg>

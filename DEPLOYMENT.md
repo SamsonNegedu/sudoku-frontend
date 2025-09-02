@@ -1,4 +1,4 @@
-# 🚀 Sudoku Master - Deployment Guide
+# 🚀 Grid Logic - Deployment Guide
 
 ## Vercel Deployment (Recommended)
 
@@ -158,4 +158,4 @@ npm run build:analyze
 
 **Happy Deploying! 🎉**
 
-Your Sudoku Master app is ready to delight users worldwide!
+Your Grid Logic app is ready to delight users worldwide!
