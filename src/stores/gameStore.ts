@@ -890,13 +890,20 @@ export const useGameStore = create<GameStore>()(
           };
         }
 
-        // Update hints used
-        const updatedGame: GameState = {
-          ...state.currentGame,
-          hintsUsed: state.currentGame.hintsUsed + 1,
-        };
+        // Only increment hint counter for helpful hints (not confirmations or errors)
+        const shouldCountHint =
+          hint.technique !== 'confirmation' &&
+          hint.technique !== 'cell_selection';
 
-        set({ currentGame: updatedGame });
+        // Update hints used only if this was a useful hint
+        if (shouldCountHint) {
+          const updatedGame: GameState = {
+            ...state.currentGame,
+            hintsUsed: state.currentGame.hintsUsed + 1,
+          };
+          set({ currentGame: updatedGame });
+        }
+
         return hint;
       },
 

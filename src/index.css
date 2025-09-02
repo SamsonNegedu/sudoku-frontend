@@ -167,6 +167,18 @@
     background-clip: text;
   }
 
+  /* Optimized number fonts for better mobile readability */
+  .sudoku-cell-number {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  
+  .sudoku-cell-notes {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+
   /* Mobile-specific adjustments */
   @media (max-width: 639px) {
     .sudoku-cell {
@@ -174,6 +186,13 @@
       height: min(10vw, 2.5rem);
       font-size: 0.875rem;
       line-height: 1;
+    }
+    
+    /* Softer mobile number styling */
+    .sudoku-cell-number {
+      font-weight: 500;
+      color: rgb(55 65 81); /* text-neutral-700 */
+      opacity: 0.95;
     }
     
     /* Smaller note text on mobile */

@@ -42,11 +42,14 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
         }
     );
 
-    // Add thicker borders for 3x3 box boundaries  
+    // Add borders - subtle for individual cells, thicker for 3x3 box boundaries  
     const borderClasses = cn(
+        // Base borders for all cells
+        'border border-neutral-200',
         {
-            'border-r-2 border-r-neutral-400': col === 2 || col === 5, // Right border for 3x3 boxes
-            'border-b-2 border-b-neutral-400': row === 2 || row === 5, // Bottom border for 3x3 boxes
+            // Thicker borders for 3x3 box boundaries and grid edges (override the base border)
+            'border-r-2 border-r-neutral-400': col === 2 || col === 5 || col === 8, // Right border for 3x3 boxes and right edge
+            'border-b-2 border-b-neutral-400': row === 2 || row === 5 || row === 8, // Bottom border for 3x3 boxes and bottom edge
         }
     );
 
@@ -77,10 +80,10 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
             {value && (
                 <div className="absolute inset-0 flex items-center justify-center">
                     <span className={cn(
-                        "text-2xl font-bold",
+                        "sudoku-cell-number text-xl sm:text-2xl font-medium sm:font-semibold",
                         {
-                            "text-neutral-900": !isIncorrect,
-                            "text-red-700": isIncorrect,
+                            "text-neutral-700 sm:text-neutral-900": !isIncorrect,
+                            "text-red-600 sm:text-red-700": isIncorrect,
                         }
                     )}>
                         {value}
@@ -106,7 +109,7 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
                         >
                             {notes.includes(num) && (
                                 <span
-                                    className="text-neutral-700 font-medium select-none"
+                                    className="sudoku-cell-notes text-neutral-500 sm:text-neutral-700 font-normal sm:font-medium select-none"
                                     style={{
                                         lineHeight: 1,
                                         display: 'block',
