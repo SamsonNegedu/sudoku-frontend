@@ -1,4 +1,5 @@
 import type { Difficulty } from '../types';
+import { DifficultyConfigManager } from '../config/difficulty';
 
 /**
  * Comprehensive Sudoku Puzzle Generation System
@@ -73,16 +74,9 @@ export class SudokuPuzzleGenerator {
     const solution = this.generateSolvedBoard();
     const puzzle = solution.map(row => [...row]);
 
-    // Conservative removal counts to ensure solvability
-    const conservativeRemovals = {
-      easy: 35,
-      medium: 45,
-      hard: 50,
-      difficult: 55,
-      extreme: 60,
-    };
-
-    const targetRemovals = conservativeRemovals[difficulty] || 45;
+    // Get conservative removal count from configuration
+    const config = DifficultyConfigManager.getConfig(difficulty);
+    const targetRemovals = config.puzzleGeneration.conservativeRemovals;
     let removed = 0;
 
     // Simple random removal with frequent uniqueness checks
@@ -208,41 +202,9 @@ export class SudokuPuzzleGenerator {
   ): number[][] {
     const puzzle = solution.map(row => [...row]);
 
-    // Dynamic difficulty-based constraints with variation
-    const constraints = {
-      easy: {
-        totalClues: [42, 48],
-        minCluesPerBlock: 3,
-        maxEmptyBlocks: 1,
-        pattern: 'balanced',
-      },
-      medium: {
-        totalClues: [32, 38],
-        minCluesPerBlock: 2,
-        maxEmptyBlocks: 2,
-        pattern: 'mixed',
-      },
-      hard: {
-        totalClues: [25, 31],
-        minCluesPerBlock: 1,
-        maxEmptyBlocks: 3,
-        pattern: 'varied',
-      },
-      difficult: {
-        totalClues: [22, 28],
-        minCluesPerBlock: 1,
-        maxEmptyBlocks: 4,
-        pattern: 'sparse',
-      },
-      extreme: {
-        totalClues: [17, 25],
-        minCluesPerBlock: 0,
-        maxEmptyBlocks: 5,
-        pattern: 'minimal',
-      },
-    };
-
-    const config = constraints[difficulty] || constraints.medium;
+    // Get difficulty-based constraints from centralized config
+    const difficultyConfig = DifficultyConfigManager.getConfig(difficulty);
+    const config = difficultyConfig.puzzleGeneration;
 
     // Random target clues within range for variety
     const [minClues, maxClues] = config.totalClues;
@@ -388,20 +350,12 @@ export class SudokuPuzzleGenerator {
 
         // Check uniqueness based on difficulty - more frequent for easier puzzles
         const shouldCheckUniqueness = (() => {
-          switch (difficulty) {
-            case 'easy':
-              return removed % 3 === 0; // Check every 3 removals for easy
-            case 'medium':
-              return removed % 5 === 0; // Check every 5 removals for medium
-            case 'hard':
-              return removed % 8 === 0; // Check every 8 removals for hard
-            case 'difficult':
-              return removed % 12 === 0; // Check every 12 removals for difficult
-            case 'extreme':
-              return removed % 20 === 0 && removed > 40; // Original logic for extreme
-            default:
-              return removed % 5 === 0;
+          if (difficulty === 'extreme') {
+            return (
+              removed % config.uniquenessCheckFrequency === 0 && removed > 40
+            );
           }
+          return removed % config.uniquenessCheckFrequency === 0;
         })();
 
         if (shouldCheckUniqueness && !this.hasUniqueSolution(puzzle)) {

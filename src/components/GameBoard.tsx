@@ -1,11 +1,12 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Button } from '@radix-ui/themes';
 import { SudokuGrid } from './SudokuGrid';
 import { NumberPad } from './NumberPad';
 import { GameSidebar } from './GameSidebar';
 import { GameTimer } from './GameTimer';
+import { HintDisplay } from './HintDisplay';
 import { useGameStore } from '../stores/gameStore';
-import type { Difficulty } from '../types';
+import type { Difficulty, Hint } from '../types';
 
 export const GameBoard: React.FC = () => {
     const {
@@ -14,7 +15,6 @@ export const GameBoard: React.FC = () => {
         inputMode,
         isGeneratingPuzzle,
         startNewGame,
-        // pauseGame,
         resumeGame,
         selectCell,
         setCellValue,
@@ -25,6 +25,25 @@ export const GameBoard: React.FC = () => {
         setInputMode,
         getCompletedNumbers,
     } = useGameStore();
+
+    // Local state for hint display
+    const [currentHint, setCurrentHint] = useState<Hint | null>(null);
+    const [showHint, setShowHint] = useState(false);
+
+    // Handle hint usage
+    const handleUseHint = useCallback(() => {
+        const hint = useHint();
+        if (hint) {
+            setCurrentHint(hint);
+            setShowHint(true);
+        }
+    }, [useHint]);
+
+    // Handle hint dismissal
+    const handleCloseHint = useCallback(() => {
+        setShowHint(false);
+        setTimeout(() => setCurrentHint(null), 200);
+    }, []);
 
     // Prevent body scrolling when game is paused
     useEffect(() => {
@@ -104,7 +123,38 @@ export const GameBoard: React.FC = () => {
 
     // Handle number input from number pad
     const handleNumberClick = useCallback((number: number) => {
-        if (!selectedCell || !currentGame) return;
+        if (!currentGame) return;
+
+        // If no cell is selected, try to find the best cell for this number
+        if (!selectedCell) {
+            // Find the first empty cell that can accept this number
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    const cell = currentGame.board[row][col];
+                    if (!cell.isFixed && (cell.value === null || cell.value === 0)) {
+                        // Auto-select this cell and place the number
+                        selectCell(row, col);
+                        if (inputMode === 'pen') {
+                            setCellValue(row, col, number);
+                        } else {
+                            toggleNote(row, col, number);
+                        }
+                        return;
+                    }
+                }
+            }
+            // If no empty cells found, just select the first empty cell without placing
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    const cell = currentGame.board[row][col];
+                    if (!cell.isFixed && (cell.value === null || cell.value === 0)) {
+                        selectCell(row, col);
+                        return;
+                    }
+                }
+            }
+            return;
+        }
 
         const { row, col } = selectedCell;
         const cell = currentGame.board[row][col];
@@ -116,11 +166,27 @@ export const GameBoard: React.FC = () => {
         } else {
             toggleNote(row, col, number);
         }
-    }, [selectedCell, currentGame, inputMode, setCellValue, toggleNote]);
+    }, [selectedCell, currentGame, inputMode, setCellValue, toggleNote, selectCell]);
 
     // Handle clear cell
     const handleClearCell = useCallback(() => {
-        if (!selectedCell || !currentGame) return;
+        if (!currentGame) return;
+
+        // If no cell is selected, find the last modified cell or select first non-empty cell
+        if (!selectedCell) {
+            // Find the first non-empty, non-fixed cell
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    const cell = currentGame.board[row][col];
+                    if (!cell.isFixed && cell.value) {
+                        selectCell(row, col);
+                        clearCell(row, col);
+                        return;
+                    }
+                }
+            }
+            return;
+        }
 
         const { row, col } = selectedCell;
         const cell = currentGame.board[row][col];
@@ -128,7 +194,7 @@ export const GameBoard: React.FC = () => {
         if (cell.isFixed) return;
 
         clearCell(row, col);
-    }, [selectedCell, currentGame, clearCell]);
+    }, [selectedCell, currentGame, clearCell, selectCell]);
 
     // Handle input mode toggle
     const handleToggleNote = useCallback(() => {
@@ -318,6 +384,13 @@ export const GameBoard: React.FC = () => {
                 </div>
             )}
 
+            {/* Hint Display Overlay */}
+            <HintDisplay
+                hint={currentHint}
+                isVisible={showHint}
+                onClose={handleCloseHint}
+            />
+
             {/* Main Game Area */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 sm:pb-6">
                 <div className="flex flex-col gap-4 sm:gap-8">
@@ -374,14 +447,15 @@ export const GameBoard: React.FC = () => {
                                     onNumberClick={handleNumberClick}
                                     onClear={handleClearCell}
                                     onToggleNote={handleToggleNote}
-                                    onHint={useHint}
+                                    onHint={handleUseHint}
                                     onUndo={undoMove}
                                     inputMode={inputMode}
-                                    disabled={!selectedCell || currentGame.isPaused}
+                                    disabled={currentGame.isPaused}
                                     canUndo={currentGame.moves.length > 0}
                                     hintsUsed={currentGame.hintsUsed}
                                     maxHints={currentGame.maxHints}
                                     completedNumbers={getCompletedNumbers()}
+                                    selectedCell={selectedCell}
                                 />
                             </div>
                         </div>

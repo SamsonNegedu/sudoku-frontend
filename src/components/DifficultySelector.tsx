@@ -1,20 +1,13 @@
 import React from 'react';
 import { Button } from '@radix-ui/themes';
 import type { Difficulty } from '../types';
+import { DifficultyConfigManager } from '../config/difficulty';
 
-interface DifficultySelectorProps {
+export interface DifficultySelectorProps {
     selectedDifficulty: Difficulty;
     onDifficultyChange: (difficulty: Difficulty) => void;
     disabled?: boolean;
 }
-
-const difficulties: { value: Difficulty; label: string; description: string; color: string }[] = [
-    { value: 'easy', label: 'Easy', description: 'Simple techniques', color: 'bg-green-500' },
-    { value: 'medium', label: 'Medium', description: 'Basic strategies', color: 'bg-yellow-500' },
-    { value: 'hard', label: 'Hard', description: 'Advanced techniques', color: 'bg-orange-500' },
-    { value: 'difficult', label: 'Difficult', description: 'Expert strategies', color: 'bg-red-500' },
-    { value: 'extreme', label: 'Extreme', description: 'Master level', color: 'bg-purple-500' },
-];
 
 export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
     selectedDifficulty,
@@ -26,7 +19,7 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
             <h3 className="text-lg font-semibold text-neutral-800 mb-3">Select Difficulty</h3>
 
             <div className="grid grid-cols-1 gap-2">
-                {difficulties.map(({ value, label, description, color }) => (
+                {DifficultyConfigManager.getDifficultyOptions().map(({ value, label, description, color }) => (
                     <Button
                         key={value}
                         onClick={() => onDifficultyChange(value)}

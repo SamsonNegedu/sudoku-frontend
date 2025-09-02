@@ -9,6 +9,8 @@ import type {
 } from '../types';
 import { SudokuValidator } from '../utils/puzzleValidator';
 import { SolutionValidator } from '../utils/solutionValidator';
+import { SudokuHintGenerator } from '../utils/hintGenerator';
+import { DifficultyConfigManager } from '../config/difficulty';
 
 interface GameStore {
   // State
@@ -102,44 +104,12 @@ const createDifficultyBasedPuzzle = (
 
   // 3x3 blocks are handled dynamically in the removal strategy
 
-  // Difficulty-based constraints with ranges for variety
-  const constraints = {
-    easy: {
-      totalClues: [42, 48], // Range instead of fixed number
-      minCluesPerBlock: 3, // Relaxed minimum
-      maxEmptyBlocks: 1, // Allow some variation
-      targetDistribution: 'balanced', // Prefer even distribution
-    },
-    medium: {
-      totalClues: [32, 38],
-      minCluesPerBlock: 2,
-      maxEmptyBlocks: 2,
-      targetDistribution: 'mixed', // Allow more variation
-    },
-    hard: {
-      totalClues: [25, 31],
-      minCluesPerBlock: 1,
-      maxEmptyBlocks: 3,
-      targetDistribution: 'varied', // Encourage different patterns
-    },
-    difficult: {
-      totalClues: [22, 28],
-      minCluesPerBlock: 1,
-      maxEmptyBlocks: 4,
-      targetDistribution: 'sparse', // Allow sparser blocks
-    },
-    extreme: {
-      totalClues: [17, 25],
-      minCluesPerBlock: 0, // Allow completely empty blocks
-      maxEmptyBlocks: 5,
-      targetDistribution: 'minimal', // Very sparse distribution
-    },
-  };
-
-  const config = constraints[difficulty] || constraints.medium;
+  // Get difficulty-based constraints from centralized config
+  const difficultyConfig = DifficultyConfigManager.getConfig(difficulty);
+  const constraints = difficultyConfig.puzzleGeneration;
 
   // Random target clues within the difficulty range
-  const [minClues, maxClues] = config.totalClues;
+  const [minClues, maxClues] = constraints.totalClues;
   const targetClues =
     minClues + Math.floor(Math.random() * (maxClues - minClues + 1));
   const targetRemovals = 81 - targetClues;
@@ -237,7 +207,7 @@ const createDifficultyBasedPuzzle = (
     }
   };
 
-  const removalCandidates = createRemovalStrategy(config.targetDistribution);
+  const removalCandidates = createRemovalStrategy(constraints.pattern);
 
   let removed = 0;
   let attempts = 0;
@@ -254,7 +224,7 @@ const createDifficultyBasedPuzzle = (
       const blockIndex = Math.floor(row / 3) * 3 + Math.floor(col / 3);
 
       // Check if removing this cell would violate block constraints
-      if (blockClues[blockIndex] <= config.minCluesPerBlock) {
+      if (blockClues[blockIndex] <= constraints.minCluesPerBlock) {
         continue; // Skip removal to maintain minimum clues per block
       }
 
@@ -262,7 +232,7 @@ const createDifficultyBasedPuzzle = (
       const wouldBeEmptyBlocks = blockClues.filter(count => count <= 2).length;
       if (
         blockClues[blockIndex] === 3 &&
-        wouldBeEmptyBlocks >= config.maxEmptyBlocks
+        wouldBeEmptyBlocks >= constraints.maxEmptyBlocks
       ) {
         continue; // Skip to avoid exceeding empty block limit
       }
@@ -277,7 +247,10 @@ const createDifficultyBasedPuzzle = (
 
     // If we can't remove enough with constraints, relax them slightly
     if (removed < targetRemovals * 0.8 && attempts > maxAttempts / 2) {
-      config.minCluesPerBlock = Math.max(0, config.minCluesPerBlock - 1);
+      constraints.minCluesPerBlock = Math.max(
+        0,
+        constraints.minCluesPerBlock - 1
+      );
     }
   }
 
@@ -316,13 +289,16 @@ const shuffleArray = <T>(array: T[]): T[] => {
   return shuffled;
 };
 
+// Difficulties that require immediate fallback to avoid performance issues
+const FALLBACK_DIFFICULTIES: Difficulty[] = ['expert', 'master', 'grandmaster'];
+
 // Helper function to create a puzzle using the new generation system
 const createPuzzle = (
   difficulty: Difficulty
 ): { puzzle: number[][]; solution: number[][] } => {
   try {
-    // For extreme and difficult, use fallback more aggressively
-    if (difficulty === 'extreme' || difficulty === 'difficult') {
+    // For extreme, difficult, and nightmare, use fallback more aggressively
+    if (FALLBACK_DIFFICULTIES.includes(difficulty)) {
       console.log(`🎯 Using optimized fallback for ${difficulty} difficulty`);
       const fallbackPuzzle = createFallbackPuzzle(difficulty);
       return {
@@ -332,7 +308,8 @@ const createPuzzle = (
     }
 
     // For easier difficulties, try generation with timeout
-    const timeoutMs = difficulty === 'hard' ? 3000 : 2000;
+    const timeoutMs =
+      DifficultyConfigManager.getPuzzleGenerationTimeout(difficulty);
     const startTime = Date.now();
     let generatedPuzzle;
 
@@ -414,11 +391,7 @@ export const useGameStore = create<GameStore>()(
             // Set a hard timeout for extreme puzzles
             let timeoutReached = false;
             const timeoutMs =
-              difficulty === 'extreme'
-                ? 5000
-                : difficulty === 'difficult'
-                  ? 4000
-                  : 3000;
+              DifficultyConfigManager.getPuzzleGenerationTimeout(difficulty);
 
             const timeoutId = setTimeout(() => {
               timeoutReached = true;
@@ -464,7 +437,9 @@ export const useGameStore = create<GameStore>()(
               isPaused: false,
               isCompleted: false,
               hintsUsed: 0,
-              maxHints: 3,
+              maxHints:
+                DifficultyConfigManager.getConfig(difficulty).gameSettings
+                  .maxHints,
               attempts: 0,
               maxAttempts: 5,
               moves: [],
@@ -801,13 +776,35 @@ export const useGameStore = create<GameStore>()(
           return null;
         }
 
-        // TODO: Implement hint generation logic
-        // For now, return a simple hint
-        const hint: Hint = {
-          type: 'technique',
-          message: 'Look for single candidates in the highlighted row',
-          technique: 'single_candidate',
-        };
+        // Generate intelligent hint based on current board state
+        let hint: Hint | null;
+
+        // If a cell is selected, provide contextual hint
+        if (state.selectedCell) {
+          hint = SudokuHintGenerator.generateContextualHint(
+            state.currentGame.board,
+            state.selectedCell.row,
+            state.selectedCell.col,
+            state.currentGame.solution
+          );
+        } else {
+          // Generate general hint for the whole board
+          hint = SudokuHintGenerator.generateHint(
+            state.currentGame.board,
+            state.currentGame.difficulty,
+            state.currentGame.solution
+          );
+        }
+
+        // Fallback if no hint could be generated
+        if (!hint) {
+          hint = {
+            type: 'technique',
+            message:
+              'Try looking for numbers that can only go in one place, or cells that can only contain one number.',
+            technique: 'general_strategy',
+          };
+        }
 
         // Update hints used
         const updatedGame: GameState = {

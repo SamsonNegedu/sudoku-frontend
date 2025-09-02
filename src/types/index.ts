@@ -1,5 +1,11 @@
 // Game difficulty levels
-export type Difficulty = 'easy' | 'medium' | 'hard' | 'difficult' | 'extreme';
+export type Difficulty =
+  | 'beginner'
+  | 'intermediate'
+  | 'advanced'
+  | 'expert'
+  | 'master'
+  | 'grandmaster';
 
 // Cell state and properties
 export interface SudokuCell {

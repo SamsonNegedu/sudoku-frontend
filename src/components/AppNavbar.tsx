@@ -9,6 +9,7 @@ import {
     ChevronDownIcon
 } from '@radix-ui/react-icons';
 import type { Difficulty } from '../types';
+import { DifficultyConfigManager } from '../config/difficulty';
 
 interface AppNavbarProps {
     onNewGame: (difficulty: Difficulty) => void;
@@ -45,13 +46,11 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     hintsUsed,
     maxHints,
 }) => {
-    const difficultyLevels = [
-        { level: 'easy' as Difficulty, label: 'Easy', description: 'Perfect for beginners' },
-        { level: 'medium' as Difficulty, label: 'Medium', description: 'A nice challenge' },
-        { level: 'hard' as Difficulty, label: 'Hard', description: 'For experienced players' },
-        { level: 'difficult' as Difficulty, label: 'Difficult', description: 'Test your skills' },
-        { level: 'extreme' as Difficulty, label: 'Extreme', description: 'Only for masters' },
-    ];
+    const difficultyLevels = DifficultyConfigManager.getDifficultyOptions().map(option => ({
+        level: option.value,
+        label: option.label,
+        description: option.description,
+    }));
 
     return (
         <nav className="bg-white border-b border-neutral-200 shadow-sm sticky top-0 z-50">
@@ -114,7 +113,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                         onClick={onPause}
                                         size="2"
                                         variant="solid"
-                                        color="amber"
+                                        color="blue"
                                         className="hidden sm:inline-flex"
                                     >
                                         <PauseIcon className="mr-2" />
@@ -127,7 +126,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                         <Button
                                             size="2"
                                             variant="soft"
-                                            color="indigo"
+                                            color="blue"
                                             className="hidden sm:inline-flex"
                                             disabled={isGeneratingPuzzle}
                                         >

@@ -20,6 +20,7 @@ interface NumberPadProps {
     hintsUsed?: number;
     maxHints?: number;
     completedNumbers?: number[]; // Array of numbers that have been completed (all 9 placed)
+    selectedCell?: { row: number; col: number } | null;
 }
 
 export const NumberPad: React.FC<NumberPadProps> = ({
@@ -34,19 +35,25 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     hintsUsed = 0,
     maxHints = 3,
     completedNumbers = [],
+    selectedCell,
 }) => {
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     return (
         <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-neutral-200">
             {/* Mode indicator */}
-            <div className="flex justify-center mb-3">
+            <div className="flex flex-col items-center mb-3 space-y-1">
                 <div className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${inputMode === 'pen'
-                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-200'
-                    : 'bg-amber-100 text-amber-700 border border-amber-200'
+                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                    : 'bg-green-100 text-green-700 border border-green-200'
                     }`}>
                     {inputMode === 'pen' ? '🖊️ Writing Mode' : '✏️ Notes Mode'}
                 </div>
+                {!selectedCell && (
+                    <div className="text-xs text-neutral-500 text-center">
+                        Click any number to auto-select a cell
+                    </div>
+                )}
             </div>
 
             {/* Responsive layout: mobile stacked, desktop all in one compact row */}
@@ -59,14 +66,13 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                         const isDisabled = disabled || isCompleted;
 
                         return (
-                            <div className="relative">
+                            <div key={number} className="relative">
                                 <Button
-                                    key={number}
                                     onClick={() => onNumberClick(number)}
                                     disabled={isDisabled}
                                     size="2"
                                     variant={isCompleted ? "soft" : "solid"}
-                                    color={isCompleted ? "gray" : (inputMode === 'pen' ? 'indigo' : 'amber')}
+                                    color={isCompleted ? "gray" : "blue"}
                                     className={`number-button-horizontal w-8 h-8 sm:w-14 sm:h-14 font-bold text-sm sm:text-lg transition-all duration-200 ${!isCompleted && !disabled
                                         ? 'hover:scale-105 active:scale-95'
                                         : ''
@@ -81,7 +87,9 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                                     title={
                                         isCompleted
                                             ? `Number ${number} is completed (9/9 placed)`
-                                            : `${inputMode === 'pen' ? 'Write' : 'Note'} ${number}`
+                                            : selectedCell
+                                                ? `${inputMode === 'pen' ? 'Write' : 'Note'} ${number} in row ${selectedCell.row + 1}, column ${selectedCell.col + 1}`
+                                                : `Click to ${inputMode === 'pen' ? 'place' : 'note'} ${number} (will auto-select first empty cell)`
                                     }
                                 >
                                     {number}
@@ -102,11 +110,12 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                         onClick={onUndo}
                         disabled={!canUndo}
                         size="2"
-                        variant="soft"
-                        color="blue"
-                        className="control-button-horizontal w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center text-sm"
+                        variant={!canUndo ? "soft" : "solid"}
+                        color={!canUndo ? "gray" : "blue"}
+                        className={`control-button-horizontal w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center text-sm ${!canUndo ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
                         aria-label="Undo last move"
-                        title="Undo (Ctrl+Z)"
+                        title={!canUndo ? "No moves to undo" : "Undo (Ctrl+Z)"}
                     >
                         <ResetIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
@@ -116,7 +125,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                         disabled={disabled}
                         size="2"
                         variant="solid"
-                        color={inputMode === 'pen' ? 'indigo' : 'amber'}
+                        color="blue"
                         className="control-button-horizontal w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center text-sm"
                         aria-label={`Currently in ${inputMode} mode. Click to switch to ${inputMode === 'pen' ? 'notes' : 'writing'} mode`}
                         title={`Current: ${inputMode === 'pen' ? 'Writing' : 'Notes'} Mode`}
@@ -131,8 +140,8 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                         onClick={onClear}
                         disabled={disabled}
                         size="2"
-                        variant="soft"
-                        color="gray"
+                        variant="solid"
+                        color="red"
                         className="control-button-horizontal w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center text-sm"
                         aria-label="Clear cell"
                         title="Clear cell"
@@ -144,11 +153,12 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                         onClick={onHint}
                         disabled={hintsUsed >= maxHints}
                         size="2"
-                        variant="soft"
-                        color="orange"
-                        className="control-button-horizontal w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center text-sm"
-                        aria-label={`Get hint (${hintsUsed}/${maxHints} used)`}
-                        title={`Hint (${hintsUsed}/${maxHints} used)`}
+                        variant={hintsUsed >= maxHints ? "soft" : "solid"}
+                        color={hintsUsed >= maxHints ? "gray" : "blue"}
+                        className={`control-button-horizontal w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center text-sm ${hintsUsed >= maxHints ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                        aria-label={`Get hint (${maxHints - hintsUsed} remaining)`}
+                        title={hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`}
                     >
                         <QuestionMarkCircledIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
