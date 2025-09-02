@@ -451,8 +451,6 @@ export const GameBoard: React.FC = () => {
                             difficulty={currentGame.difficulty}
                             hintsUsed={currentGame.hintsUsed}
                             maxHints={currentGame.maxHints}
-                            movesCount={currentGame.moves.length}
-                            inputMode={inputMode}
                             mistakes={currentGame.mistakes}
                             maxMistakes={currentGame.maxMistakes}
                         />

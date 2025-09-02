@@ -654,7 +654,7 @@ export const useGameStore = create<GameStore>()(
           previousNotes,
         };
 
-        // Create updated board with proper deep copy
+        // Create updated board with proper deep copy and auto-remove notes
         const updatedBoard = board.map((boardRow, r) =>
           boardRow.map((boardCell, c) => {
             if (r === row && c === col) {
@@ -666,6 +666,25 @@ export const useGameStore = create<GameStore>()(
                 isIncorrect,
               };
             }
+
+            // Auto-remove notes when placing a number
+            if (value !== null && boardCell.notes.includes(value)) {
+              // Check if this cell is in same row, column, or 3x3 block
+              const isSameRow = r === row;
+              const isSameCol = c === col;
+              const isSameBlock =
+                Math.floor(r / 3) === Math.floor(row / 3) &&
+                Math.floor(c / 3) === Math.floor(col / 3);
+
+              if (isSameRow || isSameCol || isSameBlock) {
+                // Remove the placed number from notes
+                return {
+                  ...boardCell,
+                  notes: boardCell.notes.filter(note => note !== value),
+                };
+              }
+            }
+
             return boardCell;
           })
         );
@@ -688,6 +707,7 @@ export const useGameStore = create<GameStore>()(
           const isCompleted = SudokuValidator.isPuzzleComplete(updatedBoard);
           if (isCompleted) {
             updatedGame.isCompleted = true;
+            updatedGame.currentTime = new Date(); // Set completion time
             completionTriggered = true;
           }
         }

@@ -106,7 +106,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
             )}
 
             {/* Main content */}
-            <div className="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4 text-center">
+            <div className="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4 text-center font-sans">
 
                 {/* Celebration stage */}
                 {stage === 'celebration' && (
@@ -115,7 +115,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
                         <h1 className="text-3xl font-bold text-gray-800 mb-2">
                             Puzzle Solved!
                         </h1>
-                        <div className={`text-xl font-semibold mb-4 ${performance.color}`}>
+                        <div className={`text-xl font-semibold mb-4  ${performance.color}`}>
                             {performance.emoji} {performance.rating}
                         </div>
                     </div>
@@ -133,7 +133,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
                         <div className="space-y-4 mb-6">
                             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                                 <span className="font-medium text-gray-600">Difficulty</span>
-                                <span className={`font-bold capitalize ${getDifficultyColor(difficulty)}`}>
+                                <span className={`font-bold capitalize  ${getDifficultyColor(difficulty)}`}>
                                     {difficulty}
                                 </span>
                             </div>
@@ -147,14 +147,14 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
 
                             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                                 <span className="font-medium text-gray-600">Mistakes</span>
-                                <span className={`font-bold ${mistakes === 0 ? 'text-green-600' : mistakes <= 3 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                <span className={`font-bold  ${mistakes === 0 ? 'text-green-600' : mistakes <= 3 ? 'text-yellow-600' : 'text-red-600'}`}>
                                     {mistakes}
                                 </span>
                             </div>
 
                             <div className="flex justify-between items-center p-3 bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-lg border border-yellow-300">
                                 <span className="font-bold text-yellow-800">Rating</span>
-                                <span className={`font-bold ${performance.color}`}>
+                                <span className={`font-bold  ${performance.color}`}>
                                     {performance.rating}
                                 </span>
                             </div>

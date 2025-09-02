@@ -53,17 +53,18 @@ export const NumberPad: React.FC<NumberPadProps> = ({
             </div>
 
             {/* Two-row layout: Controls on top, Numbers on bottom */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
 
-                {/* Top Row: Control buttons */}
-                <div className="flex justify-center gap-2">
+                {/* Top Row: Control buttons - reordered for better UX */}
+                <div className="flex justify-center gap-3 sm:gap-4">
+
                     <Button
                         onClick={onUndo}
                         disabled={!canUndo}
                         size="2"
-                        variant={!canUndo ? "soft" : "solid"}
+                        variant="outline"
                         color={!canUndo ? "gray" : "blue"}
-                        className={`w-9 h-9 sm:w-14 sm:h-14 flex items-center justify-center text-sm ${!canUndo ? 'opacity-50 cursor-not-allowed' : ''
+                        className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white hover:bg-blue-50 ${!canUndo ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-500 text-blue-600'
                             }`}
                         aria-label="Undo last move"
                         title={!canUndo ? "No moves to undo" : "Undo (Ctrl+Z)"}
@@ -72,48 +73,64 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                     </Button>
 
                     <Button
-                        onClick={onToggleNote}
-                        disabled={disabled}
-                        size="2"
-                        variant="solid"
-                        color="blue"
-                        className="w-9 h-9 sm:w-14 sm:h-14 flex items-center justify-center text-sm"
-                        aria-label={`Currently in ${inputMode} mode. Click to switch to ${inputMode === 'pen' ? 'notes' : 'writing'} mode`}
-                        title={`Current: ${inputMode === 'pen' ? 'Writing' : 'Notes'} Mode`}
-                    >
-                        {inputMode === 'pen' ? <Pencil1Icon className="w-4 h-4 sm:w-5 sm:h-5" /> : <Pencil2Icon className="w-4 h-4 sm:w-5 sm:h-5" />}
-                    </Button>
-
-                    <Button
                         onClick={onClear}
                         disabled={disabled}
                         size="2"
-                        variant="solid"
+                        variant="outline"
                         color="red"
-                        className="w-9 h-9 sm:w-14 sm:h-14 flex items-center justify-center text-sm"
+                        className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white hover:bg-red-50 ${disabled ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-red-500 text-red-600'
+                            }`}
                         aria-label="Clear cell"
                         title="Clear cell"
                     >
                         <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
 
-                    <Button
-                        onClick={onHint}
-                        disabled={hintsUsed >= maxHints}
-                        size="2"
-                        variant={hintsUsed >= maxHints ? "soft" : "solid"}
-                        color={hintsUsed >= maxHints ? "gray" : "blue"}
-                        className={`w-9 h-9 sm:w-14 sm:h-14 flex items-center justify-center text-sm ${hintsUsed >= maxHints ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}
-                        aria-label={`Get hint (${maxHints - hintsUsed} remaining)`}
-                        title={hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`}
-                    >
-                        <QuestionMarkCircledIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </Button>
+                    <div className="relative">
+                        <Button
+                            onClick={onToggleNote}
+                            disabled={disabled}
+                            size="2"
+                            variant="outline"
+                            color={inputMode === 'pencil' ? "green" : "blue"}
+                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${disabled ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : inputMode === 'pencil' ? 'border-green-500 text-green-600 hover:bg-green-50' : 'border-blue-500 text-blue-600 hover:bg-blue-50'
+                                }`}
+                            aria-label={`Currently in ${inputMode} mode. Click to switch to ${inputMode === 'pen' ? 'notes' : 'writing'} mode`}
+                            title={`Current: ${inputMode === 'pen' ? 'Writing' : 'Notes'} Mode`}
+                        >
+                            {inputMode === 'pen' ? <Pencil1Icon className="w-4 h-4 sm:w-5 sm:h-5" /> : <Pencil2Icon className="w-4 h-4 sm:w-5 sm:h-5" />}
+                        </Button>
+                        {/* Notes mode status overlay - top right corner */}
+                        <div className={`absolute -top-1 -right-1 text-[8px] font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white ${inputMode === 'pencil' ? 'bg-green-500' : 'bg-blue-500'} text-white`}>
+                            {inputMode === 'pencil' ? 'ON' : 'OFF'}
+                        </div>
+                    </div>
+
+                    <div className="relative">
+                        <Button
+                            onClick={onHint}
+                            disabled={hintsUsed >= maxHints}
+                            size="2"
+                            variant="outline"
+                            color={hintsUsed >= maxHints ? "gray" : "blue"}
+                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${hintsUsed >= maxHints ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-500 text-blue-600 hover:bg-blue-50'
+                                }`}
+                            aria-label={`Get hint (${maxHints - hintsUsed} remaining)`}
+                            title={hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`}
+                        >
+                            <QuestionMarkCircledIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </Button>
+                        {/* Remaining hints count overlay - top right corner */}
+                        {hintsUsed < maxHints && (
+                            <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white">
+                                {maxHints - hintsUsed}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Bottom Row: Number buttons */}
-                <div className="flex justify-center gap-1 sm:gap-3 flex-wrap sm:flex-nowrap">
+                <div className="flex justify-center gap-3 sm:gap-4 sm:flex-nowrap">
                     {numbers.map((number) => {
                         const isCompleted = completedNumbers.includes(number);
                         const isDisabled = disabled || isCompleted;
@@ -126,7 +143,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                                     size="2"
                                     variant={isCompleted ? "soft" : "solid"}
                                     color={isCompleted ? "gray" : "blue"}
-                                    className={`w-8 h-8 sm:w-16 sm:h-16 font-bold text-sm sm:text-xl transition-all duration-200 ${!isCompleted && !disabled
+                                    className={`w-8 h-8 sm:w-16 sm:h-16 font-bold text-base sm:text-xl transition-all duration-200  ${!isCompleted && !disabled
                                         ? 'hover:scale-105 active:scale-95'
                                         : ''
                                         } flex items-center justify-center ${inputMode === 'pencil' && !isCompleted ? 'italic' : ''

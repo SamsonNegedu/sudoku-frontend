@@ -6,8 +6,6 @@ interface GameSidebarProps {
   difficulty: Difficulty;
   hintsUsed: number;
   maxHints: number;
-  movesCount: number;
-  inputMode: 'pen' | 'pencil';
   mistakes: number;
   maxMistakes: number;
 }
@@ -17,8 +15,6 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
   difficulty,
   hintsUsed,
   maxHints,
-  movesCount,
-  inputMode,
   mistakes,
   maxMistakes,
 }) => {
@@ -39,20 +35,10 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
           </div>
 
           <div className="flex justify-between items-center py-2 border-b border-neutral-100">
-            <span className="text-neutral-600">Moves</span>
-            <span className="font-medium text-neutral-800">{movesCount}</span>
-          </div>
-
-          <div className="flex justify-between items-center py-2 border-b border-neutral-100">
             <span className="text-neutral-600">Mistakes</span>
             <span className={`font-medium ${mistakes > 0 ? 'text-red-600' : 'text-neutral-800'}`}>
               {mistakes}/{maxMistakes}
             </span>
-          </div>
-
-          <div className="flex justify-between items-center py-2 border-b border-neutral-100">
-            <span className="text-neutral-600">Input Mode</span>
-            <span className="font-medium capitalize text-neutral-800">{inputMode}</span>
           </div>
 
           {selectedCell && (

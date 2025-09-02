@@ -98,7 +98,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
 
                     {/* Right - Navigation Actions */}
                     <div className="flex items-center space-x-3">
-                        {(isPlaying || isPaused) && (
+                        {(isPlaying || isPaused) && !isCompleted && (
                             <>
                                 {isPaused ? (
                                     <>
@@ -151,7 +151,11 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                         </Button>
                                     </>
                                 )}
+                            </>
+                        )}
 
+                        {(isPlaying || isPaused || isCompleted) && (
+                            <>
                                 <DropdownMenu.Root>
                                     <DropdownMenu.Trigger disabled={isGeneratingPuzzle}>
                                         <Button
