@@ -24,6 +24,7 @@ interface GameStore {
 
   // Actions
   startNewGame: (difficulty: Difficulty) => void;
+  restartCurrentGame: () => void;
   forceStopGeneration: () => void;
   hideCompletionAnimation: () => void;
   hideMistakesModal: () => void;
@@ -466,6 +467,52 @@ export const useGameStore = create<GameStore>()(
             set({ isGeneratingPuzzle: false });
           }
         }, 200); // Longer delay to ensure UI updates and spinner shows
+      },
+
+      restartCurrentGame: () => {
+        const state = get();
+        if (!state.currentGame) return;
+
+        // Create a fresh board from the original solution
+        const board = createInitialBoard();
+
+        // Populate the board with the fixed cells only (from the original puzzle)
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            const originalCell = state.currentGame.board[row][col];
+            if (originalCell.isFixed) {
+              board[row][col] = {
+                ...board[row][col],
+                value: originalCell.value,
+                isFixed: true,
+              };
+            }
+          }
+        }
+
+        // Reset the game state while keeping the same puzzle/solution
+        const restartedGame: GameState = {
+          ...state.currentGame,
+          board,
+          startTime: new Date(),
+          currentTime: new Date(),
+          isPaused: false,
+          isCompleted: false,
+          hintsUsed: 0,
+          moves: [],
+          pauseStartTime: undefined,
+          totalPausedTime: 0,
+          pausedElapsedTime: undefined,
+          mistakes: 0,
+          mistakeLimitDisabled: false, // Reset mistake limit
+        };
+
+        set({
+          currentGame: restartedGame,
+          isPlaying: true,
+          selectedCell: null,
+          showMistakesModal: false,
+        });
       },
 
       forceStopGeneration: () => {

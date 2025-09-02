@@ -16,6 +16,7 @@ function App() {
     showCompletionAnimation,
     showMistakesModal,
     startNewGame,
+    restartCurrentGame,
     forceStopGeneration,
     hideCompletionAnimation,
     hideMistakesModal,
@@ -50,11 +51,8 @@ function App() {
   };
 
   const handleRestartFromMistakes = () => {
-    // Restart with the same difficulty and hide the modal
-    if (currentGame?.difficulty) {
-      handleNewGame(currentGame.difficulty);
-    }
-    hideMistakesModal();
+    // Restart the current puzzle (reset to initial state)
+    restartCurrentGame();
   };
 
   const handleContinueWithMistakes = () => {

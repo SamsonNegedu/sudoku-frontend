@@ -9,4 +9,26 @@ export default defineConfig({
     port: 5173,
     allowedHosts: true, // Allow all hosts (including localtunnel domains)
   },
+  build: {
+    // Production optimizations
+    minify: 'terser',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/themes', '@radix-ui/react-icons'],
+          store: ['zustand'],
+        },
+      },
+    },
+    // Generate source maps for debugging
+    sourcemap: true,
+    // Increase chunk size warning limit for better performance
+    chunkSizeWarningLimit: 1000,
+  },
+  // Define global constants for production
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
 });
