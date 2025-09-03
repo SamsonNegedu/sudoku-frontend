@@ -1,14 +1,83 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { storageManager } from '../utils/storageManager';
+import { analyticsLog } from '../config/systemConfig';
 import type {
   GameAnalytics,
   UserAnalytics,
   DetailedGameMove,
   AnalyticsInsight,
+  OverallStats,
 } from '../types/analytics';
 import type { Difficulty } from '../types';
 import type { GameMove } from '../types';
+
+/**
+ * Calculate overall statistics from the games played array
+ */
+const calculateOverallStats = (gamesPlayed: GameAnalytics[]): OverallStats => {
+  if (gamesPlayed.length === 0) {
+    return {
+      totalGames: 0,
+      completedGames: 0,
+      averageAccuracy: 0,
+      averageTimePerGame: 0,
+      favoriteOpeningMoves: [],
+      strongTechniques: [],
+      weakTechniques: [],
+      improvementTrend: 0,
+    };
+  }
+
+  const totalGames = gamesPlayed.length;
+  const completedGames = gamesPlayed.filter(game => game.completed).length;
+
+  // Calculate average accuracy
+  const totalAccuracy = gamesPlayed.reduce(
+    (sum, game) => sum + (game.accuracy || 0),
+    0
+  );
+  const averageAccuracy = totalAccuracy / totalGames;
+
+  // Calculate average time per game (only for completed games to avoid skewing with incomplete games)
+  const completedGamesWithTime = gamesPlayed.filter(
+    game => game.completed && game.duration !== undefined
+  );
+  const averageTimePerGame =
+    completedGamesWithTime.length > 0
+      ? completedGamesWithTime.reduce(
+          (sum, game) => sum + (game.duration || 0),
+          0
+        ) / completedGamesWithTime.length
+      : 0;
+
+  // Calculate improvement trend (last 5 games vs previous 5 games accuracy)
+  let improvementTrend = 0;
+  if (gamesPlayed.length >= 6) {
+    const recentGames = gamesPlayed.slice(-5);
+    const previousGames = gamesPlayed.slice(-10, -5);
+
+    const recentAvg =
+      recentGames.reduce((sum, game) => sum + (game.accuracy || 0), 0) /
+      recentGames.length;
+    const previousAvg =
+      previousGames.reduce((sum, game) => sum + (game.accuracy || 0), 0) /
+      previousGames.length;
+
+    improvementTrend = recentAvg - previousAvg;
+  }
+
+  return {
+    totalGames,
+    completedGames,
+    averageAccuracy,
+    averageTimePerGame,
+    favoriteOpeningMoves: [], // TODO: Implement if needed
+    strongTechniques: [], // TODO: Implement if needed
+    weakTechniques: [], // TODO: Implement if needed
+    improvementTrend,
+  };
+};
 
 interface AnalyticsStore {
   // State
@@ -22,10 +91,16 @@ interface AnalyticsStore {
   initializeUser: () => void;
   startGameRecording: (gameId: string, difficulty: Difficulty) => void;
   recordMove: (move: GameMove, gameContext: any) => void;
-  recordCellSelection: (row: number, col: number) => void;
+  recordCellSelection: (
+    cell: { row: number; col: number },
+    value: number,
+    isCorrect: boolean,
+    hintUsed: boolean
+  ) => void;
   recordHint: (hintType: string) => void;
   recordGameCompletion: (completed: boolean) => void;
   stopGameRecording: () => void;
+  recalculateOverallStats: () => void;
 
   // Analytics
   getGameInsights: (gameId?: string) => AnalyticsInsight[];
@@ -55,14 +130,13 @@ const detectSolvingTechnique = (move: GameMove): string => {
 
 const getCellKey = (row: number, col: number): string => `${row},${col}`;
 
-// Custom storage interface that uses our StorageManager
+// Custom storage interface that uses our StorageManager for IndexedDB
 const analyticsStorage = {
   getItem: async (name: string): Promise<string | null> => {
     try {
       const data = await storageManager.loadAnalytics(name);
       return data ? JSON.stringify(data) : null;
     } catch (error) {
-      console.error('Failed to get analytics data:', error);
       return null;
     }
   },
@@ -101,16 +175,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
             createdAt: new Date(),
             lastUpdated: new Date(),
             gamesPlayed: [],
-            overallStats: {
-              totalGames: 0,
-              completedGames: 0,
-              averageAccuracy: 0,
-              averageTimePerGame: 0,
-              favoriteOpeningMoves: [],
-              strongTechniques: [],
-              weakTechniques: [],
-              improvementTrend: 0,
-            },
+            overallStats: calculateOverallStats([]),
             difficultyProgress: {
               beginner: {
                 gamesPlayed: 0,
@@ -174,6 +239,19 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         }
       },
 
+      recalculateOverallStats: () => {
+        const state = get();
+        if (state.userAnalytics) {
+          const updatedAnalytics = {
+            ...state.userAnalytics,
+            overallStats: calculateOverallStats(
+              state.userAnalytics.gamesPlayed
+            ),
+          };
+          set({ userAnalytics: updatedAnalytics });
+        }
+      },
+
       startGameRecording: (gameId: string, difficulty: Difficulty) => {
         const state = get();
 
@@ -186,9 +264,33 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           return; // Don't start recording for already completed games
         }
 
-        // Also check if we're already recording this game
+        // If we already have a different game recording, mark it as abandoned
+        if (
+          state.currentGameAnalytics &&
+          state.currentGameAnalytics.gameId !== gameId &&
+          state.isRecording
+        ) {
+          console.log(
+            '🔄 Abandoning previous game:',
+            state.currentGameAnalytics.gameId
+          );
+          get().recordGameCompletion(false); // Mark as incomplete/abandoned
+        }
+
+        // Check if we're already recording this game
         if (state.currentGameAnalytics?.gameId === gameId) {
-          return; // Already recording this game
+          // If we have a game analytics object but isRecording is false, it's a broken state
+          if (!state.isRecording) {
+            // Fix the broken state by setting isRecording to true
+            set({
+              isRecording: true,
+              lastMoveTime: Date.now(),
+              cellHesitationTracker: new Map(),
+            });
+            return;
+          } else {
+            return; // Already recording this game properly
+          }
         }
 
         // Ensure we have user analytics without causing recursive calls
@@ -200,16 +302,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
             createdAt: new Date(),
             lastUpdated: new Date(),
             gamesPlayed: [],
-            overallStats: {
-              totalGames: 0,
-              completedGames: 0,
-              averageAccuracy: 0,
-              averageTimePerGame: 0,
-              favoriteOpeningMoves: [],
-              strongTechniques: [],
-              weakTechniques: [],
-              improvementTrend: 0,
-            },
+            overallStats: calculateOverallStats([]),
             difficultyProgress: {
               beginner: {
                 gamesPlayed: 0,
@@ -308,10 +401,14 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
       recordMove: (move: GameMove, gameContext: any) => {
         const state = get();
 
-        if (!state.isRecording || !state.currentGameAnalytics) return;
+        if (!state.isRecording || !state.currentGameAnalytics) {
+          return;
+        }
 
         const now = Date.now();
-        const gameStart = state.currentGameAnalytics.startTime.getTime();
+        const gameStart = new Date(
+          state.currentGameAnalytics.startTime
+        ).getTime();
         const timeFromStart = now - gameStart;
         const timeFromLastMove = now - state.lastMoveTime;
 
@@ -370,18 +467,88 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         });
       },
 
-      recordCellSelection: (row: number, col: number) => {
+      recordCellSelection: (
+        cell: { row: number; col: number },
+        value: number,
+        isCorrect: boolean,
+        hintUsed: boolean
+      ) => {
         const state = get();
-        if (!state.isRecording) return;
 
-        const cellKey = getCellKey(row, col);
+        if (!state.isRecording || !state.currentGameAnalytics) {
+          return;
+        }
+
         const now = Date.now();
+        const gameStart = new Date(
+          state.currentGameAnalytics.startTime
+        ).getTime();
+        const timeFromStart = now - gameStart;
+        const timeFromLastMove = now - state.lastMoveTime;
 
-        // Start tracking hesitation time for this cell
+        // Calculate hesitation time for this cell
+        const cellKey = getCellKey(cell.row, cell.col);
+        const hesitationStart = state.cellHesitationTracker.get(cellKey) || now;
+        const hesitationTime = now - hesitationStart;
+
+        const move: GameMove = {
+          row: cell.row,
+          col: cell.col,
+          value: value,
+          timestamp: new Date(),
+          isNote: false,
+          previousValue: 0,
+          previousNotes: [],
+        };
+
+        const detailedMove: DetailedGameMove = {
+          ...move,
+          moveNumber: state.currentGameAnalytics.moves.length + 1,
+          timeFromStart,
+          timeFromLastMove,
+          isCorrect,
+          technique: detectSolvingTechnique(move),
+          hesitationTime,
+          undoChainLength: 0,
+          emptyCellsRemaining: 0,
+          difficultyAtMove: 1,
+          mistakesSoFar: 0,
+          hintsSoFar: hintUsed ? 1 : 0,
+        };
+
+        // Update current game analytics
+        const updatedAnalytics: GameAnalytics = {
+          ...state.currentGameAnalytics,
+          moves: [...state.currentGameAnalytics.moves, detailedMove],
+        };
+
+        // Update opening moves (first 10)
+        if (detailedMove.moveNumber <= 10) {
+          updatedAnalytics.openingMoves = [
+            ...updatedAnalytics.openingMoves,
+            detailedMove,
+          ];
+        }
+
+        // Update technique tracking
+        if (detailedMove.technique) {
+          updatedAnalytics.techniquesUsed = {
+            ...updatedAnalytics.techniquesUsed,
+            [detailedMove.technique]:
+              (updatedAnalytics.techniquesUsed[detailedMove.technique] || 0) +
+              1,
+          };
+        }
+
+        // Clear hesitation tracker for this cell
         const newHesitationTracker = new Map(state.cellHesitationTracker);
-        newHesitationTracker.set(cellKey, now);
+        newHesitationTracker.delete(cellKey);
 
-        set({ cellHesitationTracker: newHesitationTracker });
+        set({
+          currentGameAnalytics: updatedAnalytics,
+          lastMoveTime: now,
+          cellHesitationTracker: newHesitationTracker,
+        });
       },
 
       recordHint: (hintType: string) => {
@@ -392,7 +559,8 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         const hintUsage = {
           moveNumber: state.currentGameAnalytics.moves.length,
           timeWhenUsed:
-            Date.now() - state.currentGameAnalytics.startTime.getTime(),
+            Date.now() -
+            new Date(state.currentGameAnalytics.startTime).getTime(),
           type: hintType,
         };
 
@@ -409,14 +577,20 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
 
       recordGameCompletion: (completed: boolean) => {
         const state = get();
-        if (!state.isRecording || !state.currentGameAnalytics) return;
+
+        if (!state.isRecording || !state.currentGameAnalytics) {
+          return;
+        }
 
         // Prevent multiple completion recordings
-        if (state.currentGameAnalytics.completed) return;
+        if (state.currentGameAnalytics.completed) {
+          return;
+        }
 
         const endTime = new Date();
         const duration =
-          endTime.getTime() - state.currentGameAnalytics.startTime.getTime();
+          endTime.getTime() -
+          new Date(state.currentGameAnalytics.startTime).getTime();
 
         // Calculate final stats
         const moves = state.currentGameAnalytics.moves;
@@ -477,6 +651,11 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
             finalAccuracy) /
           difficultyStats.gamesPlayed;
 
+        // Update overall stats
+        updatedUserAnalytics.overallStats = calculateOverallStats(
+          updatedUserAnalytics.gamesPlayed
+        );
+
         // Use setTimeout to break the synchronous update cycle
         setTimeout(() => {
           set({
@@ -489,11 +668,31 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
       },
 
       stopGameRecording: () => {
-        set({
-          currentGameAnalytics: null,
-          isRecording: false,
-          cellHesitationTracker: new Map(),
+        const state = get();
+        console.log('🛑 stopGameRecording called:', {
+          hasCurrentGameAnalytics: !!state.currentGameAnalytics,
+          isRecording: state.isRecording,
+          gameId: state.currentGameAnalytics?.gameId,
         });
+
+        // If we're stopping a game that was being recorded, mark it as abandoned
+        if (state.currentGameAnalytics && state.isRecording) {
+          console.log(
+            '🛑 Game stopped/abandoned - calling recordGameCompletion(false):',
+            state.currentGameAnalytics.gameId
+          );
+          get().recordGameCompletion(false); // Mark as incomplete/abandoned
+        } else {
+          console.log(
+            '🛑 Just clearing state - no active recording to abandon'
+          );
+          // Just clear the state if no active recording
+          set({
+            currentGameAnalytics: null,
+            isRecording: false,
+            cellHesitationTracker: new Map(),
+          });
+        }
       },
 
       getGameInsights: (gameId?: string): AnalyticsInsight[] => {
@@ -639,12 +838,19 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
     }),
     {
       name: 'sudoku-analytics-storage',
-      // Temporarily disable custom storage to debug
-      // storage: createJSONStorage(() => analyticsStorage),
+      storage: createJSONStorage(() => analyticsStorage),
       partialize: state => ({
         userAnalytics: state.userAnalytics,
         currentGameAnalytics: state.currentGameAnalytics,
       }),
+      onRehydrateStorage: () => state => {
+        // Recalculate overall stats when data is loaded from storage
+        if (state?.userAnalytics?.gamesPlayed) {
+          state.userAnalytics.overallStats = calculateOverallStats(
+            state.userAnalytics.gamesPlayed
+          );
+        }
+      },
     }
   )
 );

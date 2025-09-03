@@ -433,8 +433,8 @@ export const GameBoard: React.FC = () => {
             />
 
             {/* Main Game Area */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 sm:pb-6">
-                <div className="flex flex-col gap-2 sm:gap-8">
+            <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 pt-4 sm:pt-6 lg:pt-8 pb-4 sm:pb-6">
+                <div className="flex flex-col gap-2 sm:gap-6 lg:gap-8">
                     {/* Ultra-Compact Mobile Timer */}
                     {currentGame && (
                         <div className="lg:hidden -mx-4 sm:mx-0">
@@ -447,6 +447,7 @@ export const GameBoard: React.FC = () => {
                                         pauseStartTime={currentGame.pauseStartTime}
                                         totalPausedTime={currentGame.totalPausedTime}
                                         pausedElapsedTime={currentGame.pausedElapsedTime}
+                                        currentTime={currentGame.currentTime}
                                     />
                                     <div className="flex items-center gap-3">
                                         <span className="font-medium capitalize">{currentGame.difficulty}</span>
@@ -461,16 +462,18 @@ export const GameBoard: React.FC = () => {
                     )}
 
                     {/* Grid and Sidebar Container - Same Level */}
-                    <div className="flex flex-col lg:flex-row gap-4 sm:gap-8">
+                    <div className="flex flex-col lg:flex-row gap-3 sm:gap-6 lg:gap-8">
                         {/* Sudoku Grid + NumberPad Column */}
-                        <div className="flex-1 flex flex-col items-center gap-2 sm:gap-4">
-                            <div className="w-full">
-                                <SudokuGrid
-                                    board={currentGame.board}
-                                    selectedCell={selectedCell}
-                                    onCellClick={handleCellClick}
-                                    onCellKeyDown={handleCellKeyDown}
-                                />
+                        <div className="flex-1 flex flex-col items-center gap-2 sm:gap-4 max-w-full overflow-hidden">
+                            <div className="w-full flex justify-center">
+                                <div className="max-w-full">
+                                    <SudokuGrid
+                                        board={currentGame.board}
+                                        selectedCell={selectedCell}
+                                        onCellClick={handleCellClick}
+                                        onCellKeyDown={handleCellKeyDown}
+                                    />
+                                </div>
                             </div>
 
                             {/* Number Pad - Directly below grid */}

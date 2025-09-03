@@ -17,7 +17,14 @@
     "deploy:preview": "npm run build && vercel --prod=false",
     "deploy:prod": "npm run build && vercel --prod",
     "clean": "rm -rf dist node_modules/.vite",
-    "precommit": "npm run lint && npm run type-check && npm run format:check"
+    "precommit": "npm run lint && npm run type-check && npm run format:check",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:analytics": "vitest run src/stores/__tests__/analyticsStore.test.ts",
+    "test:scenarios": "vitest run src/test/__tests__/gameScenarios.test.ts",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
@@ -37,11 +44,15 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
@@ -49,11 +60,14 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "jest-environment-jsdom": "^30.1.2",
+    "jsdom": "^26.1.0",
     "postcss": "^8.4.32",
     "prettier": "^3.1.1",
     "tailwindcss": "^3.4.17",
     "terser": "^5.43.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vitest": "^3.2.4"
   }
 }

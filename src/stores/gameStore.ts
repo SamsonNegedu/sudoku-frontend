@@ -79,6 +79,7 @@ const createInitialBoard = (): SudokuBoard => {
 };
 
 import { SudokuPuzzleGenerator } from '../utils/puzzleGenerator';
+import { enableUnlimitedHints } from '../config/systemConfig';
 
 // Fallback puzzle generator for when main generation times out
 const createFallbackPuzzle = (difficulty: Difficulty) => {
@@ -873,9 +874,11 @@ export const useGameStore = create<GameStore>()(
 
       useHint: () => {
         const state = get();
+
         if (
           !state.currentGame ||
-          state.currentGame.hintsUsed >= state.currentGame.maxHints
+          (!enableUnlimitedHints() &&
+            state.currentGame.hintsUsed >= state.currentGame.maxHints)
         ) {
           return null;
         }

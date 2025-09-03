@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Theme } from '@radix-ui/themes';
+import { Theme, Button } from '@radix-ui/themes';
 import { AppNavbar } from './components/AppNavbar';
 import { GameBoard } from './components/GameBoard';
 import { CompletionAnimation } from './components/CompletionAnimation';
@@ -10,6 +10,7 @@ import { storageManager } from './utils/storageManager';
 import { AnalyticsProvider } from './components/AnalyticsProvider';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { PageLayout } from './components/PageLayout';
+import { PageHeader } from './components/PageHeader';
 import type { Difficulty } from './types';
 import './index.css';
 
@@ -123,6 +124,7 @@ function App() {
             pauseStartTime={currentGame?.pauseStartTime}
             totalPausedTime={currentGame?.totalPausedTime || 0}
             pausedElapsedTime={currentGame?.pausedElapsedTime}
+            currentTime={currentGame?.currentTime}
             hintsUsed={currentGame?.hintsUsed || 0}
             maxHints={currentGame?.maxHints || 3}
           />
@@ -236,16 +238,22 @@ function App() {
           {/* Analytics Dashboard Page */}
           {currentPage === 'analytics' && (
             <PageLayout className="bg-gray-50">
-              <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
-                <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-                  <button
-                    onClick={handleBackToGame}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base w-full sm:w-auto"
-                  >
-                    ← Back to Game
-                  </button>
-                </div>
+              <PageHeader
+                title="Analytics Dashboard"
+                subtitle="Track your progress and improve your solving skills"
+              >
+                <Button
+                  onClick={handleBackToGame}
+                  size="2"
+                  variant="solid"
+                  color="blue"
+                  className="text-sm sm:text-base w-full sm:w-auto"
+                >
+                  ← Back to Game
+                </Button>
+              </PageHeader>
+
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <AnalyticsDashboard />
               </div>
             </PageLayout>

@@ -29,6 +29,7 @@ interface AppNavbarProps {
     pauseStartTime?: Date;
     totalPausedTime: number;
     pausedElapsedTime?: number;
+    currentTime?: Date;
     hintsUsed: number;
     maxHints: number;
 }
@@ -49,6 +50,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     pauseStartTime,
     totalPausedTime,
     pausedElapsedTime,
+    currentTime,
     hintsUsed,
     maxHints,
 }) => {
@@ -64,11 +66,11 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                 <div className="flex justify-between items-center h-16">
                     {/* Logo and Brand */}
                     <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-lg">9</span>
                         </div>
                         <div className="block">
-                            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                            <h1 className="text-lg sm:text-xl font-bold text-blue-600">
                                 Grid Logic
                             </h1>
                         </div>
@@ -84,6 +86,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                 pauseStartTime={pauseStartTime}
                                 totalPausedTime={totalPausedTime}
                                 pausedElapsedTime={pausedElapsedTime}
+                                currentTime={currentTime}
                             />
 
                             <div className="flex items-center space-x-4 text-sm text-neutral-600">

@@ -9,6 +9,7 @@ interface GameTimerProps {
     pauseStartTime?: Date | string;
     totalPausedTime: number;
     pausedElapsedTime?: number;
+    currentTime?: Date | string; // For completed games
 }
 
 export const GameTimer: React.FC<GameTimerProps> = ({
@@ -18,9 +19,10 @@ export const GameTimer: React.FC<GameTimerProps> = ({
     pauseStartTime,
     totalPausedTime,
     pausedElapsedTime,
+    currentTime,
 }) => {
     const [elapsedTime, setElapsedTime] = useState(0);
-    const intervalRef = useRef<number | null>(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     // Don't render timer if no start time (no active game)
     if (!startTime) {
@@ -32,7 +34,13 @@ export const GameTimer: React.FC<GameTimerProps> = ({
 
     // Calculate the current elapsed time
     const calculateElapsedTime = () => {
-        if (isPaused && pausedElapsedTime !== undefined) {
+        if (isCompleted && currentTime) {
+            // For completed games, calculate total duration using completion time
+            const currentTimeDate = currentTime instanceof Date ? currentTime : new Date(currentTime);
+            const startTimeMs = startTimeDate.getTime();
+            const completionTimeMs = currentTimeDate.getTime();
+            return Math.max(0, Math.floor((completionTimeMs - startTimeMs - totalPausedTime) / 1000));
+        } else if (isPaused && pausedElapsedTime !== undefined) {
             // When paused, show the frozen elapsed time
             return pausedElapsedTime;
         } else {
@@ -50,14 +58,20 @@ export const GameTimer: React.FC<GameTimerProps> = ({
             intervalRef.current = null;
         }
 
-        // Don't start if completed
+        // Always update elapsed time, even if completed
+        const elapsed = calculateElapsedTime();
+        setElapsedTime(elapsed);
+
+        // Don't start interval if completed
         if (isCompleted) {
             return;
         }
 
-        // Update the elapsed time immediately
-        const elapsed = calculateElapsedTime();
-        setElapsedTime(elapsed);
+        // Update the elapsed time immediately (only if not already updated above)
+        if (!isCompleted) {
+            const elapsed = calculateElapsedTime();
+            setElapsedTime(elapsed);
+        }
 
         // Only start interval if not paused
         if (!isPaused) {
@@ -73,7 +87,7 @@ export const GameTimer: React.FC<GameTimerProps> = ({
                 intervalRef.current = null;
             }
         };
-    }, [startTimeDate, isCompleted, isPaused, pauseStartTime, totalPausedTime, pausedElapsedTime]);
+    }, [startTimeDate, isCompleted, isPaused, pauseStartTime, totalPausedTime, pausedElapsedTime, currentTime]);
 
     return (
         <div className="flex items-center gap-2 p-3 bg-neutral-100 rounded-lg">

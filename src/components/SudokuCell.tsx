@@ -42,14 +42,19 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
         }
     );
 
-    // Add borders - subtle for individual cells, thicker for 3x3 box boundaries  
+    // Add borders - subtle for individual cells, emphasized for 3x3 box boundaries  
     const borderClasses = cn(
         // Base borders for all cells
         'border border-neutral-200',
         {
-            // Thicker borders for 3x3 box boundaries and grid edges (override the base border)
-            'border-r-2 border-r-neutral-400': col === 2 || col === 5 || col === 8, // Right border for 3x3 boxes and right edge
-            'border-b-2 border-b-neutral-400': row === 2 || row === 5 || row === 8, // Bottom border for 3x3 boxes and bottom edge
+            // Slightly thicker borders for 3x3 box separations (4 inner borders total)
+            // Vertical separators (after columns 2 and 5)
+            'border-r border-r-neutral-400': col === 2 || col === 5,
+            // Horizontal separators (after rows 2 and 5) 
+            'border-b border-b-neutral-400': row === 2 || row === 5,
+            // Grid edges (outer border) - same thickness as separators
+            'border-r border-r-neutral-300': col === 8, // Right edge
+            'border-b border-b-neutral-300': row === 8, // Bottom edge
         }
     );
 

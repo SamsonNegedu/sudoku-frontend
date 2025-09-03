@@ -53,7 +53,7 @@ export const DIFFICULTY_CONFIGS: Record<Difficulty, DifficultyConfig> = {
     color: 'bg-green-500',
     order: 1,
     puzzleGeneration: {
-      totalClues: [42, 48],
+      totalClues: [62, 68],
       minCluesPerBlock: 3,
       maxEmptyBlocks: 1,
       pattern: 'balanced',

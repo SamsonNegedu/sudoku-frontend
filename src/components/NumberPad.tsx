@@ -7,6 +7,7 @@ import {
     TrashIcon,
     QuestionMarkCircledIcon,
 } from '@radix-ui/react-icons';
+import { enableUnlimitedHints } from '../config/systemConfig';
 
 interface NumberPadProps {
     onNumberClick: (number: number) => void;
@@ -38,6 +39,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     selectedCell,
 }) => {
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const useUnlimitedHints = enableUnlimitedHints();
 
     return (
         <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-neutral-200">
@@ -109,21 +111,21 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                     <div className="relative">
                         <Button
                             onClick={onHint}
-                            disabled={hintsUsed >= maxHints}
+                            disabled={!useUnlimitedHints && hintsUsed >= maxHints}
                             size="2"
                             variant="outline"
-                            color={hintsUsed >= maxHints ? "gray" : "blue"}
-                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${hintsUsed >= maxHints ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-500 text-blue-600 hover:bg-blue-50'
+                            color={(!useUnlimitedHints && hintsUsed >= maxHints) ? "gray" : "blue"}
+                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${(!useUnlimitedHints && hintsUsed >= maxHints) ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-500 text-blue-600 hover:bg-blue-50'
                                 }`}
-                            aria-label={`Get hint (${maxHints - hintsUsed} remaining)`}
-                            title={hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`}
+                            aria-label={useUnlimitedHints ? 'Get hint (unlimited)' : `Get hint (${maxHints - hintsUsed} remaining)`}
+                            title={useUnlimitedHints ? 'Hint (unlimited in development)' : (hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`)}
                         >
                             <QuestionMarkCircledIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                         </Button>
                         {/* Remaining hints count overlay - top right corner */}
-                        {hintsUsed < maxHints && (
+                        {(useUnlimitedHints || hintsUsed < maxHints) && (
                             <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white">
-                                {maxHints - hintsUsed}
+                                {useUnlimitedHints ? '∞' : maxHints - hintsUsed}
                             </div>
                         )}
                     </div>

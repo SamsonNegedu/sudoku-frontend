@@ -1,6 +1,20 @@
 // Analytics and Move Recording Types
 import type { GameMove, Difficulty } from './index';
 
+export interface OverallStats {
+  totalGames: number;
+  completedGames: number;
+  averageAccuracy: number;
+  averageTimePerGame: number;
+  favoriteOpeningMoves: Array<{
+    cell: { row: number; col: number };
+    frequency: number;
+  }>;
+  strongTechniques: string[];
+  weakTechniques: string[];
+  improvementTrend: number; // Positive = improving, negative = declining
+}
+
 export interface DetailedGameMove extends GameMove {
   // Enhanced move tracking
   moveNumber: number; // Sequential move number in the game

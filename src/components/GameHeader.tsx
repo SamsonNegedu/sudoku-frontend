@@ -12,6 +12,10 @@ interface GameHeaderProps {
   hintsUsed: number;
   maxHints: number;
   canUndo: boolean;
+  pauseStartTime?: Date;
+  totalPausedTime: number;
+  pausedElapsedTime?: number;
+  currentTime?: Date;
   onNewGame: () => void;
   onPause: () => void;
   onResume: () => void;
@@ -29,6 +33,10 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   hintsUsed,
   maxHints,
   canUndo,
+  pauseStartTime,
+  totalPausedTime,
+  pausedElapsedTime,
+  currentTime,
   onNewGame,
   onPause,
   onResume,
@@ -46,8 +54,12 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
               startTime={startTime}
               isPaused={isPaused}
               isCompleted={isCompleted}
+              pauseStartTime={pauseStartTime}
+              totalPausedTime={totalPausedTime}
+              pausedElapsedTime={pausedElapsedTime}
+              currentTime={currentTime}
             />
-            
+
             {isPlaying && (
               <div className="flex items-center space-x-4 text-sm text-neutral-600">
                 <div className="flex items-center space-x-2">

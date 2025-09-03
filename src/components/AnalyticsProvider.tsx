@@ -13,10 +13,46 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         startGameRecording,
         recordCellSelection,
         recordGameCompletion,
+        stopGameRecording,
         isRecording
     } = useAnalyticsStore();
 
-    const { currentGame, selectedCell } = useGameStore();
+    const { currentGame } = useGameStore();
+
+    // Track moves using React patterns instead of direct subscription
+    const movesCountRef = useRef(0);
+
+    useEffect(() => {
+        const currentMoves = currentGame?.moves || [];
+        const newMovesCount = currentMoves.length;
+
+        // Check if a new move was added
+        if (newMovesCount > movesCountRef.current && newMovesCount > 0) {
+            const newMove = currentMoves[newMovesCount - 1];
+
+            if (newMove && currentGame && newMove.value !== null) {
+                if (isRecording) {
+                    // Determine if move was correct
+                    const isCorrect = currentGame.board[newMove.row][newMove.col]?.isCorrect ?? false;
+
+                    recordCellSelection(
+                        { row: newMove.row, col: newMove.col },
+                        newMove.value,
+                        isCorrect,
+                        false // TODO: Track hint usage separately
+                    );
+                } else {
+                    // Auto-fix: Try to start recording if we have a game but aren't recording
+                    if (currentGame.id && !currentGame.isCompleted) {
+                        startGameRecording(currentGame.id, currentGame.difficulty);
+                    }
+                }
+            }
+        }
+
+        // Update the ref to current count
+        movesCountRef.current = newMovesCount;
+    }, [currentGame?.moves?.length, currentGame?.id, isRecording, recordCellSelection]);
 
     // Initialize user analytics on mount
     useEffect(() => {
@@ -25,31 +61,61 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     // Track new games (with ref to prevent multiple calls)
     const recordingStartedRef = useRef<string | null>(null);
+    const lastGameIdRef = useRef<string | null>(null);
 
     useEffect(() => {
+        console.log('🎯 Game ID tracking:', {
+            currentGameId: currentGame?.id,
+            lastGameId: lastGameIdRef.current,
+            isRecording,
+            gameChanged: currentGame?.id !== lastGameIdRef.current
+        });
+
+        // Detect game changes (new game or restart)
+        if (currentGame?.id !== lastGameIdRef.current) {
+            // If we had a previous game, it was abandoned/restarted
+            if (lastGameIdRef.current && isRecording) {
+                console.log('🔄 Game changed - previous game abandoned:', lastGameIdRef.current);
+                stopGameRecording();
+            }
+            lastGameIdRef.current = currentGame?.id || null;
+        }
+
         if (currentGame && !isRecording && currentGame.id !== recordingStartedRef.current && !currentGame.isCompleted) {
-            recordingStartedRef.current = currentGame.id;
-            startGameRecording(currentGame.id, currentGame.difficulty);
+            // Double-check that we don't already have analytics for this game
+            const { currentGameAnalytics } = useAnalyticsStore.getState();
+            if (!currentGameAnalytics || currentGameAnalytics.gameId !== currentGame.id) {
+                recordingStartedRef.current = currentGame.id;
+                startGameRecording(currentGame.id, currentGame.difficulty);
+            }
         }
     }, [currentGame?.id, currentGame?.isCompleted, isRecording]);
-
-    // Track cell selection
-    useEffect(() => {
-        if (selectedCell && isRecording) {
-
-            recordCellSelection(selectedCell.row, selectedCell.col);
-        }
-    }, [selectedCell?.row, selectedCell?.col, isRecording]);
 
     // Track game completion (with ref to prevent multiple calls)
     const completionRecordedRef = useRef<string | null>(null);
 
     useEffect(() => {
         if (currentGame?.isCompleted && isRecording &&
-            currentGame.id !== completionRecordedRef.current &&
-            currentGame.id === recordingStartedRef.current) {
-            completionRecordedRef.current = currentGame.id;
-            recordGameCompletion(true);
+            currentGame.id !== completionRecordedRef.current) {
+            // Additional check: ensure we have analytics for this game
+            const { currentGameAnalytics } = useAnalyticsStore.getState();
+
+            if (currentGameAnalytics && currentGameAnalytics.gameId === currentGame.id) {
+                completionRecordedRef.current = currentGame.id;
+                recordGameCompletion(true);
+            } else {
+                // Try to start recording for this completed game retroactively
+                if (currentGame.id && !currentGameAnalytics) {
+                    startGameRecording(currentGame.id, currentGame.difficulty);
+                    // Give it a moment then try completion again
+                    setTimeout(() => {
+                        const { currentGameAnalytics: newAnalytics } = useAnalyticsStore.getState();
+                        if (newAnalytics && newAnalytics.gameId === currentGame.id) {
+                            recordGameCompletion(true);
+                        }
+                    }, 100);
+                }
+            }
         }
     }, [currentGame?.isCompleted, currentGame?.id, isRecording]);
 
