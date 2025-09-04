@@ -113,7 +113,7 @@ export const AnalyticsDashboard: React.FC = () => {
                                 key={index}
                                 className={`p-3 rounded-lg border-l-4 ${insight.type === 'strength' ? 'border-green-500 bg-green-50' :
                                     insight.type === 'weakness' ? 'border-red-500 bg-red-50' :
-                                        insight.type === 'suggestion' ? 'border-blue-500 bg-blue-50' :
+                                        insight.type === 'suggestion' ? 'border-blue-600 bg-blue-50' :
                                             'border-purple-500 bg-purple-50'
                                     }`}
                             >
@@ -134,9 +134,10 @@ export const AnalyticsDashboard: React.FC = () => {
                             key={difficulty}
                             onClick={() => setSelectedDifficulty(difficulty)}
                             variant={selectedDifficulty === difficulty ? "solid" : "outline"}
-                            color={selectedDifficulty === difficulty ? "blue" : "gray"}
                             size="1"
-                            className="capitalize"
+                            className={`capitalize ${selectedDifficulty === difficulty
+                                ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                : 'border-gray-300 text-gray-600 hover:bg-gray-50'}`}
                         >
                             {difficulty}
                         </Button>

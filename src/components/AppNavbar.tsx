@@ -5,7 +5,6 @@ import {
     PlayIcon,
     PauseIcon,
     PlusIcon,
-    GearIcon,
     ChevronDownIcon,
     HamburgerMenuIcon,
     BarChartIcon
@@ -37,7 +36,6 @@ interface AppNavbarProps {
 export const AppNavbar: React.FC<AppNavbarProps> = ({
     onNewGame,
     onRestart,
-    onShowSettings,
     onShowAnalytics,
     onPause,
     onResume,
@@ -138,8 +136,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                             onClick={onPause}
                                             size="2"
                                             variant="solid"
-                                            color="blue"
-                                            className="sm:hidden"
+                                            className="sm:hidden bg-blue-600 hover:bg-blue-700 text-white"
                                             aria-label="Pause Game"
                                         >
                                             <PauseIcon />
@@ -149,8 +146,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                             onClick={onPause}
                                             size="2"
                                             variant="solid"
-                                            color="blue"
-                                            className="hidden sm:inline-flex"
+                                            className="hidden sm:inline-flex bg-blue-600 hover:bg-blue-700 text-white"
                                         >
                                             <PauseIcon className="mr-2" />
                                             Pause
@@ -167,8 +163,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                         <Button
                                             size="2"
                                             variant="soft"
-                                            color="blue"
-                                            className="hidden sm:inline-flex"
+                                            className="hidden sm:inline-flex bg-blue-100 hover:bg-blue-200 text-blue-600 border border-blue-200"
                                             disabled={isGeneratingPuzzle}
                                         >
                                             {isGeneratingPuzzle ? (
@@ -245,8 +240,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                         <Button
                                             size="2"
                                             variant="soft"
-                                            color="blue"
-                                            className="sm:hidden"
+                                            className="sm:hidden bg-blue-100 hover:bg-blue-200 text-blue-600 border border-blue-200"
                                             disabled={isGeneratingPuzzle}
                                             aria-label="Game Menu"
                                         >
@@ -317,21 +311,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                             onClick={onShowAnalytics}
                             size="2"
                             variant="ghost"
-                            color="gray"
                             aria-label="Analytics Dashboard"
-                            className="mr-2"
+                            className="mr-2 text-blue-600 hover:bg-blue-50"
                         >
                             <BarChartIcon />
-                        </Button>
-
-                        <Button
-                            onClick={onShowSettings}
-                            size="2"
-                            variant="ghost"
-                            color="gray"
-                            aria-label="Settings"
-                        >
-                            <GearIcon />
                         </Button>
                     </div>
                 </div>

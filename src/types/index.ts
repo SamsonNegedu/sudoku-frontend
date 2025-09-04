@@ -93,6 +93,7 @@ export interface Hint {
   technique?: string;
   targetCells?: [number, number][];
   suggestedValue?: number;
+  autoFill?: boolean; // Whether this hint should auto-fill the cell
 }
 
 // API response types

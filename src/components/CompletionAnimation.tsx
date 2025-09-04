@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Button } from '@radix-ui/themes';
 
 interface CompletionAnimationProps {
     isVisible: boolean;
@@ -71,7 +72,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
 
     const getPerformanceRating = (mistakes: number, difficulty: string) => {
         if (mistakes === 0) return { rating: 'Perfect!', emoji: '🏆', color: 'text-yellow-500' };
-        if (mistakes <= 1) return { rating: 'Excellent!', emoji: '🌟', color: 'text-blue-500' };
+        if (mistakes <= 1) return { rating: 'Excellent!', emoji: '🌟', color: 'text-blue-600' };
         if (mistakes <= 3) return { rating: 'Great Job!', emoji: '👏', color: 'text-green-500' };
         if (mistakes <= 5) return { rating: 'Well Done!', emoji: '👍', color: 'text-orange-500' };
         return { rating: 'Completed!', emoji: '🎉', color: 'text-purple-500' };
@@ -80,10 +81,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
     const performance = getPerformanceRating(mistakes, difficulty);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* Background overlay - clicking outside will NOT dismiss the modal */}
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             {/* Confetti particles */}
             {(stage === 'confetti' || stage === 'celebration') && (
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -106,77 +104,94 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
             )}
 
             {/* Main content */}
-            <div className="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4 text-center font-sans">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full text-center overflow-hidden">
 
-                {/* Celebration stage */}
+                {/* Header with success icon */}
                 {stage === 'celebration' && (
-                    <div className="animate-bounce-in">
-                        <div className="text-6xl mb-4 animate-pulse">🎉</div>
-                        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                            Puzzle Solved!
-                        </h1>
-                        <div className={`text-xl font-semibold mb-4  ${performance.color}`}>
-                            {performance.emoji} {performance.rating}
+                    <div className="bg-green-50 px-6 py-4 border-b border-green-100">
+                        <div className="w-16 h-16 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center animate-bounce-in">
+                            <div className="text-3xl">🎉</div>
                         </div>
+                        <h2 className="text-xl font-bold text-green-800 mb-1">
+                            Puzzle Solved!
+                        </h2>
+                        <p className={`text-sm ${performance.color}`}>
+                            {performance.emoji} {performance.rating}
+                        </p>
                     </div>
                 )}
 
-                {/* Stats stage */}
+                {/* Header with success icon */}
                 {stage === 'stats' && (
-                    <div className="animate-fade-in">
-                        <div className="text-4xl mb-4">{getDifficultyEmoji(difficulty)}</div>
-                        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-                            Congratulations!
-                        </h1>
-
-                        {/* Stats grid */}
-                        <div className="space-y-4 mb-6">
-                            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                <span className="font-medium text-gray-600">Difficulty</span>
-                                <span className={`font-bold capitalize  ${getDifficultyColor(difficulty)}`}>
-                                    {difficulty}
-                                </span>
+                    <>
+                        <div className="bg-green-50 px-6 py-4 border-b border-green-100">
+                            <div className="w-16 h-16 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
+                                <div className="text-3xl">{getDifficultyEmoji(difficulty)}</div>
                             </div>
-
-                            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                <span className="font-medium text-gray-600">Time</span>
-                                <span className="font-bold text-blue-600">
-                                    {completionTime}
-                                </span>
-                            </div>
-
-                            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                <span className="font-medium text-gray-600">Mistakes</span>
-                                <span className={`font-bold  ${mistakes === 0 ? 'text-green-600' : mistakes <= 3 ? 'text-yellow-600' : 'text-red-600'}`}>
-                                    {mistakes}
-                                </span>
-                            </div>
-
-                            <div className="flex justify-between items-center p-3 bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-lg border border-yellow-300">
-                                <span className="font-bold text-yellow-800">Rating</span>
-                                <span className={`font-bold  ${performance.color}`}>
-                                    {performance.rating}
-                                </span>
-                            </div>
+                            <h2 className="text-xl font-bold text-green-800 mb-1">
+                                Congratulations!
+                            </h2>
+                            <p className="text-green-600 text-sm">
+                                You successfully completed this {difficulty} puzzle
+                            </p>
                         </div>
 
-                        {/* Action buttons */}
-                        <div className="space-y-3">
-                            <button
-                                onClick={handleStartNewGame}
-                                className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 cursor-pointer"
-                            >
-                                🎯 Start New Game
-                            </button>
+                        {/* Content */}
+                        <div className="p-6">
+                            {/* Stats grid */}
+                            <div className="space-y-3 mb-6">
+                                <div className="flex justify-between items-center p-3 bg-neutral-50 rounded-lg">
+                                    <span className="font-medium text-neutral-600">Difficulty</span>
+                                    <span className={`font-bold capitalize ${getDifficultyColor(difficulty)}`}>
+                                        {difficulty}
+                                    </span>
+                                </div>
 
-                            <button
-                                onClick={handleAnimationComplete}
-                                className="w-full py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 cursor-pointer"
-                            >
-                                ✨ Admire My Solution
-                            </button>
+                                <div className="flex justify-between items-center p-3 bg-neutral-50 rounded-lg">
+                                    <span className="font-medium text-neutral-600">Time</span>
+                                    <span className="font-bold text-blue-600">
+                                        {completionTime}
+                                    </span>
+                                </div>
+
+                                <div className="flex justify-between items-center p-3 bg-neutral-50 rounded-lg">
+                                    <span className="font-medium text-neutral-600">Mistakes</span>
+                                    <span className={`font-bold ${mistakes === 0 ? 'text-green-600' : mistakes <= 3 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                        {mistakes}
+                                    </span>
+                                </div>
+
+                                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg border border-yellow-200">
+                                    <span className="font-medium text-yellow-800">Rating</span>
+                                    <span className={`font-bold ${performance.color}`}>
+                                        {performance.emoji} {performance.rating}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Action buttons */}
+                            <div className="space-y-3">
+                                <Button
+                                    onClick={handleStartNewGame}
+                                    size="3"
+                                    variant="solid"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                                >
+                                    🎯 Start New Game
+                                </Button>
+
+                                <Button
+                                    onClick={handleAnimationComplete}
+                                    size="3"
+                                    variant="soft"
+                                    color="gray"
+                                    className="w-full"
+                                >
+                                    ✨ Admire My Solution
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    </>
                 )}
             </div>
         </div>

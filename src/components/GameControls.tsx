@@ -42,8 +42,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
                         disabled={disabled}
                         size="2"
                         variant="solid"
-                        color="blue"
-                        className="control-button"
+                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
                         aria-label="Start new game"
                     >
                         🆕 New Game
@@ -57,7 +56,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
                                 size="2"
                                 variant="solid"
                                 color="green"
-                                className="control-button"
+                                className="control-button bg-blue-600 hover:bg-blue-700 text-white"
                                 aria-label="Resume game"
                             >
                                 ▶️ Resume
@@ -68,8 +67,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
                                 disabled={disabled}
                                 size="2"
                                 variant="solid"
-                                color="blue"
-                                className="control-button"
+                                className="control-button bg-blue-600 hover:bg-blue-700 text-white"
                                 aria-label="Pause game"
                             >
                                 ⏸️ Pause
@@ -87,8 +85,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
                         disabled={disabled || hintsRemaining <= 0}
                         size="2"
                         variant="soft"
-                        color="blue"
-                        className="control-button"
+                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
                         aria-label={`Get hint (${hintsRemaining} remaining)`}
                     >
                         💡 Hint ({hintsRemaining})
@@ -99,8 +96,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
                         disabled={disabled || !canUndo}
                         size="2"
                         variant="soft"
-                        color="blue"
-                        className="control-button"
+                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
                         aria-label="Undo last move"
                     >
                         ↩️ Undo
@@ -112,7 +108,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
                         size="2"
                         variant="solid"
                         color="red"
-                        className="control-button"
+                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
                         aria-label="Reset current game"
                     >
                         🔄 Reset

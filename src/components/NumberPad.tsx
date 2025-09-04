@@ -46,7 +46,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
             {/* Mode indicator */}
             <div className="flex flex-col items-center mb-3 space-y-1">
                 <div className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${inputMode === 'pen'
-                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                    ? 'bg-blue-100 text-blue-600 border border-blue-200'
                     : 'bg-green-100 text-green-700 border border-green-200'
                     }`}>
                     {inputMode === 'pen' ? '🖊️ Writing Mode' : '✏️ Notes Mode'}
@@ -66,7 +66,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                         size="2"
                         variant="outline"
                         color={!canUndo ? "gray" : "blue"}
-                        className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white hover:bg-blue-50 ${!canUndo ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-500 text-blue-600'
+                        className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white hover:bg-blue-50 ${!canUndo ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-600 text-blue-600'
                             }`}
                         aria-label="Undo last move"
                         title={!canUndo ? "No moves to undo" : "Undo (Ctrl+Z)"}
@@ -95,7 +95,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                             size="2"
                             variant="outline"
                             color={inputMode === 'pencil' ? "green" : "blue"}
-                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${disabled ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : inputMode === 'pencil' ? 'border-green-500 text-green-600 hover:bg-green-50' : 'border-blue-500 text-blue-600 hover:bg-blue-50'
+                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${disabled ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : inputMode === 'pencil' ? 'border-green-500 text-green-600 hover:bg-green-50' : 'border-blue-600 text-blue-600 hover:bg-blue-50'
                                 }`}
                             aria-label={`Currently in ${inputMode} mode. Click to switch to ${inputMode === 'pen' ? 'notes' : 'writing'} mode`}
                             title={`Current: ${inputMode === 'pen' ? 'Writing' : 'Notes'} Mode`}
@@ -103,7 +103,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                             {inputMode === 'pen' ? <Pencil1Icon className="w-4 h-4 sm:w-5 sm:h-5" /> : <Pencil2Icon className="w-4 h-4 sm:w-5 sm:h-5" />}
                         </Button>
                         {/* Notes mode status overlay - top right corner */}
-                        <div className={`absolute -top-1 -right-1 text-[8px] font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white ${inputMode === 'pencil' ? 'bg-green-500' : 'bg-blue-500'} text-white`}>
+                        <div className={`absolute -top-1 -right-1 text-[8px] font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white ${inputMode === 'pencil' ? 'bg-green-500' : 'bg-blue-600'} text-white`}>
                             {inputMode === 'pencil' ? 'ON' : 'OFF'}
                         </div>
                     </div>
@@ -115,16 +115,17 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                             size="2"
                             variant="outline"
                             color={(!useUnlimitedHints && hintsUsed >= maxHints) ? "gray" : "blue"}
-                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${(!useUnlimitedHints && hintsUsed >= maxHints) ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-500 text-blue-600 hover:bg-blue-50'
+                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${(!useUnlimitedHints && hintsUsed >= maxHints) ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-600 text-blue-600 hover:bg-blue-50'
                                 }`}
                             aria-label={useUnlimitedHints ? 'Get hint (unlimited)' : `Get hint (${maxHints - hintsUsed} remaining)`}
                             title={useUnlimitedHints ? 'Hint (unlimited in development)' : (hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`)}
+                            data-hint-button="true"
                         >
                             <QuestionMarkCircledIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                         </Button>
                         {/* Remaining hints count overlay - top right corner */}
                         {(useUnlimitedHints || hintsUsed < maxHints) && (
-                            <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white">
+                            <div className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white">
                                 {useUnlimitedHints ? '∞' : maxHints - hintsUsed}
                             </div>
                         )}
@@ -144,11 +145,11 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                                     disabled={isDisabled}
                                     size="2"
                                     variant={isCompleted ? "soft" : "solid"}
-                                    color={isCompleted ? "gray" : "blue"}
-                                    className={`w-8 h-8 sm:w-16 sm:h-16 font-bold text-base sm:text-xl transition-all duration-200  ${!isCompleted && !disabled
-                                        ? 'hover:scale-105 active:scale-95'
+                                    color={isCompleted ? "gray" : undefined}
+                                    className={`w-8 h-8 sm:w-16 sm:h-16 font-bold text-base sm:text-xl transition-all duration-200 flex items-center justify-center ${!isCompleted && !disabled
+                                        ? 'hover:scale-105 active:scale-95 bg-blue-600 hover:bg-blue-700 text-white'
                                         : ''
-                                        } flex items-center justify-center ${inputMode === 'pencil' && !isCompleted ? 'italic' : ''
+                                        } ${inputMode === 'pencil' && !isCompleted ? 'italic' : ''
                                         } ${isCompleted ? 'opacity-60 cursor-not-allowed' : ''
                                         }`}
                                     aria-label={

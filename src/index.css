@@ -48,15 +48,15 @@
   /* Force full cell highlighting with maximum specificity */
   div.sudoku-cell[data-selected="true"],
   .sudoku-cell[data-selected="true"] {
-    background-color: rgb(191 219 254) !important; /* bg-blue-300 - more prominent */
-    background: rgb(191 219 254) !important;
-    border-color: rgb(59 130 246) !important; /* border-blue-500 */
+    background-color: rgb(147 197 253) !important; /* bg-blue-300 equivalent for blue-600 family */
+    background: rgb(147 197 253) !important;
+    border-color: rgb(37 99 235) !important; /* border-blue-600 */
   }
 
   /* Force full cell highlighting for related cells */
   div.sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-same-number="true"]),
   .sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-same-number="true"]) {
-    background-color: rgb(219 234 254) !important; /* bg-blue-100 - more visible */
+    background-color: rgb(219 234 254) !important; /* bg-blue-100 - consistent with blue-600 family */
     background: rgb(219 234 254) !important;
   }
 

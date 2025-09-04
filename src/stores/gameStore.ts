@@ -913,18 +913,37 @@ export const useGameStore = create<GameStore>()(
           };
         }
 
-        // Only increment hint counter for helpful hints (not confirmations or errors)
-        const shouldCountHint =
-          hint.technique !== 'confirmation' &&
-          hint.technique !== 'cell_selection';
+        // Handle auto-fill hints
+        if (hint.autoFill && hint.targetCells && hint.suggestedValue) {
+          const [row, col] = hint.targetCells[0];
 
-        // Update hints used only if this was a useful hint
-        if (shouldCountHint) {
-          const updatedGame: GameState = {
-            ...state.currentGame,
-            hintsUsed: state.currentGame.hintsUsed + 1,
-          };
-          set({ currentGame: updatedGame });
+          // Auto-fill the cell
+          const { setCellValue } = get();
+          setCellValue(row, col, hint.suggestedValue);
+
+          // Count as a hint used
+          const currentState = get();
+          if (currentState.currentGame) {
+            const updatedGame: GameState = {
+              ...currentState.currentGame,
+              hintsUsed: currentState.currentGame.hintsUsed + 1,
+            };
+            set({ currentGame: updatedGame });
+          }
+        } else {
+          // Only increment hint counter for helpful hints (not confirmations or errors)
+          const shouldCountHint =
+            hint.technique !== 'confirmation' &&
+            hint.technique !== 'cell_selection';
+
+          // Update hints used only if this was a useful hint
+          if (shouldCountHint) {
+            const updatedGame: GameState = {
+              ...state.currentGame,
+              hintsUsed: state.currentGame.hintsUsed + 1,
+            };
+            set({ currentGame: updatedGame });
+          }
         }
 
         return hint;

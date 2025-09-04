@@ -100,10 +100,11 @@ export class SudokuHintGenerator {
             hints.push({
               hint: {
                 type: 'cell',
-                message: `Cell at row ${row + 1}, column ${col + 1} can only be ${candidateInfo.candidates[0]}. This is the only valid number for this position.`,
+                message: `Auto-filled ${candidateInfo.candidates[0]} at row ${row + 1}, column ${col + 1}. This was the only valid number for this position.`,
                 targetCells: [[row, col]],
                 suggestedValue: candidateInfo.candidates[0],
                 technique: 'naked_single',
+                autoFill: true,
               },
               confidence: 0.95,
               priority: 5,
@@ -179,10 +180,11 @@ export class SudokuHintGenerator {
         hints.push({
           hint: {
             type: 'cell',
-            message: `In ${unitName}, the number ${num} can only go in row ${row + 1}, column ${col + 1}. This is a hidden single.`,
+            message: `Auto-filled ${num} at row ${row + 1}, column ${col + 1}. In ${unitName}, this was the only place for ${num}.`,
             targetCells: [[row, col]],
             suggestedValue: num,
             technique: 'hidden_single',
+            autoFill: true,
           },
           confidence: 0.9,
           priority: 4,
@@ -405,10 +407,11 @@ export class SudokuHintGenerator {
       if (candidateInfo.candidates.length === 1) {
         return {
           type: 'cell',
-          message: `This cell can only be ${candidateInfo.candidates[0]}. All other numbers are eliminated by the surrounding values.`,
+          message: `Auto-filled ${candidateInfo.candidates[0]} in selected cell. This was the only valid number.`,
           targetCells: [[selectedRow, selectedCol]],
           suggestedValue: candidateInfo.candidates[0],
           technique: 'naked_single',
+          autoFill: true,
         };
       }
 

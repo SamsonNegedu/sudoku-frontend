@@ -181,7 +181,7 @@ function App() {
                             forceStopGeneration();
                             setTimeout(() => handleNewGame('beginner'), 100);
                           }}
-                          className="block w-full text-sm text-blue-600 hover:text-blue-800 underline font-medium"
+                          className="block w-full text-sm text-blue-600 hover:text-blue-700 underline font-medium"
                         >
                           🚨 Stop & Switch to Easy
                         </button>
@@ -246,8 +246,7 @@ function App() {
                   onClick={handleBackToGame}
                   size="2"
                   variant="solid"
-                  color="blue"
-                  className="text-sm sm:text-base w-full sm:w-auto"
+                  className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   ← Back to Game
                 </Button>
