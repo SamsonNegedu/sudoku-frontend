@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { storageManager } from '../utils/storageManager';
-import { analyticsLog } from '../config/systemConfig';
 import type {
   GameAnalytics,
   UserAnalytics,
@@ -26,6 +25,7 @@ const calculateOverallStats = (gamesPlayed: GameAnalytics[]): OverallStats => {
       strongTechniques: [],
       weakTechniques: [],
       improvementTrend: 0,
+      techniqueUsage: {},
     };
   }
 
@@ -76,6 +76,7 @@ const calculateOverallStats = (gamesPlayed: GameAnalytics[]): OverallStats => {
     strongTechniques: [], // TODO: Implement if needed
     weakTechniques: [], // TODO: Implement if needed
     improvementTrend,
+    techniqueUsage: {},
   };
 };
 
@@ -97,7 +98,14 @@ interface AnalyticsStore {
     isCorrect: boolean,
     hintUsed: boolean
   ) => void;
-  recordHint: (hintType: string) => void;
+  recordHint: (hintType: string, techniqueRevealed?: string) => void;
+  recordTechniqueUsage: (
+    technique: string,
+    moveNumber: number,
+    timeToApply: number,
+    successful: boolean,
+    wasHintBased: boolean
+  ) => void;
   recordGameCompletion: (completed: boolean) => void;
   stopGameRecording: () => void;
   recalculateOverallStats: () => void;
@@ -105,13 +113,10 @@ interface AnalyticsStore {
   // Analytics
   getGameInsights: (gameId?: string) => AnalyticsInsight[];
   getUserInsights: () => AnalyticsInsight[];
+  getTechniqueInsights: () => any[];
   getProgressData: (difficulty?: Difficulty) => any;
-  exportUserData: () => string;
-  importUserData: (data: string) => boolean;
-
   // Privacy
   clearAllData: () => void;
-  anonymizeData: () => void;
 }
 
 // Utility functions
@@ -129,6 +134,39 @@ const detectSolvingTechnique = (move: GameMove): string => {
 };
 
 const getCellKey = (row: number, col: number): string => `${row},${col}`;
+
+const getTechniqueLevel = (
+  technique: string
+): 'basic' | 'intermediate' | 'advanced' | 'expert' => {
+  const levels = {
+    naked_single: 'basic',
+    hidden_single: 'basic',
+    naked_pair: 'intermediate',
+    pointing_pair: 'intermediate',
+    x_wing: 'advanced',
+    xy_wing: 'advanced',
+    swordfish: 'expert',
+  } as const;
+
+  return (levels as any)[technique] || 'intermediate';
+};
+
+const formatTechniqueName = (technique: string): string => {
+  const names = {
+    naked_single: 'Naked Singles',
+    hidden_single: 'Hidden Singles',
+    naked_pair: 'Naked Pairs',
+    pointing_pair: 'Pointing Pairs',
+    x_wing: 'X-Wing',
+    xy_wing: 'XY-Wing',
+    swordfish: 'Swordfish',
+  } as const;
+
+  return (
+    (names as any)[technique] ||
+    technique.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+  );
+};
 
 // Custom storage interface that uses our StorageManager for IndexedDB
 const analyticsStorage = {
@@ -377,7 +415,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           undoFrequency: 0,
           openingMoves: [],
           bottlenecks: [],
-          techniquesUsed: {},
+          techniquesUsed: [],
           hintUsagePattern: [],
           errorCells: [],
           finalStats: {
@@ -448,12 +486,31 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
 
         // Update technique tracking
         if (detailedMove.technique) {
-          updatedAnalytics.techniquesUsed = {
-            ...updatedAnalytics.techniquesUsed,
-            [detailedMove.technique]:
-              (updatedAnalytics.techniquesUsed[detailedMove.technique] || 0) +
-              1,
-          };
+          // Ensure techniquesUsed is an array (migrate from old object format)
+          if (!Array.isArray(updatedAnalytics.techniquesUsed)) {
+            updatedAnalytics.techniquesUsed = [];
+          }
+
+          updatedAnalytics.techniquesUsed.push({
+            technique: detailedMove.technique,
+            moveNumber: updatedAnalytics.moves.length,
+            timeToApply: detailedMove.timeFromLastMove || 0,
+            successful: detailedMove.isCorrect !== false,
+            wasHintBased: false,
+            context: {
+              emptyCellsRemaining: 81 - updatedAnalytics.moves.length,
+              previousTechnique:
+                updatedAnalytics.techniquesUsed.length > 0
+                  ? updatedAnalytics.techniquesUsed[
+                      updatedAnalytics.techniquesUsed.length - 1
+                    ].technique
+                  : undefined,
+              difficultyAtPoint: Math.min(
+                5,
+                Math.max(1, Math.ceil(updatedAnalytics.moves.length / 15))
+              ),
+            },
+          });
         }
 
         // Clear hesitation tracker for this cell
@@ -532,12 +589,31 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
 
         // Update technique tracking
         if (detailedMove.technique) {
-          updatedAnalytics.techniquesUsed = {
-            ...updatedAnalytics.techniquesUsed,
-            [detailedMove.technique]:
-              (updatedAnalytics.techniquesUsed[detailedMove.technique] || 0) +
-              1,
-          };
+          // Ensure techniquesUsed is an array (migrate from old object format)
+          if (!Array.isArray(updatedAnalytics.techniquesUsed)) {
+            updatedAnalytics.techniquesUsed = [];
+          }
+
+          updatedAnalytics.techniquesUsed.push({
+            technique: detailedMove.technique,
+            moveNumber: updatedAnalytics.moves.length,
+            timeToApply: detailedMove.timeFromLastMove || 0,
+            successful: detailedMove.isCorrect !== false,
+            wasHintBased: false,
+            context: {
+              emptyCellsRemaining: 81 - updatedAnalytics.moves.length,
+              previousTechnique:
+                updatedAnalytics.techniquesUsed.length > 0
+                  ? updatedAnalytics.techniquesUsed[
+                      updatedAnalytics.techniquesUsed.length - 1
+                    ].technique
+                  : undefined,
+              difficultyAtPoint: Math.min(
+                5,
+                Math.max(1, Math.ceil(updatedAnalytics.moves.length / 15))
+              ),
+            },
+          });
         }
 
         // Clear hesitation tracker for this cell
@@ -551,7 +627,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         });
       },
 
-      recordHint: (hintType: string) => {
+      recordHint: (hintType: string, techniqueRevealed?: string) => {
         const state = get();
 
         if (!state.isRecording || !state.currentGameAnalytics) return;
@@ -562,6 +638,8 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
             Date.now() -
             new Date(state.currentGameAnalytics.startTime).getTime(),
           type: hintType,
+          techniqueRevealed,
+          wasAppliedSuccessfully: false, // Will be updated when move is made
         };
 
         set({
@@ -570,6 +648,54 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
             hintUsagePattern: [
               ...state.currentGameAnalytics.hintUsagePattern,
               hintUsage,
+            ],
+          },
+        });
+      },
+
+      recordTechniqueUsage: (
+        technique: string,
+        moveNumber: number,
+        timeToApply: number,
+        successful: boolean,
+        wasHintBased: boolean
+      ) => {
+        const state = get();
+
+        if (!state.isRecording || !state.currentGameAnalytics) return;
+
+        const techniqueUsage = {
+          technique,
+          moveNumber,
+          timeToApply,
+          successful,
+          wasHintBased,
+          context: {
+            emptyCellsRemaining:
+              state.currentGameAnalytics.moves.length > 0
+                ? 81 -
+                  state.currentGameAnalytics.moves.filter(m => m.value !== null)
+                    .length
+                : 81,
+            previousTechnique:
+              state.currentGameAnalytics.techniquesUsed.length > 0
+                ? state.currentGameAnalytics.techniquesUsed[
+                    state.currentGameAnalytics.techniquesUsed.length - 1
+                  ].technique
+                : undefined,
+            difficultyAtPoint: Math.min(
+              5,
+              Math.max(1, Math.ceil(moveNumber / 15))
+            ), // Rough difficulty estimate
+          },
+        };
+
+        set({
+          currentGameAnalytics: {
+            ...state.currentGameAnalytics,
+            techniquesUsed: [
+              ...state.currentGameAnalytics.techniquesUsed,
+              techniqueUsage,
             ],
           },
         });
@@ -629,27 +755,8 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           ],
         };
 
-        // Update difficulty progress
-        const difficultyStats =
-          updatedUserAnalytics.difficultyProgress[
-            completedAnalytics.difficulty
-          ];
-        difficultyStats.gamesPlayed += 1;
-        if (completed) {
-          difficultyStats.gamesCompleted += 1;
-          if (duration < difficultyStats.bestTime) {
-            difficultyStats.bestTime = duration;
-          }
-        }
-        difficultyStats.lastPlayed = endTime;
-        difficultyStats.averageTime =
-          (difficultyStats.averageTime * (difficultyStats.gamesPlayed - 1) +
-            duration) /
-          difficultyStats.gamesPlayed;
-        difficultyStats.accuracy =
-          (difficultyStats.accuracy * (difficultyStats.gamesPlayed - 1) +
-            finalAccuracy) /
-          difficultyStats.gamesPlayed;
+        // Note: Difficulty progress stats are now calculated in real-time
+        // from the gamesPlayed array in getProgressData()
 
         // Update overall stats
         updatedUserAnalytics.overallStats = calculateOverallStats(
@@ -773,41 +880,224 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         return insights;
       },
 
+      getTechniqueInsights: () => {
+        const state = get();
+        if (
+          !state.userAnalytics ||
+          state.userAnalytics.gamesPlayed.length === 0
+        ) {
+          return [];
+        }
+
+        const insights: any[] = [];
+        const allTechniques: any = {};
+
+        // Aggregate technique usage across all games
+        state.userAnalytics.gamesPlayed.forEach(game => {
+          // Safety check: ensure techniquesUsed exists and is an array
+          if (!game.techniquesUsed || !Array.isArray(game.techniquesUsed)) {
+            return; // Skip games without technique data
+          }
+
+          game.techniquesUsed.forEach(tech => {
+            if (!allTechniques[tech.technique]) {
+              allTechniques[tech.technique] = {
+                name: tech.technique,
+                timesUsed: 0,
+                timesSuccessful: 0,
+                totalTime: 0,
+                recentUses: [],
+                level: getTechniqueLevel(tech.technique),
+              };
+            }
+
+            allTechniques[tech.technique].timesUsed++;
+            if (tech.successful)
+              allTechniques[tech.technique].timesSuccessful++;
+            allTechniques[tech.technique].totalTime += tech.timeToApply;
+            allTechniques[tech.technique].recentUses.push({
+              successful: tech.successful,
+              timeToApply: tech.timeToApply,
+              wasHintBased: tech.wasHintBased,
+            });
+          });
+        });
+
+        // Generate insights for each technique
+        Object.values(allTechniques).forEach((tech: any) => {
+          const successRate = (tech.timesSuccessful / tech.timesUsed) * 100;
+          const avgTime = tech.totalTime / tech.timesUsed;
+
+          if (tech.timesUsed >= 3) {
+            if (successRate >= 80) {
+              insights.push({
+                type: 'strength',
+                technique: tech.name,
+                message: `You've mastered ${formatTechniqueName(tech.name)}! ${successRate.toFixed(0)}% success rate.`,
+                actionable: `Try applying this technique earlier in puzzles to solve them faster.`,
+                priority: 3,
+                level: tech.level,
+              });
+            } else if (successRate < 50) {
+              insights.push({
+                type: 'weakness',
+                technique: tech.name,
+                message: `${formatTechniqueName(tech.name)} needs practice - only ${successRate.toFixed(0)}% success rate.`,
+                actionable: `Focus on recognizing the pattern before applying the technique. Take your time to verify the logic.`,
+                priority: 4,
+                level: tech.level,
+              });
+            }
+
+            if (avgTime > 30000) {
+              // More than 30 seconds
+              insights.push({
+                type: 'improvement',
+                technique: tech.name,
+                message: `You're taking ${Math.round(avgTime / 1000)}s on average for ${formatTechniqueName(tech.name)}.`,
+                actionable: `Practice pattern recognition for this technique to reduce application time.`,
+                priority: 2,
+                level: tech.level,
+              });
+            }
+          }
+        });
+
+        // Generate progression suggestions
+        const basicTechniques = ['naked_single', 'hidden_single'];
+        const intermediateTechniques = ['naked_pair', 'pointing_pair'];
+        const advancedTechniques = ['x_wing', 'xy_wing', 'swordfish'];
+
+        const masteredBasic = basicTechniques.every(
+          tech =>
+            allTechniques[tech] &&
+            allTechniques[tech].timesSuccessful /
+              allTechniques[tech].timesUsed >=
+              0.8
+        );
+
+        const masteredIntermediate = intermediateTechniques.every(
+          tech =>
+            allTechniques[tech] &&
+            allTechniques[tech].timesSuccessful /
+              allTechniques[tech].timesUsed >=
+              0.7
+        );
+
+        if (masteredBasic && !masteredIntermediate) {
+          insights.push({
+            type: 'suggestion',
+            technique: 'progression',
+            message: `Ready for intermediate techniques! You've mastered the basics.`,
+            actionable: `Try focusing on Naked Pairs and Pointing Pairs in your next games.`,
+            priority: 5,
+            level: 'intermediate',
+          });
+        } else if (
+          masteredIntermediate &&
+          !advancedTechniques.some(tech => allTechniques[tech])
+        ) {
+          insights.push({
+            type: 'suggestion',
+            technique: 'progression',
+            message: `Time for advanced techniques! You're ready for X-Wing and XY-Wing patterns.`,
+            actionable: `Challenge yourself with expert-level puzzles to encounter these techniques.`,
+            priority: 5,
+            level: 'advanced',
+          });
+        }
+
+        return insights.sort((a, b) => b.priority - a.priority);
+      },
+
       getProgressData: (difficulty?: Difficulty) => {
         const state = get();
         if (!state.userAnalytics) return null;
 
+        // Calculate stats in real-time from games played
+        const calculateDifficultyStats = (targetDifficulty: Difficulty) => {
+          const games = state.userAnalytics!.gamesPlayed.filter(
+            game => game.difficulty === targetDifficulty
+          );
+
+          const completedGames = games.filter(game => game.completed === true);
+          const gamesPlayed = games.length;
+          const gamesCompleted = completedGames.length;
+
+          // Calculate best time from completed games with valid durations
+          const completedGamesWithDuration = completedGames.filter(
+            game => game.duration && game.duration > 0
+          );
+
+          const bestTime =
+            completedGamesWithDuration.length > 0
+              ? Math.min(
+                  ...completedGamesWithDuration.map(game => game.duration!)
+                )
+              : Infinity;
+
+          // Calculate average time from all games (including incomplete for overall play time)
+          const averageTime =
+            games.length > 0
+              ? games.reduce((sum, game) => sum + (game.duration || 0), 0) /
+                games.length
+              : 0;
+
+          // Calculate accuracy from all games
+          const accuracy =
+            games.length > 0
+              ? games.reduce((sum, game) => sum + (game.accuracy || 0), 0) /
+                games.length
+              : 0;
+
+          // Find last played date
+          const lastPlayed =
+            games.length > 0
+              ? new Date(
+                  Math.max(
+                    ...games.map(game => {
+                      const endTime = game.endTime
+                        ? new Date(game.endTime).getTime()
+                        : 0;
+                      const startTime = game.startTime
+                        ? new Date(game.startTime).getTime()
+                        : 0;
+                      return Math.max(endTime, startTime);
+                    })
+                  )
+                )
+              : new Date();
+
+          return {
+            gamesPlayed,
+            gamesCompleted,
+            averageTime,
+            bestTime,
+            accuracy,
+            lastPlayed,
+          };
+        };
+
         if (difficulty) {
-          return state.userAnalytics.difficultyProgress[difficulty];
+          return calculateDifficultyStats(difficulty);
         }
 
-        return state.userAnalytics.difficultyProgress;
-      },
+        // Return all difficulties calculated in real-time
+        const difficulties: Difficulty[] = [
+          'beginner',
+          'intermediate',
+          'advanced',
+          'expert',
+          'master',
+          'grandmaster',
+        ];
+        const result: Record<Difficulty, any> = {} as Record<Difficulty, any>;
 
-      exportUserData: (): string => {
-        const state = get();
-        return JSON.stringify(
-          {
-            userAnalytics: state.userAnalytics,
-            exportDate: new Date(),
-            version: '1.0',
-          },
-          null,
-          2
-        );
-      },
+        difficulties.forEach(diff => {
+          result[diff] = calculateDifficultyStats(diff);
+        });
 
-      importUserData: (data: string): boolean => {
-        try {
-          const parsed = JSON.parse(data);
-          if (parsed.userAnalytics) {
-            set({ userAnalytics: parsed.userAnalytics });
-            return true;
-          }
-          return false;
-        } catch {
-          return false;
-        }
+        return result;
       },
 
       clearAllData: () => {
@@ -817,23 +1107,6 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           isRecording: false,
           cellHesitationTracker: new Map(),
         });
-      },
-
-      anonymizeData: () => {
-        const state = get();
-        if (!state.userAnalytics) return;
-
-        const anonymized: UserAnalytics = {
-          ...state.userAnalytics,
-          userId: generateUserId(),
-          gamesPlayed: state.userAnalytics.gamesPlayed.map(game => ({
-            ...game,
-            userId: 'anonymous',
-            gameId: 'anon_' + Math.random().toString(36).substr(2, 9),
-          })),
-        };
-
-        set({ userAnalytics: anonymized });
       },
     }),
     {

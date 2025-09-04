@@ -55,7 +55,6 @@ export const GameControls: React.FC<GameControlsProps> = ({
                                 disabled={disabled}
                                 size="2"
                                 variant="solid"
-                                color="green"
                                 className="control-button bg-blue-600 hover:bg-blue-700 text-white"
                                 aria-label="Resume game"
                             >

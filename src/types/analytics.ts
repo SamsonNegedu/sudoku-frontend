@@ -1,6 +1,25 @@
 // Analytics and Move Recording Types
 import type { GameMove, Difficulty } from './index';
 
+export interface TechniqueUsage {
+  technique: string;
+  timesUsed: number;
+  timesSuccessful: number;
+  averageTimeToApply: number; // milliseconds
+  lastUsed: Date;
+  difficultyLevel: 'basic' | 'intermediate' | 'advanced' | 'expert';
+  successRate: number; // percentage
+  improvementTrend: number; // positive = getting better
+}
+
+export interface TechniqueInsight {
+  type: 'strength' | 'weakness' | 'improvement' | 'suggestion';
+  technique: string;
+  message: string;
+  actionable: string; // What the player should do
+  priority: number; // 1-5, higher = more important
+}
+
 export interface OverallStats {
   totalGames: number;
   completedGames: number;
@@ -13,6 +32,7 @@ export interface OverallStats {
   strongTechniques: string[];
   weakTechniques: string[];
   improvementTrend: number; // Positive = improving, negative = declining
+  techniqueUsage: Record<string, TechniqueUsage>;
 }
 
 export interface DetailedGameMove extends GameMove {
@@ -60,11 +80,24 @@ export interface GameAnalytics {
   }>;
 
   // Technique usage
-  techniquesUsed: Record<string, number>;
+  techniquesUsed: Array<{
+    technique: string;
+    moveNumber: number;
+    timeToApply: number;
+    successful: boolean;
+    wasHintBased: boolean;
+    context: {
+      emptyCellsRemaining: number;
+      previousTechnique?: string;
+      difficultyAtPoint: number;
+    };
+  }>;
   hintUsagePattern: Array<{
     moveNumber: number;
     timeWhenUsed: number;
     type: string;
+    techniqueRevealed?: string;
+    wasAppliedSuccessfully?: boolean;
   }>;
 
   // Error patterns

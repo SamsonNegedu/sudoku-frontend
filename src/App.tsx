@@ -9,6 +9,7 @@ import { useGameStore } from './stores/gameStore';
 import { storageManager } from './utils/storageManager';
 import { AnalyticsProvider } from './components/AnalyticsProvider';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
+import { LearningCenter } from './components/LearningCenter';
 import { PageLayout } from './components/PageLayout';
 import { PageHeader } from './components/PageHeader';
 import type { Difficulty } from './types';
@@ -30,7 +31,7 @@ function App() {
   } = useGameStore();
 
   // App navigation state
-  const [currentPage, setCurrentPage] = useState<'game' | 'analytics'>('game');
+  const [currentPage, setCurrentPage] = useState<'game' | 'analytics' | 'learning'>('game');
 
   // Initialize storage manager on app start
   useEffect(() => {
@@ -65,6 +66,10 @@ function App() {
 
   const handleBackToGame = () => {
     setCurrentPage('game');
+  };
+
+  const handleShowLearning = () => {
+    setCurrentPage('learning');
   };
 
   const handleCompletionAnimationEnd = () => {
@@ -113,6 +118,7 @@ function App() {
             onRestart={restartCurrentGame}
             onShowSettings={handleShowSettings}
             onShowAnalytics={handleShowAnalytics}
+            onShowLearning={handleShowLearning}
             onPause={pauseGame}
             onResume={resumeGame}
             currentDifficulty={currentGame?.difficulty}
@@ -256,6 +262,11 @@ function App() {
                 <AnalyticsDashboard />
               </div>
             </PageLayout>
+          )}
+
+          {/* Learning Center Page */}
+          {currentPage === 'learning' && (
+            <LearningCenter />
           )}
         </div>
       </AnalyticsProvider>

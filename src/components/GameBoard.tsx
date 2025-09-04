@@ -42,8 +42,8 @@ export const GameBoard: React.FC = () => {
         if (hint) {
             setCurrentHint(hint);
             setShowHint(true);
-            // Record hint usage for analytics
-            recordHintUsage(hint.type);
+            // Record hint usage for analytics with technique information
+            recordHintUsage(hint.type, hint.technique);
         }
     }, [useHint, recordHintUsage]);
 
@@ -390,8 +390,8 @@ export const GameBoard: React.FC = () => {
                 >
                     <div className="bg-white rounded-2xl p-8 mx-4 shadow-2xl max-w-sm w-full text-center">
                         <div className="mb-6">
-                            <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 rounded-full flex items-center justify-center">
-                                <svg className="w-8 h-8 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                                 </svg>
                             </div>
@@ -405,8 +405,7 @@ export const GameBoard: React.FC = () => {
                             onClick={resumeGame}
                             size="4"
                             variant="solid"
-                            color="green"
-                            className="w-full flex items-center justify-center gap-2 mb-4"
+                            className="w-full flex items-center justify-center gap-2 mb-4 bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z" />

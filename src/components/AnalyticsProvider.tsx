@@ -147,9 +147,8 @@ export const useGameAnalytics = () => {
         analyticsStore.recordMove(move, gameContext);
     };
 
-    const recordHintUsage = (hintType: string) => {
-
-        analyticsStore.recordHint(hintType);
+    const recordHintUsage = (hintType: string, techniqueRevealed?: string) => {
+        analyticsStore.recordHint(hintType, techniqueRevealed);
     };
 
     return {
