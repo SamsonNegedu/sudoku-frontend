@@ -19,9 +19,11 @@ interface AppNavbarProps {
     onShowSettings: () => void;
     onShowAnalytics: () => void;
     onShowLearning: () => void;
+    onShowGame?: () => void; // New prop for navigating back to game
     onPause: () => void;
     onResume: () => void;
     currentDifficulty?: Difficulty;
+    currentPage?: 'game' | 'analytics' | 'learning'; // New prop to know current page
     isPlaying: boolean;
     isPaused: boolean;
     isCompleted: boolean;
@@ -40,9 +42,11 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     onRestart,
     onShowAnalytics,
     onShowLearning,
+    onShowGame,
     onPause,
     onResume,
     currentDifficulty,
+    currentPage = 'game',
     isPlaying,
     isPaused,
     isCompleted,
@@ -66,7 +70,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo and Brand */}
-                    <div className="flex items-center space-x-3">
+                    <button
+                        onClick={onShowGame}
+                        className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+                    >
                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-lg">9</span>
                         </div>
@@ -75,7 +82,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                 Grid Logic
                             </h1>
                         </div>
-                    </div>
+                    </button>
 
                     {/* Center - Game Status & Timer */}
                     {(isPlaying || isPaused) && (
@@ -351,70 +358,90 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                         )}
                                     </Button>
                                 </DropdownMenu.Trigger>
-                                <DropdownMenu.Content align="end" side="bottom">
-                                    <div className="px-2 py-1">
+                                <DropdownMenu.Content
+                                    align="end"
+                                    side="bottom"
+                                    sideOffset={8}
+                                    className="w-48 p-1 bg-white border border-neutral-200 rounded-lg shadow-lg z-50"
+                                >
+                                    {/* Back to Game - only when not on game page and has active game */}
+                                    {currentPage !== 'game' && (isPlaying || isPaused) && onShowGame && (
+                                        <>
+                                            <DropdownMenu.Item
+                                                className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-blue-50 focus:bg-blue-50 outline-none border-0"
+                                                onClick={onShowGame}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <PlayIcon className="w-4 h-4 text-blue-600" />
+                                                    <span className="font-medium text-sm text-blue-600">Back to Game</span>
+                                                </div>
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Separator className="my-1" />
+                                        </>
+                                    )}
+
+                                    {/* Navigation */}
+                                    {currentPage !== 'analytics' && (
                                         <DropdownMenu.Item
-                                            className="px-3 py-3 rounded-lg cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
+                                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
                                             onClick={onShowAnalytics}
                                         >
                                             <div className="flex items-center gap-2">
-                                                <BarChartIcon className="w-4 h-4" />
+                                                <BarChartIcon className="w-4 h-4 text-neutral-600" />
                                                 <span className="font-medium text-sm">Analytics</span>
                                             </div>
                                         </DropdownMenu.Item>
+                                    )}
 
+                                    {currentPage !== 'learning' && (
                                         <DropdownMenu.Item
-                                            className="px-3 py-3 rounded-lg cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
+                                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
                                             onClick={onShowLearning}
                                         >
                                             <div className="flex items-center gap-2">
-                                                <ReaderIcon className="w-4 h-4" />
+                                                <ReaderIcon className="w-4 h-4 text-neutral-600" />
                                                 <span className="font-medium text-sm">Learning Center</span>
                                             </div>
                                         </DropdownMenu.Item>
+                                    )}
 
-                                        {(isPlaying || isPaused) && !isCompleted && (
-                                            <>
-                                                <DropdownMenu.Separator />
+                                    <DropdownMenu.Separator className="my-1" />
 
-                                                <div className="text-xs font-medium text-neutral-500 uppercase tracking-wide px-2 py-1.5 mb-2">
-                                                    Start New Game
+                                    {/* New Game section */}
+                                    <DropdownMenu.Label className="px-3 py-1 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
+                                        New Game
+                                    </DropdownMenu.Label>
+
+                                    {difficultyLevels.map((difficulty) => (
+                                        <DropdownMenu.Item
+                                            key={difficulty.level}
+                                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
+                                            onClick={() => onNewGame(difficulty.level)}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <PlusIcon className="w-3 h-3 text-neutral-500" />
+                                                <span className="font-medium text-sm">{difficulty.label}</span>
+                                            </div>
+                                        </DropdownMenu.Item>
+                                    ))}
+
+                                    {/* Current game actions */}
+                                    {(isPlaying || isPaused) && !isCompleted && (
+                                        <>
+                                            <DropdownMenu.Separator className="my-1" />
+                                            <DropdownMenu.Item
+                                                className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-red-50 focus:bg-red-50 outline-none border-0"
+                                                onClick={onRestart}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                                                    </svg>
+                                                    <span className="font-medium text-sm text-red-600">Restart</span>
                                                 </div>
-                                                {difficultyLevels.map((difficulty, index) => (
-                                                    <div key={difficulty.level}>
-                                                        {index > 0 && <div className="h-3"></div>}
-                                                        <DropdownMenu.Item
-                                                            className="px-3 py-3 rounded-lg cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
-                                                            onClick={() => onNewGame(difficulty.level)}
-                                                        >
-                                                            <div className="flex flex-col gap-1">
-                                                                <div className="font-semibold text-neutral-900 text-sm">
-                                                                    {difficulty.label}
-                                                                </div>
-                                                                <div className="text-xs text-neutral-500 leading-normal break-words">
-                                                                    {difficulty.description}
-                                                                </div>
-                                                            </div>
-                                                        </DropdownMenu.Item>
-                                                    </div>
-                                                ))}
-
-                                                <DropdownMenu.Separator />
-
-                                                <DropdownMenu.Item
-                                                    className="px-3 py-3 rounded-lg cursor-pointer transition-colors hover:bg-red-50 focus:bg-red-50 outline-none border-0 text-red-600"
-                                                    onClick={onRestart}
-                                                >
-                                                    <div className="flex flex-col gap-1">
-                                                        <div className="font-semibold text-red-600 text-sm">Restart Current</div>
-                                                        <div className="text-xs text-red-500 leading-normal">
-                                                            Clear progress and start over
-                                                        </div>
-                                                    </div>
-                                                </DropdownMenu.Item>
-                                            </>
-                                        )}
-                                    </div>
+                                            </DropdownMenu.Item>
+                                        </>
+                                    )}
                                 </DropdownMenu.Content>
                             </DropdownMenu.Root>
                         </div>

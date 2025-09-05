@@ -119,9 +119,11 @@ function App() {
             onShowSettings={handleShowSettings}
             onShowAnalytics={handleShowAnalytics}
             onShowLearning={handleShowLearning}
+            onShowGame={handleBackToGame}
             onPause={pauseGame}
             onResume={resumeGame}
             currentDifficulty={currentGame?.difficulty}
+            currentPage={currentPage}
             isPlaying={!!isPlaying}
             isPaused={!!isPaused}
             isCompleted={currentGame?.isCompleted || false}
@@ -266,7 +268,25 @@ function App() {
 
           {/* Learning Center Page */}
           {currentPage === 'learning' && (
-            <LearningCenter />
+            <PageLayout>
+              <PageHeader
+                title="Sudoku Learning Center"
+                subtitle="Master every solving technique with interactive guides and examples. Experimental AI-generated guides."
+              >
+                <Button
+                  onClick={handleBackToGame}
+                  size="2"
+                  variant="solid"
+                  className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  ← Back to Game
+                </Button>
+              </PageHeader>
+
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <LearningCenter />
+              </div>
+            </PageLayout>
           )}
         </div>
       </AnalyticsProvider>
