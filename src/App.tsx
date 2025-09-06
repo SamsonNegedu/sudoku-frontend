@@ -9,7 +9,7 @@ import { useGameStore } from './stores/gameStore';
 import { storageManager } from './utils/storageManager';
 import { AnalyticsProvider } from './components/AnalyticsProvider';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
-import { LearningCenter } from './components/LearningCenter';
+import { LearningCenter } from './components/learning/LearningCenter';
 import { PageLayout } from './components/PageLayout';
 import { PageHeader } from './components/PageHeader';
 import type { Difficulty } from './types';
