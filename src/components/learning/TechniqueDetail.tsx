@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@radix-ui/themes';
 import type { TechniqueGuide } from '../../types/learning';
 import { useLearning } from '../../contexts/LearningContext';
-import { ExampleBoard } from '../ExampleBoard';
+import { ExampleBoard } from '../learning/ExampleBoard';
 
 interface TechniqueDetailProps {
     technique: TechniqueGuide;

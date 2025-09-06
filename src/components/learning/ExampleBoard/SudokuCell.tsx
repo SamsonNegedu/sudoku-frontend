@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../../utils/cn';
 import { useBoardLayout } from '../../../hooks/useBoardLayout';
-import { CellType } from '../../../types/learning';
+import type { CellType } from '../../../types/learning';
 
 interface SudokuCellProps {
     value?: number;

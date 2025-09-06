@@ -1,13 +1,5 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
-import {
-    ResetIcon,
-    Pencil1Icon,
-    Pencil2Icon,
-    TrashIcon,
-    QuestionMarkCircledIcon,
-} from '@radix-ui/react-icons';
-import { enableUnlimitedHints } from '../config/systemConfig';
+import { ModeIndicator, ControlButtons, NumberGrid } from './numberpad/index';
 
 interface NumberPadProps {
     onNumberClick: (number: number) => void;
@@ -38,144 +30,34 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     completedNumbers = [],
     selectedCell,
 }) => {
-    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const useUnlimitedHints = enableUnlimitedHints();
-
     return (
         <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-neutral-200">
             {/* Mode indicator */}
-            <div className="flex flex-col items-center mb-3 space-y-1">
-                <div className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${inputMode === 'pen'
-                    ? 'bg-blue-100 text-blue-600 border border-blue-200'
-                    : 'bg-green-100 text-green-700 border border-green-200'
-                    }`}>
-                    {inputMode === 'pen' ? '🖊️ Writing Mode' : '✏️ Notes Mode'}
-                </div>
-
-            </div>
+            <ModeIndicator inputMode={inputMode} />
 
             {/* Two-row layout: Controls on top, Numbers on bottom */}
             <div className="flex flex-col gap-4">
-
-                {/* Top Row: Control buttons - reordered for better UX */}
-                <div className="flex justify-center gap-3 sm:gap-4">
-
-                    <Button
-                        onClick={onUndo}
-                        disabled={!canUndo}
-                        size="2"
-                        variant="outline"
-                        color={!canUndo ? "gray" : "blue"}
-                        className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white hover:bg-blue-50 ${!canUndo ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-600 text-blue-600'
-                            }`}
-                        aria-label="Undo last move"
-                        title={!canUndo ? "No moves to undo" : "Undo (Ctrl+Z)"}
-                    >
-                        <ResetIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </Button>
-
-                    <Button
-                        onClick={onClear}
-                        disabled={disabled}
-                        size="2"
-                        variant="outline"
-                        color="red"
-                        className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white hover:bg-red-50 ${disabled ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-red-500 text-red-600'
-                            }`}
-                        aria-label="Clear cell"
-                        title="Clear cell"
-                    >
-                        <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </Button>
-
-                    <div className="relative">
-                        <Button
-                            onClick={onToggleNote}
-                            disabled={disabled}
-                            size="2"
-                            variant="outline"
-                            color={inputMode === 'pencil' ? "green" : "blue"}
-                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${disabled ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : inputMode === 'pencil' ? 'border-green-500 text-green-600 hover:bg-green-50' : 'border-blue-600 text-blue-600 hover:bg-blue-50'
-                                }`}
-                            aria-label={`Currently in ${inputMode} mode. Click to switch to ${inputMode === 'pen' ? 'notes' : 'writing'} mode`}
-                            title={`Current: ${inputMode === 'pen' ? 'Writing' : 'Notes'} Mode`}
-                        >
-                            {inputMode === 'pen' ? <Pencil1Icon className="w-4 h-4 sm:w-5 sm:h-5" /> : <Pencil2Icon className="w-4 h-4 sm:w-5 sm:h-5" />}
-                        </Button>
-                        {/* Notes mode status overlay - top right corner */}
-                        <div className={`absolute -top-1 -right-1 text-[8px] font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white ${inputMode === 'pencil' ? 'bg-green-500' : 'bg-blue-600'} text-white`}>
-                            {inputMode === 'pencil' ? 'ON' : 'OFF'}
-                        </div>
-                    </div>
-
-                    <div className="relative">
-                        <Button
-                            onClick={onHint}
-                            disabled={!useUnlimitedHints && hintsUsed >= maxHints}
-                            size="2"
-                            variant="outline"
-                            color={(!useUnlimitedHints && hintsUsed >= maxHints) ? "gray" : "blue"}
-                            className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${(!useUnlimitedHints && hintsUsed >= maxHints) ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-600 text-blue-600 hover:bg-blue-50'
-                                }`}
-                            aria-label={useUnlimitedHints ? 'Get hint (unlimited)' : `Get hint (${maxHints - hintsUsed} remaining)`}
-                            title={useUnlimitedHints ? 'Hint (unlimited in development)' : (hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`)}
-                            data-hint-button="true"
-                        >
-                            <QuestionMarkCircledIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </Button>
-                        {/* Remaining hints count overlay - top right corner */}
-                        {(useUnlimitedHints || hintsUsed < maxHints) && (
-                            <div className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center shadow-lg border-2 border-white">
-                                {useUnlimitedHints ? '∞' : maxHints - hintsUsed}
-                            </div>
-                        )}
-                    </div>
-                </div>
+                {/* Top Row: Control buttons */}
+                <ControlButtons
+                    onUndo={onUndo}
+                    onClear={onClear}
+                    onToggleNote={onToggleNote}
+                    onHint={onHint}
+                    inputMode={inputMode}
+                    disabled={disabled}
+                    canUndo={canUndo}
+                    hintsUsed={hintsUsed}
+                    maxHints={maxHints}
+                />
 
                 {/* Bottom Row: Number buttons */}
-                <div className="flex justify-center gap-3 sm:gap-4 sm:flex-nowrap">
-                    {numbers.map((number) => {
-                        const isCompleted = completedNumbers.includes(number);
-                        const isDisabled = disabled || isCompleted;
-
-                        return (
-                            <div key={number} className="relative">
-                                <Button
-                                    onClick={() => onNumberClick(number)}
-                                    disabled={isDisabled}
-                                    size="2"
-                                    variant={isCompleted ? "soft" : "solid"}
-                                    color={isCompleted ? "gray" : undefined}
-                                    className={`w-8 h-8 sm:w-16 sm:h-16 font-bold text-base sm:text-xl transition-all duration-200 flex items-center justify-center ${!isCompleted && !disabled
-                                        ? 'hover:scale-105 active:scale-95 bg-blue-600 hover:bg-blue-700 text-white'
-                                        : ''
-                                        } ${inputMode === 'pencil' && !isCompleted ? 'italic' : ''
-                                        } ${isCompleted ? 'opacity-60 cursor-not-allowed' : ''
-                                        }`}
-                                    aria-label={
-                                        isCompleted
-                                            ? `Number ${number} is completed (all 9 placed)`
-                                            : `${inputMode === 'pen' ? 'Enter' : 'Add note'} ${number}`
-                                    }
-                                    title={
-                                        isCompleted
-                                            ? `Number ${number} is completed (9/9 placed)`
-                                            : selectedCell
-                                                ? `${inputMode === 'pen' ? 'Write' : 'Note'} ${number} in row ${selectedCell.row + 1}, column ${selectedCell.col + 1}`
-                                                : `Click to ${inputMode === 'pen' ? 'place' : 'note'} ${number} (will auto-select first empty cell)`
-                                    }
-                                >
-                                    {number}
-                                </Button>
-                                {isCompleted && (
-                                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full text-[8px] text-white flex items-center justify-center font-bold shadow-sm">
-                                        ✓
-                                    </span>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
+                <NumberGrid
+                    onNumberClick={onNumberClick}
+                    inputMode={inputMode}
+                    disabled={disabled}
+                    completedNumbers={completedNumbers}
+                    selectedCell={selectedCell}
+                />
             </div>
         </div>
     );

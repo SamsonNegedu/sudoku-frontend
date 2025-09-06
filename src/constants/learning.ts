@@ -4,7 +4,7 @@ import {
   LightningBoltIcon,
   TargetIcon,
 } from '@radix-ui/react-icons';
-import { LevelFilter } from '../types/learning';
+import type { LevelFilter } from '../types/learning';
 
 export const DIFFICULTY_LEVELS: readonly LevelFilter[] = [
   { id: 'all', name: 'All Levels', icon: ReaderIcon },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { GameStateControls, GameActionControls } from './controls/index';
 
 interface GameControlsProps {
     onNewGame: () => void;
@@ -35,84 +35,25 @@ export const GameControls: React.FC<GameControlsProps> = ({
     return (
         <div className="game-controls space-y-3">
             {/* Game state controls */}
-            <div className="flex flex-wrap gap-2">
-                {!isPlaying ? (
-                    <Button
-                        onClick={onNewGame}
-                        disabled={disabled}
-                        size="2"
-                        variant="solid"
-                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
-                        aria-label="Start new game"
-                    >
-                        🆕 New Game
-                    </Button>
-                ) : (
-                    <>
-                        {isPaused ? (
-                            <Button
-                                onClick={onResume}
-                                disabled={disabled}
-                                size="2"
-                                variant="solid"
-                                className="control-button bg-blue-600 hover:bg-blue-700 text-white"
-                                aria-label="Resume game"
-                            >
-                                ▶️ Resume
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={onPause}
-                                disabled={disabled}
-                                size="2"
-                                variant="solid"
-                                className="control-button bg-blue-600 hover:bg-blue-700 text-white"
-                                aria-label="Pause game"
-                            >
-                                ⏸️ Pause
-                            </Button>
-                        )}
-                    </>
-                )}
-            </div>
+            <GameStateControls
+                onNewGame={onNewGame}
+                onPause={onPause}
+                onResume={onResume}
+                isPlaying={isPlaying}
+                isPaused={isPaused}
+                disabled={disabled}
+            />
 
             {/* Game action controls */}
             {isPlaying && (
-                <div className="flex flex-wrap gap-2">
-                    <Button
-                        onClick={onHint}
-                        disabled={disabled || hintsRemaining <= 0}
-                        size="2"
-                        variant="soft"
-                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
-                        aria-label={`Get hint (${hintsRemaining} remaining)`}
-                    >
-                        💡 Hint ({hintsRemaining})
-                    </Button>
-
-                    <Button
-                        onClick={onUndo}
-                        disabled={disabled || !canUndo}
-                        size="2"
-                        variant="soft"
-                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
-                        aria-label="Undo last move"
-                    >
-                        ↩️ Undo
-                    </Button>
-
-                    <Button
-                        onClick={onReset}
-                        disabled={disabled}
-                        size="2"
-                        variant="solid"
-                        color="red"
-                        className="control-button bg-blue-600 hover:bg-blue-700 text-white"
-                        aria-label="Reset current game"
-                    >
-                        🔄 Reset
-                    </Button>
-                </div>
+                <GameActionControls
+                    onHint={onHint}
+                    onUndo={onUndo}
+                    onReset={onReset}
+                    hintsRemaining={hintsRemaining}
+                    canUndo={canUndo}
+                    disabled={disabled}
+                />
             )}
         </div>
     );
