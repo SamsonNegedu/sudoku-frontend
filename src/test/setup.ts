@@ -21,12 +21,6 @@ const mockIDB = {
 
 // @ts-ignore
 global.indexedDB = mockIDB;
-global.IDBKeyRange = {
-  bound: vi.fn(),
-  lowerBound: vi.fn(),
-  upperBound: vi.fn(),
-  only: vi.fn(),
-};
 
 // Mock localStorage
 const localStorageMock = {
@@ -51,12 +45,3 @@ global.console = {
   info: vi.fn(),
   debug: vi.fn(),
 };
-
-// Reset all mocks before each test
-beforeEach(() => {
-  vi.clearAllMocks();
-  localStorageMock.getItem.mockClear();
-  localStorageMock.setItem.mockClear();
-  localStorageMock.removeItem.mockClear();
-  localStorageMock.clear.mockClear();
-});

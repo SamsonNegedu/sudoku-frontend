@@ -225,10 +225,10 @@ export class SudokuPuzzleGenerator {
       }
 
       switch (pattern) {
-        case 'balanced':
+        case 'balanced': {
           return this.shuffleArray(allPositions);
-
-        case 'mixed':
+        }
+        case 'mixed': {
           // Rotate through blocks randomly
           const blockIndices = this.shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8]);
           const mixedPositions: [number, number][] = [];
@@ -241,8 +241,9 @@ export class SudokuPuzzleGenerator {
             mixedPositions.push(...this.shuffleArray(blockPositions));
           });
           return mixedPositions;
+        }
 
-        case 'varied':
+        case 'varied': {
           // Create random patterns
           const patterns = ['diagonal', 'corners', 'center', 'edges'];
           const selectedPattern =
@@ -264,8 +265,9 @@ export class SudokuPuzzleGenerator {
           }
 
           return this.shuffleArray(allPositions);
+        }
 
-        case 'sparse':
+        case 'sparse': {
           // Prioritize random blocks for sparsity
           const sparseBlocks = this.shuffleArray([
             0, 1, 2, 3, 4, 5, 6, 7, 8,
@@ -286,8 +288,9 @@ export class SudokuPuzzleGenerator {
             ...this.shuffleArray(sparsePositions),
             ...this.shuffleArray(regularPositions),
           ];
+        }
 
-        case 'minimal':
+        case 'minimal': {
           // Create dramatic variation
           const targetEmpty = Math.floor(Math.random() * 3) + 2; // 2-4 blocks
           const emptyBlocks = this.shuffleArray([
@@ -309,6 +312,7 @@ export class SudokuPuzzleGenerator {
             ...this.shuffleArray(emptyPositions),
             ...this.shuffleArray(filledPositions),
           ];
+        }
 
         default:
           return this.shuffleArray(allPositions);

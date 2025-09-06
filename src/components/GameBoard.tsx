@@ -42,12 +42,14 @@ export const GameBoard: React.FC = () => {
 
     // Handle hint usage
     const handleUseHint = useCallback(() => {
-        const hint = useHint();
-        if (hint) {
-            setCurrentHint(hint);
-            setShowHint(true);
-            // Record hint usage for analytics with technique information
-            recordHintUsage(hint.type, hint.technique);
+        if (useHint) {
+            const hint = useHint();
+            if (hint) {
+                setCurrentHint(hint);
+                setShowHint(true);
+                // Record hint usage for analytics with technique information
+                recordHintUsage(hint.type, hint.technique);
+            }
         }
     }, [useHint, recordHintUsage]);
 

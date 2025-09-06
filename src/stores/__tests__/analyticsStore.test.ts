@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useAnalyticsStore } from '../analyticsStore';
-import type { Difficulty } from '../../types';
 
 // Helper to create a fresh store instance
 const createFreshStore = () => {

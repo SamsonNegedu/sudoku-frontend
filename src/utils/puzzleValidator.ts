@@ -1,4 +1,4 @@
-import type { SudokuBoard, ValidationResult } from '../types';
+import type { SudokuBoard } from '../types';
 
 /**
  * Advanced Sudoku Puzzle Validation System
@@ -367,13 +367,15 @@ export class SudokuValidator {
               );
               break;
             case 'box':
-              const boxNum =
-                Math.floor(conflictRow / 3) * 3 +
-                Math.floor(conflictCol / 3) +
-                1;
-              reasons.push(
-                `appears in box ${boxNum} at row ${conflictRow + 1}, column ${conflictCol + 1}`
-              );
+              {
+                const boxNum =
+                  Math.floor(conflictRow / 3) * 3 +
+                  Math.floor(conflictCol / 3) +
+                  1;
+                reasons.push(
+                  `appears in box ${boxNum} at row ${conflictRow + 1}, column ${conflictCol + 1}`
+                );
+              }
               break;
           }
         });

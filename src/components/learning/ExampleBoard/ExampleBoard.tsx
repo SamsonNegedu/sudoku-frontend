@@ -3,7 +3,6 @@ import { SudokuCell } from './SudokuCell';
 import { CandidateGrid } from './CandidateGrid';
 import { useBoardLayout } from '../../../hooks/useBoardLayout';
 import type { TechniqueExample } from '../../../types/learning';
-import { GRID_SIZE } from '../../../constants/learning';
 
 interface ExampleBoardProps extends Pick<TechniqueExample, 'board' | 'highlightCells' | 'eliminationCells' | 'candidateNotes'> {
     className?: string;

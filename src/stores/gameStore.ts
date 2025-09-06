@@ -136,7 +136,7 @@ const createDifficultyBasedPuzzle = (
         // Evenly distributed removal - shuffle completely
         return shuffleArray(allCells);
 
-      case 'mixed':
+      case 'mixed': {
         // Favor removing from different blocks in rotation
         const blockOrder = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8]);
         const mixedCells: [number, number][] = [];
@@ -148,8 +148,9 @@ const createDifficultyBasedPuzzle = (
           mixedCells.push(...shuffleArray(blockCells));
         });
         return mixedCells;
+      }
 
-      case 'varied':
+      case 'varied': {
         // Create clusters and gaps randomly
         const clusters = Math.floor(Math.random() * 3) + 2; // 2-4 clusters
         const cellsPerCluster = Math.floor(allCells.length / clusters);
@@ -162,8 +163,9 @@ const createDifficultyBasedPuzzle = (
           variedCells.push(...shuffleArray(clusterCells));
         }
         return variedCells;
+      }
 
-      case 'sparse':
+      case 'sparse': {
         // Prefer creating sparse blocks - prioritize certain blocks
         const sparsePriority = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8]);
         const priorityBlocks = sparsePriority.slice(
@@ -184,8 +186,9 @@ const createDifficultyBasedPuzzle = (
         });
 
         return [...shuffleArray(priorityCells), ...shuffleArray(normalCells)];
+      }
 
-      case 'minimal':
+      case 'minimal': {
         // Very sparse - create dramatic variations
         const minimalBlocks = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8]);
         const emptyTargets = minimalBlocks.slice(
@@ -206,6 +209,7 @@ const createDifficultyBasedPuzzle = (
         });
 
         return [...shuffleArray(emptyCells), ...shuffleArray(filledCells)];
+      }
 
       default:
         return shuffleArray(allCells);
@@ -325,7 +329,7 @@ const createPuzzle = (
       if (Date.now() - startTime > timeoutMs) {
         throw new Error(`Generation timeout after ${timeoutMs}ms`);
       }
-    } catch (timeoutError) {
+    } catch (_timeoutError) {
       console.warn(
         `Puzzle generation timeout for ${difficulty}, using fallback`
       );

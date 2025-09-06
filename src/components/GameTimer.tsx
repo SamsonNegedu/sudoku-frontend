@@ -19,21 +19,18 @@ export const GameTimer: React.FC<GameTimerProps> = ({
     pauseStartTime,
     totalPausedTime,
     pausedElapsedTime,
+
     currentTime,
 }) => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Don't render timer if no start time (no active game)
-    if (!startTime) {
-        return null;
-    }
-
     // Convert startTime to Date object if it's a string
-    const startTimeDate = startTime instanceof Date ? startTime : new Date(startTime);
+    const startTimeDate = startTime ? (startTime instanceof Date ? startTime : new Date(startTime)) : null;
 
     // Calculate the current elapsed time
     const calculateElapsedTime = () => {
+        if (!startTimeDate) return 0;
         if (isCompleted && currentTime) {
             // For completed games, calculate total duration using completion time
             const currentTimeDate = currentTime instanceof Date ? currentTime : new Date(currentTime);
@@ -56,6 +53,11 @@ export const GameTimer: React.FC<GameTimerProps> = ({
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
+        }
+
+        // Don't do anything if no start time
+        if (!startTimeDate) {
+            return;
         }
 
         // Always update elapsed time, even if completed
@@ -87,7 +89,12 @@ export const GameTimer: React.FC<GameTimerProps> = ({
                 intervalRef.current = null;
             }
         };
-    }, [startTimeDate, isCompleted, isPaused, pauseStartTime, totalPausedTime, pausedElapsedTime, currentTime]);
+    }, [startTimeDate, isCompleted, isPaused, pauseStartTime, totalPausedTime, pausedElapsedTime, currentTime, calculateElapsedTime]);
+
+    // Don't render timer if no start time (no active game)
+    if (!startTime) {
+        return null;
+    }
 
     return (
         <div className="flex items-center gap-2 p-3 bg-neutral-100 rounded-lg">

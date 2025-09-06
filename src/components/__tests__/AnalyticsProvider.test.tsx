@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { AnalyticsProvider } from '../AnalyticsProvider';
 import { useAnalyticsStore } from '../../stores/analyticsStore';
 import { useGameStore } from '../../stores/gameStore';

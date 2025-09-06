@@ -24,9 +24,7 @@ export const HintDisplay: React.FC<HintDisplayProps> = ({
 
   return (
     <div
-      className={`fixed z-40 transition-all duration-200 ${
-        fadeOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
-      }`}
+      className={`fixed z-40 ${fadeOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
       style={{
         top: typeof position.top === 'number' ? `${position.top}px` : position.top,
         left: typeof position.left === 'number' ? `${position.left}px` : position.left,
