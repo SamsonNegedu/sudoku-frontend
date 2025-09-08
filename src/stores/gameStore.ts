@@ -7,10 +7,11 @@ import type {
   Difficulty,
   Hint,
 } from '../types';
-import { SudokuValidator } from '../utils/puzzleValidator';
-import { SolutionValidator } from '../utils/solutionValidator';
-import { SudokuHintGenerator } from '../utils/hintGenerator';
+
+// Use the new game engine instead of old utils
+import { gameEngineService } from '../services/gameEngineService';
 import { DifficultyConfigManager } from '../config/difficulty';
+import { enableUnlimitedHints } from '../config/systemConfig';
 
 interface GameStore {
   // State
@@ -21,6 +22,14 @@ interface GameStore {
   isGeneratingPuzzle: boolean;
   showCompletionAnimation: boolean;
   showMistakesModal: boolean;
+  isHydrated: boolean; // Track if persisted state has been loaded
+  hintHighlights: {
+    cells: [number, number][];
+    rows: number[];
+    columns: number[];
+    boxes: number[];
+  };
+  hintFilledCells: [number, number][];
 
   // Actions
   startNewGame: (difficulty: Difficulty) => void;
@@ -34,25 +43,36 @@ interface GameStore {
   selectCell: (row: number, col: number) => void;
   setCellValue: (row: number, col: number, value: number | null) => void;
   toggleNote: (row: number, col: number, value: number) => void;
-  clearCell: (row: number, col: number) => void;
+  clearCell: (row: number, col: number) => Promise<void>;
   undoMove: () => void;
   redoMove: () => void;
-  useHint: () => Hint | null;
+  getHint: () => Promise<Hint | null>;
+  clearHintHighlights: () => void;
   validateMove: (row: number, col: number, value: number) => boolean;
   checkGameCompletion: () => boolean;
   resetGame: () => void;
   setInputMode: (mode: 'pen' | 'pencil') => void;
 
   // Enhanced validation methods
-  validateMoveDetailed: (row: number, col: number, value: number) => any;
-  getCandidates: (row: number, col: number) => any;
-  getBoardValidation: () => any;
+  validateMoveDetailed: (
+    row: number,
+    col: number,
+    value: number
+  ) => Promise<unknown>;
+  getCandidates: (row: number, col: number) => Promise<number[]>;
+  getBoardValidation: () => Promise<unknown>;
 
   // Solution validation methods
   validateAgainstSolution: (row: number, col: number, value: number) => boolean;
   updateBoardValidation: () => void;
   getMistakeCount: () => number;
-  getPuzzleStats: () => any;
+  getPuzzleStats: () => {
+    totalCells: number;
+    filledCells: number;
+    correctCells: number;
+    completionPercentage: number;
+    accuracy: number;
+  } | null;
   getCompletedNumbers: () => number[];
 }
 
@@ -78,303 +98,6 @@ const createInitialBoard = (): SudokuBoard => {
   return board;
 };
 
-import { SudokuPuzzleGenerator } from '../utils/puzzleGenerator';
-import { enableUnlimitedHints } from '../config/systemConfig';
-
-// Fallback puzzle generator for when main generation times out
-const createFallbackPuzzle = (difficulty: Difficulty) => {
-  // Use the solution directly for fallback
-
-  const baseSolution = [
-    [5, 3, 4, 6, 7, 8, 9, 1, 2],
-    [6, 7, 2, 1, 9, 5, 3, 4, 8],
-    [1, 9, 8, 3, 4, 2, 5, 6, 7],
-    [8, 5, 9, 7, 6, 1, 4, 2, 3],
-    [4, 2, 6, 8, 5, 3, 7, 9, 1],
-    [7, 1, 3, 9, 2, 4, 8, 5, 6],
-    [9, 6, 1, 5, 3, 7, 2, 8, 4],
-    [2, 8, 7, 4, 1, 9, 6, 3, 5],
-    [3, 4, 5, 2, 8, 6, 1, 7, 9],
-  ];
-
-  return createDifficultyBasedPuzzle(baseSolution, difficulty);
-};
-
-// Advanced puzzle creation with 3x3 block control
-const createDifficultyBasedPuzzle = (
-  solution: number[][],
-  difficulty: Difficulty
-) => {
-  const puzzle = solution.map(row => [...row]);
-
-  // 3x3 blocks are handled dynamically in the removal strategy
-
-  // Get difficulty-based constraints from centralized config
-  const difficultyConfig = DifficultyConfigManager.getConfig(difficulty);
-  const constraints = difficultyConfig.puzzleGeneration;
-
-  // Random target clues within the difficulty range
-  const [minClues, maxClues] = constraints.totalClues;
-  const targetClues =
-    minClues + Math.floor(Math.random() * (maxClues - minClues + 1));
-  const targetRemovals = 81 - targetClues;
-
-  // Track clues per block
-  const blockClues = new Array(9).fill(9); // Start with 9 clues per block
-
-  // Create varied removal patterns based on distribution strategy
-  const createRemovalStrategy = (distribution: string): [number, number][] => {
-    const allCells: [number, number][] = [];
-    for (let row = 0; row < 9; row++) {
-      for (let col = 0; col < 9; col++) {
-        allCells.push([row, col]);
-      }
-    }
-
-    switch (distribution) {
-      case 'balanced':
-        // Evenly distributed removal - shuffle completely
-        return shuffleArray(allCells);
-
-      case 'mixed': {
-        // Favor removing from different blocks in rotation
-        const blockOrder = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-        const mixedCells: [number, number][] = [];
-        blockOrder.forEach(blockIdx => {
-          const blockCells = allCells.filter(([row, col]) => {
-            const cellBlockIdx = Math.floor(row / 3) * 3 + Math.floor(col / 3);
-            return cellBlockIdx === blockIdx;
-          });
-          mixedCells.push(...shuffleArray(blockCells));
-        });
-        return mixedCells;
-      }
-
-      case 'varied': {
-        // Create clusters and gaps randomly
-        const clusters = Math.floor(Math.random() * 3) + 2; // 2-4 clusters
-        const cellsPerCluster = Math.floor(allCells.length / clusters);
-        const variedCells = [];
-
-        for (let i = 0; i < clusters; i++) {
-          const startIdx = i * cellsPerCluster;
-          const endIdx = Math.min(startIdx + cellsPerCluster, allCells.length);
-          const clusterCells = allCells.slice(startIdx, endIdx);
-          variedCells.push(...shuffleArray(clusterCells));
-        }
-        return variedCells;
-      }
-
-      case 'sparse': {
-        // Prefer creating sparse blocks - prioritize certain blocks
-        const sparsePriority = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-        const priorityBlocks = sparsePriority.slice(
-          0,
-          Math.min(4, sparsePriority.length)
-        );
-
-        const priorityCells: [number, number][] = [];
-        const normalCells: [number, number][] = [];
-
-        allCells.forEach(([row, col]) => {
-          const blockIdx = Math.floor(row / 3) * 3 + Math.floor(col / 3);
-          if (priorityBlocks.includes(blockIdx)) {
-            priorityCells.push([row, col]);
-          } else {
-            normalCells.push([row, col]);
-          }
-        });
-
-        return [...shuffleArray(priorityCells), ...shuffleArray(normalCells)];
-      }
-
-      case 'minimal': {
-        // Very sparse - create dramatic variations
-        const minimalBlocks = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-        const emptyTargets = minimalBlocks.slice(
-          0,
-          Math.floor(Math.random() * 3) + 2
-        );
-
-        const emptyCells: [number, number][] = [];
-        const filledCells: [number, number][] = [];
-
-        allCells.forEach(([row, col]) => {
-          const blockIdx = Math.floor(row / 3) * 3 + Math.floor(col / 3);
-          if (emptyTargets.includes(blockIdx)) {
-            emptyCells.push([row, col]);
-          } else {
-            filledCells.push([row, col]);
-          }
-        });
-
-        return [...shuffleArray(emptyCells), ...shuffleArray(filledCells)];
-      }
-
-      default:
-        return shuffleArray(allCells);
-    }
-  };
-
-  const removalCandidates = createRemovalStrategy(constraints.pattern);
-
-  let removed = 0;
-  let attempts = 0;
-  const maxAttempts = targetRemovals * 3; // Prevent infinite loops
-
-  while (removed < targetRemovals && attempts < maxAttempts) {
-    attempts++;
-
-    for (const [row, col] of removalCandidates) {
-      if (removed >= targetRemovals) break;
-      if (puzzle[row][col] === 0) continue; // Already removed
-
-      // Determine which 3x3 block this cell belongs to
-      const blockIndex = Math.floor(row / 3) * 3 + Math.floor(col / 3);
-
-      // Check if removing this cell would violate block constraints
-      if (blockClues[blockIndex] <= constraints.minCluesPerBlock) {
-        continue; // Skip removal to maintain minimum clues per block
-      }
-
-      // Count how many blocks would be considered "empty" after this removal
-      const wouldBeEmptyBlocks = blockClues.filter(count => count <= 2).length;
-      if (
-        blockClues[blockIndex] === 3 &&
-        wouldBeEmptyBlocks >= constraints.maxEmptyBlocks
-      ) {
-        continue; // Skip to avoid exceeding empty block limit
-      }
-
-      // Remove the number
-      puzzle[row][col] = 0;
-      blockClues[blockIndex]--;
-      removed++;
-
-      if (removed >= targetRemovals) break;
-    }
-
-    // If we can't remove enough with constraints, relax them slightly
-    if (removed < targetRemovals * 0.8 && attempts > maxAttempts / 2) {
-      constraints.minCluesPerBlock = Math.max(
-        0,
-        constraints.minCluesPerBlock - 1
-      );
-    }
-  }
-
-  // Phase 2: If we still need to remove more, do it more selectively
-  if (removed < targetRemovals) {
-    const remaining = targetRemovals - removed;
-    let extraRemoved = 0;
-
-    for (const [row, col] of removalCandidates) {
-      if (extraRemoved >= remaining) break;
-      if (puzzle[row][col] === 0) continue;
-
-      puzzle[row][col] = 0;
-      extraRemoved++;
-    }
-  }
-
-  return {
-    puzzle,
-    solution: solution,
-    stats: {
-      cluesPlaced: 81 - removed,
-      blockDistribution: blockClues,
-      difficulty: difficulty,
-    },
-  };
-};
-
-// Utility function to shuffle array
-const shuffleArray = <T>(array: T[]): T[] => {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-};
-
-// Difficulties that require immediate fallback to avoid performance issues
-const FALLBACK_DIFFICULTIES: Difficulty[] = ['expert', 'master', 'grandmaster'];
-
-// Helper function to create a puzzle using the new generation system
-const createPuzzle = (
-  difficulty: Difficulty
-): { puzzle: number[][]; solution: number[][] } => {
-  try {
-    // For extreme, difficult, and nightmare, use fallback more aggressively
-    if (FALLBACK_DIFFICULTIES.includes(difficulty)) {
-      console.log(`🎯 Using optimized fallback for ${difficulty} difficulty`);
-      const fallbackPuzzle = createFallbackPuzzle(difficulty);
-      return {
-        puzzle: fallbackPuzzle.puzzle,
-        solution: fallbackPuzzle.solution,
-      };
-    }
-
-    // For easier difficulties, try generation with timeout
-    const timeoutMs =
-      DifficultyConfigManager.getPuzzleGenerationTimeout(difficulty);
-    const startTime = Date.now();
-    let generatedPuzzle;
-
-    try {
-      generatedPuzzle = SudokuPuzzleGenerator.generatePuzzle(difficulty);
-
-      // Check if generation took too long
-      if (Date.now() - startTime > timeoutMs) {
-        throw new Error(`Generation timeout after ${timeoutMs}ms`);
-      }
-    } catch (_timeoutError) {
-      console.warn(
-        `Puzzle generation timeout for ${difficulty}, using fallback`
-      );
-      generatedPuzzle = createFallbackPuzzle(difficulty);
-    }
-
-    return {
-      puzzle: generatedPuzzle.puzzle,
-      solution: generatedPuzzle.solution,
-    };
-  } catch (error) {
-    console.warn('Failed to generate puzzle, falling back to sample:', error);
-
-    // Fallback to sample puzzle if generation fails
-    const samplePuzzle = [
-      [5, 3, 0, 0, 7, 0, 0, 0, 0],
-      [6, 0, 0, 1, 9, 5, 0, 0, 0],
-      [0, 9, 8, 0, 0, 0, 0, 6, 0],
-      [8, 0, 0, 0, 6, 0, 0, 0, 3],
-      [4, 0, 0, 8, 0, 3, 0, 0, 1],
-      [7, 0, 0, 0, 2, 0, 0, 0, 6],
-      [0, 6, 0, 0, 0, 0, 2, 8, 0],
-      [0, 0, 0, 4, 1, 9, 0, 0, 5],
-      [0, 0, 0, 0, 8, 0, 0, 7, 9],
-    ];
-
-    const sampleSolution = [
-      [5, 3, 4, 6, 7, 8, 9, 1, 2],
-      [6, 7, 2, 1, 9, 5, 3, 4, 8],
-      [1, 9, 8, 3, 4, 2, 5, 6, 7],
-      [8, 5, 9, 7, 6, 1, 4, 2, 3],
-      [4, 2, 6, 8, 5, 3, 7, 9, 1],
-      [7, 1, 3, 9, 2, 4, 8, 5, 6],
-      [9, 6, 1, 5, 3, 7, 2, 8, 4],
-      [2, 8, 7, 4, 1, 9, 6, 3, 5],
-      [3, 4, 5, 2, 8, 6, 1, 7, 9],
-    ];
-
-    return {
-      puzzle: samplePuzzle,
-      solution: sampleSolution,
-    };
-  }
-};
-
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
@@ -386,6 +109,14 @@ export const useGameStore = create<GameStore>()(
       isGeneratingPuzzle: false,
       showCompletionAnimation: false,
       showMistakesModal: false,
+      isHydrated: false,
+      hintHighlights: {
+        cells: [],
+        rows: [],
+        columns: [],
+        boxes: [],
+      },
+      hintFilledCells: [],
 
       // Actions
       startNewGame: (difficulty: Difficulty) => {
@@ -393,71 +124,46 @@ export const useGameStore = create<GameStore>()(
         set({ isGeneratingPuzzle: true });
 
         // Use setTimeout to allow UI to update before heavy computation
-        setTimeout(() => {
+        setTimeout(async () => {
           try {
-            console.log(`Starting ${difficulty} puzzle generation...`);
-            const startTime = Date.now();
+            const generatedPuzzle =
+              await gameEngineService.generatePuzzle(difficulty);
 
-            // Set a hard timeout for extreme puzzles
-            let timeoutReached = false;
-            const timeoutMs =
-              DifficultyConfigManager.getPuzzleGenerationTimeout(difficulty);
-
-            const timeoutId = setTimeout(() => {
-              timeoutReached = true;
-              console.warn(
-                `⏰ Generation timeout after ${timeoutMs}ms, using fallback`
-              );
-            }, timeoutMs);
-
-            const { puzzle, solution } = createPuzzle(difficulty);
-
-            clearTimeout(timeoutId);
-
-            if (timeoutReached) {
-              console.log('⚠️ Using fallback puzzle due to timeout');
-            } else {
-              const generationTime = Date.now() - startTime;
-              console.log(
-                `✅ Generated ${difficulty} puzzle in ${generationTime}ms`
-              );
-            }
             const board = createInitialBoard();
 
             // Populate the board with the generated puzzle
             for (let row = 0; row < 9; row++) {
               for (let col = 0; col < 9; col++) {
-                if (puzzle[row][col] !== 0) {
+                if (generatedPuzzle.puzzle[row][col] !== 0) {
                   board[row][col] = {
                     ...board[row][col],
-                    value: puzzle[row][col],
+                    value: generatedPuzzle.puzzle[row][col],
                     isFixed: true,
                   };
                 }
               }
             }
 
+            const difficultyConfig =
+              DifficultyConfigManager.getConfig(difficulty);
+
             const newGame: GameState = {
               id: `game_${Date.now()}`,
               board,
-              solution,
+              solution: generatedPuzzle.solution,
               difficulty,
               startTime: new Date(),
               currentTime: new Date(),
               isPaused: false,
               isCompleted: false,
               hintsUsed: 0,
-              maxHints:
-                DifficultyConfigManager.getConfig(difficulty).gameSettings
-                  .maxHints,
+              maxHints: difficultyConfig.gameSettings.maxHints,
               attempts: 0,
-              maxAttempts: 5,
+              maxAttempts: difficultyConfig.gameSettings.maxAttempts,
               moves: [],
-              pauseStartTime: undefined,
               totalPausedTime: 0,
-              pausedElapsedTime: undefined,
               mistakes: 0,
-              maxMistakes: 3, // Allow 3 mistakes before game over
+              maxMistakes: 3, // Default to 3 for now, can be made configurable later
               mistakeLimitDisabled: false,
             };
 
@@ -466,22 +172,23 @@ export const useGameStore = create<GameStore>()(
               isPlaying: true,
               selectedCell: null,
               isGeneratingPuzzle: false,
+              showCompletionAnimation: false,
+              showMistakesModal: false,
             });
           } catch (error) {
-            console.error('Failed to generate puzzle:', error);
+            console.error('Failed to start new game:', error);
             set({ isGeneratingPuzzle: false });
           }
-        }, 200); // Longer delay to ensure UI updates and spinner shows
+        }, 10);
       },
 
       restartCurrentGame: () => {
         const state = get();
         if (!state.currentGame) return;
 
-        // Create a fresh board from the original solution
         const board = createInitialBoard();
 
-        // Populate the board with the fixed cells only (from the original puzzle)
+        // Restore fixed cells from the original puzzle
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
             const originalCell = state.currentGame.board[row][col];
@@ -495,7 +202,6 @@ export const useGameStore = create<GameStore>()(
           }
         }
 
-        // Reset the game state while keeping the same puzzle/solution
         const restartedGame: GameState = {
           ...state.currentGame,
           board,
@@ -504,24 +210,23 @@ export const useGameStore = create<GameStore>()(
           isPaused: false,
           isCompleted: false,
           hintsUsed: 0,
+          attempts: 0,
           moves: [],
-          pauseStartTime: undefined,
           totalPausedTime: 0,
-          pausedElapsedTime: undefined,
           mistakes: 0,
-          mistakeLimitDisabled: false, // Reset mistake limit
+          mistakeLimitDisabled: false,
         };
 
         set({
           currentGame: restartedGame,
           isPlaying: true,
           selectedCell: null,
+          showCompletionAnimation: false,
           showMistakesModal: false,
         });
       },
 
       forceStopGeneration: () => {
-        console.log('🛑 Force stopping puzzle generation');
         set({ isGeneratingPuzzle: false });
       },
 
@@ -537,118 +242,114 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         if (!state.currentGame) return;
 
-        // Disable mistake limit instead of setting arbitrary high number
-        const updatedGame: GameState = {
-          ...state.currentGame,
-          mistakeLimitDisabled: true,
-        };
-
         set({
-          currentGame: updatedGame,
+          currentGame: {
+            ...state.currentGame,
+            mistakeLimitDisabled: true,
+          },
           showMistakesModal: false,
         });
       },
 
       pauseGame: () => {
         const state = get();
-        if (!state.currentGame) return; // Don't do anything if no game is active
+        if (!state.currentGame || state.currentGame.isPaused) return;
 
-        try {
-          // Calculate current elapsed time to freeze it
-          const now = Date.now();
-          const startTime =
-            state.currentGame.startTime instanceof Date
-              ? state.currentGame.startTime
-              : new Date(state.currentGame.startTime);
-          const startTimeMs = startTime.getTime();
-          const currentElapsed = Math.max(
-            0,
-            Math.floor(
-              (now - startTimeMs - state.currentGame.totalPausedTime) / 1000
-            )
-          );
-
-          set(state => ({
-            isPlaying: false,
-            currentGame: {
-              ...state.currentGame!,
-              isPaused: true,
-              pauseStartTime: new Date(),
-              pausedElapsedTime: currentElapsed,
-            },
-          }));
-        } catch (error) {
-          console.error('Error in pauseGame:', error);
-          // Fallback: simple pause without elapsed time calculation
-          set(state => ({
-            isPlaying: false,
-            currentGame: {
-              ...state.currentGame!,
-              isPaused: true,
-              pauseStartTime: new Date(),
-            },
-          }));
-        }
+        const now = new Date();
+        set({
+          currentGame: {
+            ...state.currentGame,
+            isPaused: true,
+            pauseStartTime: now,
+            currentTime: now,
+          },
+          isPlaying: false,
+        });
       },
 
       resumeGame: () => {
         const state = get();
         if (!state.currentGame || !state.currentGame.isPaused) return;
 
-        // SIMPLE APPROACH: Set new start time based on paused elapsed time
-        const pausedElapsed = state.currentGame.pausedElapsedTime || 0;
-        const newStartTime = new Date(Date.now() - pausedElapsed * 1000);
+        const now = new Date();
+        const pauseStart = state.currentGame.pauseStartTime;
+        const pauseDuration = pauseStart
+          ? now.getTime() - new Date(pauseStart).getTime()
+          : 0;
 
-        set(state => ({
-          isPlaying: true,
+        set({
           currentGame: {
-            ...state.currentGame!,
+            ...state.currentGame,
             isPaused: false,
-            startTime: newStartTime,
-            totalPausedTime: 0, // Reset since we're using new start time
             pauseStartTime: undefined,
-            pausedElapsedTime: undefined,
+            totalPausedTime:
+              (state.currentGame.totalPausedTime || 0) + pauseDuration,
+            currentTime: now,
           },
-        }));
+          isPlaying: true,
+        });
       },
 
       selectCell: (row: number, col: number) => {
-        set({ selectedCell: { row, col } });
-      },
-
-      setCellValue: (row: number, col: number, value: number | null) => {
         const state = get();
         if (!state.currentGame) return;
 
-        const board = state.currentGame.board;
-        const cell = board[row][col];
+        // Clear previous selection
+        const newBoard = state.currentGame.board.map(r =>
+          r.map(cell => ({ ...cell, isSelected: false }))
+        );
 
+        // Set new selection
+        newBoard[row][col].isSelected = true;
+
+        set({
+          selectedCell: { row, col },
+          currentGame: {
+            ...state.currentGame,
+            board: newBoard,
+          },
+        });
+      },
+
+      setCellValue: async (row: number, col: number, value: number | null) => {
+        const state = get();
+        if (!state.currentGame) return;
+
+        const cell = state.currentGame.board[row][col];
         if (cell.isFixed) return;
 
-        const previousValue = cell.value;
-        const previousNotes = [...cell.notes];
+        // Reset hint tracking when user makes a move
+        await gameEngineService.resetHintTracking();
 
-        // Check if the new value is correct (only for non-null values)
-        let isCorrect: boolean | null = null;
-        let isIncorrect = false;
-        let mistakeCount = state.currentGame.mistakes;
+        // Validate move using the game engine
+        let isCorrect = true;
 
         if (value !== null) {
-          isCorrect = SolutionValidator.isInputCorrect(
-            state.currentGame.solution,
+          // Validate move using the game engine (async validation available if needed)
+          await gameEngineService.validateMove(
+            state.currentGame.board,
             row,
             col,
             value
           );
-          isIncorrect = !isCorrect;
-
-          // Increment mistake counter if this is a new incorrect value
-          if (!isCorrect && previousValue !== value) {
-            mistakeCount++;
-          }
+          // Check correctness against solution
+          isCorrect = value === state.currentGame.solution[row][col];
         }
 
-        // Create new move
+        const newBoard = [...state.currentGame.board];
+        const previousValue = cell.value;
+        const previousNotes = [...cell.notes];
+
+        // Update cell
+        newBoard[row][col] = {
+          ...cell,
+          value,
+          notes: value !== null ? [] : cell.notes, // Clear notes when setting value
+          isCorrect: value !== null ? isCorrect : null,
+          isIncorrect: value !== null ? !isCorrect : false,
+        };
+
+        // Create move record
         const move: GameMove = {
           row,
           col,
@@ -659,78 +360,37 @@ export const useGameStore = create<GameStore>()(
           previousNotes,
         };
 
-        // Create updated board with proper deep copy and auto-remove notes
-        const updatedBoard = board.map((boardRow, r) =>
-          boardRow.map((boardCell, c) => {
-            if (r === row && c === col) {
-              return {
-                ...boardCell,
-                value,
-                notes: [],
-                isCorrect,
-                isIncorrect,
-              };
-            }
+        // Handle mistakes
+        let newMistakes = state.currentGame.mistakes;
+        let showMistakesModal = false;
 
-            // Auto-remove notes when placing a number
-            if (value !== null && boardCell.notes.includes(value)) {
-              // Check if this cell is in same row, column, or 3x3 block
-              const isSameRow = r === row;
-              const isSameCol = c === col;
-              const isSameBlock =
-                Math.floor(r / 3) === Math.floor(row / 3) &&
-                Math.floor(c / 3) === Math.floor(col / 3);
-
-              if (isSameRow || isSameCol || isSameBlock) {
-                // Remove the placed number from notes
-                return {
-                  ...boardCell,
-                  notes: boardCell.notes.filter(note => note !== value),
-                };
-              }
-            }
-
-            return boardCell;
-          })
-        );
-
-        // Update game state
-        const updatedGame: GameState = {
-          ...state.currentGame,
-          board: updatedBoard,
-          moves: [...state.currentGame.moves, move],
-          currentTime: new Date(),
-          mistakes: mistakeCount,
-        };
-
-        // Check if game is completed using the UPDATED board
-        let completionTriggered = false;
-        let mistakesModalTriggered = false;
-
-        if (value !== null) {
-          // Check completion with the updated board, not the old state!
-          const isCompleted = SudokuValidator.isPuzzleComplete(updatedBoard);
-          if (isCompleted) {
-            updatedGame.isCompleted = true;
-            updatedGame.currentTime = new Date(); // Set completion time
-            completionTriggered = true;
+        if (value !== null && !isCorrect) {
+          newMistakes++;
+          if (
+            !state.currentGame.mistakeLimitDisabled &&
+            newMistakes >= state.currentGame.maxMistakes
+          ) {
+            showMistakesModal = true;
           }
         }
 
-        // Check if maximum mistakes reached (but not if game is completed or limit disabled)
-        if (
-          mistakeCount >= updatedGame.maxMistakes &&
-          !updatedGame.isCompleted &&
-          !updatedGame.mistakeLimitDisabled
-        ) {
-          mistakesModalTriggered = true;
-        }
+        // Check completion
+        const isCompleted = await gameEngineService.isPuzzleComplete(newBoard);
+
+        const updatedGame = {
+          ...state.currentGame,
+          board: newBoard,
+          currentTime: new Date(),
+          moves: [...state.currentGame.moves, move],
+          mistakes: newMistakes,
+          isCompleted,
+          attempts: state.currentGame.attempts + 1,
+        };
 
         set({
           currentGame: updatedGame,
-          isPlaying: !updatedGame.isCompleted,
-          showCompletionAnimation: completionTriggered,
-          showMistakesModal: mistakesModalTriggered,
+          showCompletionAnimation: isCompleted,
+          showMistakesModal,
         });
       },
 
@@ -738,68 +398,57 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         if (!state.currentGame) return;
 
-        const board = state.currentGame.board;
-        const cell = board[row][col];
+        const cell = state.currentGame.board[row][col];
+        if (cell.isFixed || cell.value !== null) return;
 
-        if (cell.isFixed) return;
+        const newBoard = [...state.currentGame.board];
+        const currentNotes = [...cell.notes];
 
-        const previousValue = cell.value;
-        const previousNotes = [...cell.notes];
+        if (currentNotes.includes(value)) {
+          // Remove note
+          newBoard[row][col] = {
+            ...cell,
+            notes: currentNotes.filter(note => note !== value),
+          };
+        } else {
+          // Add note
+          newBoard[row][col] = {
+            ...cell,
+            notes: [...currentNotes, value].sort(),
+          };
+        }
 
-        // Create new move
-        const move: GameMove = {
-          row,
-          col,
-          value: null,
-          isNote: true,
-          timestamp: new Date(),
-          previousValue,
-          previousNotes,
-        };
-
-        // Toggle note
-        const newNotes = cell.notes.includes(value)
-          ? cell.notes.filter(n => n !== value)
-          : [...cell.notes, value];
-
-        // Create updated board with proper deep copy
-        const updatedBoard = board.map((boardRow, r) =>
-          boardRow.map((boardCell, c) => {
-            if (r === row && c === col) {
-              return {
-                ...boardCell,
-                notes: newNotes,
-                value: null,
-              };
-            }
-            return boardCell;
-          })
-        );
-
-        // Update game state
-        const updatedGame: GameState = {
-          ...state.currentGame,
-          board: updatedBoard,
-          moves: [...state.currentGame.moves, move],
-          currentTime: new Date(),
-        };
-
-        set({ currentGame: updatedGame });
+        set({
+          currentGame: {
+            ...state.currentGame,
+            board: newBoard,
+            currentTime: new Date(),
+          },
+        });
       },
 
-      clearCell: (row: number, col: number) => {
+      clearCell: async (row: number, col: number) => {
         const state = get();
         if (!state.currentGame) return;
 
-        const board = state.currentGame.board;
-        const cell = board[row][col];
-
+        const cell = state.currentGame.board[row][col];
         if (cell.isFixed) return;
 
+        // Reset hint tracking when user makes a move
+        await gameEngineService.resetHintTracking();
+
+        const newBoard = [...state.currentGame.board];
         const previousValue = cell.value;
         const previousNotes = [...cell.notes];
 
-        // Create new move
+        newBoard[row][col] = {
+          ...cell,
+          value: null,
+          notes: [],
+          isCorrect: null,
+          isIncorrect: false,
+        };
+
         const move: GameMove = {
           row,
           col,
@@ -810,31 +459,14 @@ export const useGameStore = create<GameStore>()(
           previousNotes,
         };
 
-        // Create updated board with proper deep copy
-        const updatedBoard = board.map((boardRow, r) =>
-          boardRow.map((boardCell, c) => {
-            if (r === row && c === col) {
-              return {
-                ...boardCell,
-                value: null,
-                notes: [],
-                isCorrect: null,
-                isIncorrect: false,
-              };
-            }
-            return boardCell;
-          })
-        );
-
-        // Update game state
-        const updatedGame: GameState = {
-          ...state.currentGame,
-          board: updatedBoard,
-          moves: [...state.currentGame.moves, move],
-          currentTime: new Date(),
-        };
-
-        set({ currentGame: updatedGame });
+        set({
+          currentGame: {
+            ...state.currentGame,
+            board: newBoard,
+            currentTime: new Date(),
+            moves: [...state.currentGame.moves, move],
+          },
+        });
       },
 
       undoMove: () => {
@@ -843,40 +475,50 @@ export const useGameStore = create<GameStore>()(
 
         const moves = [...state.currentGame.moves];
         const lastMove = moves.pop()!;
-        const board = state.currentGame.board;
+        const { row, col, previousValue, previousNotes } = lastMove;
 
-        // Create updated board with proper deep copy
-        const updatedBoard = board.map((boardRow, r) =>
-          boardRow.map((boardCell, c) => {
-            if (r === lastMove.row && c === lastMove.col) {
-              return {
-                ...boardCell,
-                value: lastMove.previousValue,
-                notes: lastMove.previousNotes,
-                isCorrect: null,
-                isIncorrect: false,
-              };
-            }
-            return boardCell;
-          })
-        );
-
-        const updatedGame: GameState = {
-          ...state.currentGame,
-          board: updatedBoard,
-          moves,
-          currentTime: new Date(),
+        const newBoard = [...state.currentGame.board];
+        newBoard[row][col] = {
+          ...newBoard[row][col],
+          value: previousValue,
+          notes: [...previousNotes],
+          isCorrect:
+            previousValue !== null
+              ? previousValue === state.currentGame.solution[row][col]
+              : null,
+          isIncorrect:
+            previousValue !== null
+              ? previousValue !== state.currentGame.solution[row][col]
+              : false,
         };
 
-        set({ currentGame: updatedGame });
+        set({
+          currentGame: {
+            ...state.currentGame,
+            board: newBoard,
+            moves,
+            currentTime: new Date(),
+          },
+        });
       },
 
       redoMove: () => {
         // TODO: Implement redo functionality
-        // This would require storing a redo stack
       },
 
-      useHint: () => {
+      clearHintHighlights: () => {
+        set({
+          hintHighlights: {
+            cells: [],
+            rows: [],
+            columns: [],
+            boxes: [],
+          },
+          hintFilledCells: [], // Also clear hint-filled cells when clearing highlights
+        });
+      },
+
+      getHint: async () => {
         const state = get();
 
         if (
@@ -887,207 +529,126 @@ export const useGameStore = create<GameStore>()(
           return null;
         }
 
-        // Generate intelligent hint based on current board state
-        let hint: Hint | null;
+        try {
+          // Clear any existing highlights at the start
+          set({
+            hintHighlights: {
+              cells: [],
+              rows: [],
+              columns: [],
+              boxes: [],
+            },
+            hintFilledCells: [],
+          });
 
-        // If a cell is selected, provide contextual hint
-        if (state.selectedCell) {
-          hint = SudokuHintGenerator.generateContextualHint(
-            state.currentGame.board,
-            state.selectedCell.row,
-            state.selectedCell.col,
-            state.currentGame.solution
-          );
-        } else {
-          // Generate general hint for the whole board
-          hint = SudokuHintGenerator.generateHint(
+          // Generate hint using the game engine
+          const hintResult = await gameEngineService.generateHint(
             state.currentGame.board,
             state.currentGame.difficulty,
+            state.selectedCell
+              ? [state.selectedCell.row, state.selectedCell.col]
+              : undefined,
             state.currentGame.solution
           );
-        }
 
-        // Fallback if no hint could be generated
-        if (!hint) {
-          hint = {
-            type: 'technique',
-            message:
-              'Try looking for numbers that can only go in one place, or cells that can only contain one number.',
-            technique: 'general_strategy',
-          };
-        }
+          if (!hintResult) {
+            // Return a helpful fallback if no hints are found
+            return {
+              type: 'technique' as const,
+              message:
+                'No obvious hints available. Try looking for cells with the fewest possible numbers, or examine if any numbers appear only once in a row, column, or 3×3 box.',
+              technique: 'general_advice',
+            };
+          }
 
-        // Handle auto-fill hints
-        if (hint.autoFill && hint.targetCells && hint.suggestedValue) {
-          const [row, col] = hint.targetCells[0];
+          // Handle auto-fill hints and track filled cells
+          let filledCell: [number, number] | null = null;
+          if (
+            hintResult.hint.autoFill &&
+            hintResult.hint.targetCells &&
+            hintResult.hint.suggestedValue
+          ) {
+            const [row, col] = hintResult.hint.targetCells[0];
+            get().setCellValue(row, col, hintResult.hint.suggestedValue);
+            filledCell = [row, col];
+          }
 
-          // Auto-fill the cell
-          const { setCellValue } = get();
-          setCellValue(row, col, hint.suggestedValue);
-
-          // Count as a hint used
+          // Update hints used count and set highlighting
           const currentState = get();
           if (currentState.currentGame) {
-            const updatedGame: GameState = {
-              ...currentState.currentGame,
-              hintsUsed: currentState.currentGame.hintsUsed + 1,
+            // Calculate highlighting - only highlight target cells for clarity
+            const highlights = {
+              cells: [] as [number, number][],
+              rows: [] as number[], // Keep for future use but don't populate
+              columns: [] as number[], // Keep for future use but don't populate
+              boxes: [] as number[], // Keep for future use but don't populate
             };
-            set({ currentGame: updatedGame });
-          }
-        } else {
-          // Only increment hint counter for helpful hints (not confirmations or errors)
-          const shouldCountHint =
-            hint.technique !== 'confirmation' &&
-            hint.technique !== 'cell_selection';
 
-          // Update hints used only if this was a useful hint
-          if (shouldCountHint) {
-            const updatedGame: GameState = {
-              ...state.currentGame,
-              hintsUsed: state.currentGame.hintsUsed + 1,
-            };
-            set({ currentGame: updatedGame });
+            if (hintResult.hint.targetCells) {
+              // Only highlight the specific target cells - no broader area highlighting
+              highlights.cells = hintResult.hint.targetCells;
+            }
+
+            // Get fresh state right before setting to avoid stale state issues
+            const currentState = get();
+            set({
+              currentGame: {
+                ...currentState.currentGame!,
+                hintsUsed: currentState.currentGame!.hintsUsed + 1,
+              },
+              hintHighlights: highlights,
+              hintFilledCells: filledCell ? [filledCell] : [],
+            });
           }
+
+          // Return the actual hint with proper formatting
+          return {
+            type:
+              hintResult.hint.type === 'value'
+                ? 'cell'
+                : (hintResult.hint.type as 'cell' | 'technique' | 'note'),
+            message: hintResult.hint.message,
+            technique: hintResult.hint.technique || hintResult.technique,
+            targetCells: hintResult.hint.targetCells,
+            suggestedValue: hintResult.hint.suggestedValue,
+            autoFill: hintResult.hint.autoFill,
+            detailedExplanation: hintResult.hint.detailedExplanation,
+          };
+        } catch {
+          return {
+            type: 'technique' as const,
+            message:
+              'Unable to analyze the board right now. Try examining cells with fewer possible numbers or look for obvious placements.',
+            technique: 'error_fallback',
+          };
         }
-
-        return hint;
       },
 
-      validateMove: (row: number, col: number, value: number): boolean => {
+      validateMove: (row: number, col: number, value: number) => {
         const state = get();
         if (!state.currentGame) return false;
 
-        // Use the enhanced validation system
-        const validation = SudokuValidator.validateMove(
-          state.currentGame.board,
-          row,
-          col,
-          value
-        );
-        return validation.isValid;
+        // For synchronous compatibility, just check against solution
+        return state.currentGame.solution[row][col] === value;
       },
 
-      // Enhanced validation with detailed feedback
-      validateMoveDetailed: (row: number, col: number, value: number) => {
-        const state = get();
-        if (!state.currentGame) {
-          return {
-            isValid: false,
-            conflicts: [],
-            isCorrect: false,
-            message: 'No active game',
-          };
-        }
-
-        return SudokuValidator.validateMove(
-          state.currentGame.board,
-          row,
-          col,
-          value
-        );
-      },
-
-      // Get possible candidates for a cell
-      getCandidates: (row: number, col: number) => {
-        const state = get();
-        if (!state.currentGame) return { candidates: [], eliminatedBy: {} };
-
-        const board = state.currentGame.board.map(row =>
-          row.map(cell => cell.value || 0)
-        );
-
-        return SudokuValidator.getCandidates(board, row, col);
-      },
-
-      checkGameCompletion: (): boolean => {
-        const state = get();
-        if (!state.currentGame) {
-          return false;
-        }
-
-        // Use the enhanced validation system to check completion
-        const isComplete = SudokuValidator.isPuzzleComplete(
-          state.currentGame.board
-        );
-
-        if (isComplete && !state.currentGame.isCompleted) {
-          // Update game state to completed
-          const updatedGame: GameState = {
-            ...state.currentGame,
-            isCompleted: true,
-            currentTime: new Date(),
-          };
-
-          set({ currentGame: updatedGame, isPlaying: false });
-        }
-
-        return isComplete;
-      },
-
-      // Get board validation status
-      getBoardValidation: () => {
-        const state = get();
-        if (!state.currentGame) {
-          return { isValid: false, errors: [], completionPercentage: 0 };
-        }
-
-        return SudokuValidator.validateBoard(state.currentGame.board);
-      },
-
-      // Solution validation methods
-      validateAgainstSolution: (
-        row: number,
-        col: number,
-        value: number
-      ): boolean => {
+      checkGameCompletion: () => {
         const state = get();
         if (!state.currentGame) return false;
 
-        return SolutionValidator.isInputCorrect(
-          state.currentGame.solution,
-          row,
-          col,
-          value
-        );
-      },
-
-      updateBoardValidation: () => {
-        const state = get();
-        if (!state.currentGame) return;
-
-        const updatedBoard = SolutionValidator.updateBoardValidationStatus(
-          state.currentGame.board,
-          state.currentGame.solution
-        );
-
-        const updatedGame: GameState = {
-          ...state.currentGame,
-          board: updatedBoard,
-        };
-
-        set({ currentGame: updatedGame });
-      },
-
-      getMistakeCount: (): number => {
-        const state = get();
-        return state.currentGame?.mistakes || 0;
-      },
-
-      getPuzzleStats: () => {
-        const state = get();
-        if (!state.currentGame) {
-          return {
-            progress: 0,
-            accuracy: 100,
-            mistakes: 0,
-            remaining: 81,
-          };
+        // Check if all cells are filled correctly
+        for (let r = 0; r < 9; r++) {
+          for (let c = 0; c < 9; c++) {
+            const cell = state.currentGame.board[r][c];
+            if (
+              !cell.value ||
+              cell.value !== state.currentGame.solution[r][c]
+            ) {
+              return false;
+            }
+          }
         }
-
-        return SolutionValidator.getPuzzleStats(
-          state.currentGame.board,
-          state.currentGame.solution
-        );
+        return true;
       },
 
       resetGame: () => {
@@ -1095,6 +656,10 @@ export const useGameStore = create<GameStore>()(
           currentGame: null,
           isPlaying: false,
           selectedCell: null,
+          inputMode: 'pen',
+          isGeneratingPuzzle: false,
+          showCompletionAnimation: false,
+          showMistakesModal: false,
         });
       },
 
@@ -1102,39 +667,152 @@ export const useGameStore = create<GameStore>()(
         set({ inputMode: mode });
       },
 
+      // Enhanced validation methods using game engine
+      validateMoveDetailed: async (row: number, col: number, value: number) => {
+        const state = get();
+        if (!state.currentGame) return null;
+
+        try {
+          return await gameEngineService.validateMove(
+            state.currentGame.board,
+            row,
+            col,
+            value
+          );
+        } catch {
+          return null;
+        }
+      },
+
+      getCandidates: async (row: number, col: number) => {
+        const state = get();
+        if (!state.currentGame) return [];
+
+        try {
+          return await gameEngineService.getCandidates(
+            state.currentGame.board,
+            row,
+            col
+          );
+        } catch {
+          return [];
+        }
+      },
+
+      getBoardValidation: async () => {
+        const state = get();
+        if (!state.currentGame) return null;
+
+        try {
+          // For now, just return basic validation
+          return {
+            isValid: get().checkGameCompletion(),
+            completionPercentage:
+              get().getPuzzleStats()?.completionPercentage || 0,
+          };
+        } catch {
+          return null;
+        }
+      },
+
+      // Solution validation methods
+      validateAgainstSolution: (row: number, col: number, value: number) => {
+        const state = get();
+        if (!state.currentGame) return false;
+        return state.currentGame.solution[row][col] === value;
+      },
+
+      updateBoardValidation: () => {
+        const state = get();
+        if (!state.currentGame) return;
+
+        const newBoard = state.currentGame.board.map((row, r) =>
+          row.map((cell, c) => {
+            if (cell.value !== null && !cell.isFixed) {
+              const isCorrect =
+                cell.value === state.currentGame!.solution[r][c];
+              return {
+                ...cell,
+                isCorrect,
+                isIncorrect: !isCorrect,
+              };
+            }
+            return cell;
+          })
+        );
+
+        set({
+          currentGame: {
+            ...state.currentGame,
+            board: newBoard,
+          },
+        });
+      },
+
+      getMistakeCount: () => {
+        const state = get();
+        return state.currentGame?.mistakes || 0;
+      },
+
+      getPuzzleStats: () => {
+        const state = get();
+        if (!state.currentGame) return null;
+
+        const totalCells = 81;
+        let filledCells = 0;
+        let correctCells = 0;
+
+        state.currentGame.board.forEach((row, r) => {
+          row.forEach((cell, c) => {
+            if (cell.value !== null) {
+              filledCells++;
+              if (cell.value === state.currentGame!.solution[r][c]) {
+                correctCells++;
+              }
+            }
+          });
+        });
+
+        return {
+          totalCells,
+          filledCells,
+          correctCells,
+          completionPercentage: (filledCells / totalCells) * 100,
+          accuracy: filledCells > 0 ? (correctCells / filledCells) * 100 : 100,
+        };
+      },
+
       getCompletedNumbers: () => {
         const state = get();
         if (!state.currentGame) return [];
 
-        // Count occurrences of each number (1-9) on the board
-        const numberCounts = new Array(10).fill(0); // Index 0 unused, 1-9 for numbers
+        const counts = new Array(10).fill(0); // Index 0 unused, 1-9 for numbers
 
-        for (let row = 0; row < 9; row++) {
-          for (let col = 0; col < 9; col++) {
-            const cell = state.currentGame.board[row][col];
-            if (cell.value && cell.value >= 1 && cell.value <= 9) {
-              numberCounts[cell.value]++;
+        state.currentGame.board.forEach(row => {
+          row.forEach(cell => {
+            if (cell.value !== null) {
+              counts[cell.value]++;
             }
-          }
-        }
+          });
+        });
 
-        // Return numbers that appear exactly 9 times (completed)
-        const completedNumbers: number[] = [];
-        for (let i = 1; i <= 9; i++) {
-          if (numberCounts[i] === 9) {
-            completedNumbers.push(i);
-          }
-        }
-
-        return completedNumbers;
+        return Array.from({ length: 9 }, (_, i) => i + 1).filter(
+          num => counts[num] === 9
+        );
       },
     }),
     {
-      name: 'sudoku-game-storage',
+      name: 'sudoku-game-store',
       partialize: state => ({
         currentGame: state.currentGame,
         inputMode: state.inputMode,
       }),
+      onRehydrateStorage: () => state => {
+        // Set hydrated to true when state is restored from storage or when there's no stored state
+        if (state) {
+          state.isHydrated = true;
+        }
+      },
     }
   )
 );

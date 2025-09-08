@@ -2,12 +2,13 @@ import React from 'react';
 import { Button } from '@radix-ui/themes';
 import type { Difficulty } from '../../types';
 import type { UserAnalytics } from '../../types/analytics';
+import type { DifficultyProgressData } from '../../stores/analyticsStore';
 
 interface DifficultyProgressProps {
     userAnalytics: UserAnalytics;
     selectedDifficulty: Difficulty;
     onDifficultyChange: (difficulty: Difficulty) => void;
-    progressData: any; // Using any for now since the type isn't exported
+    progressData: DifficultyProgressData;
 }
 
 export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({

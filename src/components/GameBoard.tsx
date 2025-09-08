@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useGameStore } from '../stores/gameStore';
-import { useGameAnalytics } from './AnalyticsProvider';
+import { useGameAnalytics } from '../hooks/useGameAnalytics';
 import { useGameInteraction } from '../hooks/useGameInteraction';
 import { GameLoadingView } from './game/GameLoadingView';
 import { GamePauseOverlay } from './game/GamePauseOverlay';
@@ -13,10 +13,12 @@ export const GameBoard: React.FC = () => {
         selectedCell,
         inputMode,
         isGeneratingPuzzle,
+        isHydrated,
         startNewGame,
         resumeGame,
         undoMove,
-        useHint,
+        getHint,
+        clearHintHighlights,
         getCompletedNumbers,
     } = useGameStore();
 
@@ -41,23 +43,37 @@ export const GameBoard: React.FC = () => {
     });
 
     // Handle hint usage
-    const handleUseHint = useCallback(() => {
-        if (useHint) {
-            const hint = useHint();
-            if (hint) {
-                setCurrentHint(hint);
-                setShowHint(true);
-                // Record hint usage for analytics with technique information
-                recordHintUsage(hint.type, hint.technique);
+    const handleUseHint = useCallback(async () => {
+        if (getHint) {
+            try {
+                // If there's already a hint showing, close it first for clean transition
+                if (showHint) {
+                    setShowHint(false);
+                    setCurrentHint(null);
+                    // Brief pause for smooth visual transition
+                    await new Promise(resolve => setTimeout(resolve, 150));
+                }
+
+                const hint = await getHint();
+                if (hint) {
+                    // Set hint data and show (store handles highlight clearing)
+                    setCurrentHint(hint);
+                    setShowHint(true);
+                    // Record hint usage for analytics with technique information
+                    recordHintUsage(hint.type, hint.technique);
+                }
+            } catch (error) {
+                console.error('Failed to get hint:', error);
             }
         }
-    }, [useHint, recordHintUsage]);
+    }, [getHint, recordHintUsage, showHint]);
 
     // Handle hint dismissal
     const handleCloseHint = useCallback(() => {
         setShowHint(false);
-        setTimeout(() => setCurrentHint(null), 200);
-    }, []);
+        setCurrentHint(null);
+        clearHintHighlights(); // Clear highlighting when hint is dismissed
+    }, [clearHintHighlights]);
 
     // Handle new game
     const handleNewGame = useCallback((difficulty: Difficulty) => {
@@ -83,7 +99,16 @@ export const GameBoard: React.FC = () => {
         }
     }, [currentGame?.isPaused]);
 
-    // Show loading view when no game or generating puzzle
+    // Show loading view when no game or generating puzzle, but wait for hydration first
+    if (!isHydrated) {
+        // Still loading persisted state, show minimal loading
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full"></div>
+            </div>
+        );
+    }
+
     if (!currentGame || isGeneratingPuzzle) {
         return (
             <GameLoadingView

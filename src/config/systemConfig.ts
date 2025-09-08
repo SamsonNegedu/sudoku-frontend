@@ -8,19 +8,9 @@ export interface SystemConfig {
   isDevelopment: boolean;
   enableDebugLogs: boolean;
   enableUnlimitedHints: boolean;
-  enableUnlimitedMistakes: boolean;
 
   // Analytics
-  enableAnalytics: boolean;
   enableAnalyticsDebug: boolean;
-
-  // Performance
-  enablePerformanceMonitoring: boolean;
-  enableStorageDebug: boolean;
-
-  // UI Features
-  showDeveloperTools: boolean;
-  enableExperimentalFeatures: boolean;
 }
 
 class SystemConfigManager {
@@ -46,19 +36,9 @@ class SystemConfigManager {
       isDevelopment,
       enableDebugLogs: isDevelopment,
       enableUnlimitedHints: isDevelopment,
-      enableUnlimitedMistakes: false, // Can be enabled separately if needed
 
       // Analytics
-      enableAnalytics: true,
       enableAnalyticsDebug: isDevelopment,
-
-      // Performance
-      enablePerformanceMonitoring: !isDevelopment, // Enable in production for monitoring
-      enableStorageDebug: isDevelopment,
-
-      // UI Features
-      showDeveloperTools: isDevelopment,
-      enableExperimentalFeatures: isDevelopment,
     };
   }
 
@@ -77,14 +57,6 @@ class SystemConfigManager {
 
   public get enableAnalyticsDebug(): boolean {
     return this.config.enableAnalyticsDebug;
-  }
-
-  public get showDeveloperTools(): boolean {
-    return this.config.showDeveloperTools;
-  }
-
-  public get enableUnlimitedMistakes(): boolean {
-    return this.config.enableUnlimitedMistakes;
   }
 
   // Get full config
@@ -113,8 +85,6 @@ class SystemConfigManager {
       enableUnlimitedHints: enable,
       enableDebugLogs: enable,
       enableAnalyticsDebug: enable,
-      showDeveloperTools: enable,
-      enableExperimentalFeatures: enable,
     });
   }
 }
@@ -127,16 +97,15 @@ export const isDevelopment = () => SystemConfig.isDevelopment;
 export const enableUnlimitedHints = () => SystemConfig.enableUnlimitedHints;
 export const enableDebugLogs = () => SystemConfig.enableDebugLogs;
 export const enableAnalyticsDebug = () => SystemConfig.enableAnalyticsDebug;
-export const showDeveloperTools = () => SystemConfig.showDeveloperTools;
 
 // Console logging helper that respects debug settings
-export const debugLog = (message: string, ...args: any[]) => {
+export const debugLog = (message: string, ...args: unknown[]) => {
   if (SystemConfig.enableDebugLogs) {
     console.log(`[DEBUG] ${message}`, ...args);
   }
 };
 
-export const analyticsLog = (message: string, ...args: any[]) => {
+export const analyticsLog = (message: string, ...args: unknown[]) => {
   if (SystemConfig.enableAnalyticsDebug) {
     console.log(`[ANALYTICS] ${message}`, ...args);
   }

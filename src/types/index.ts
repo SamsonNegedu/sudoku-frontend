@@ -85,7 +85,7 @@ export interface GameSettings {
 }
 
 // Hint types
-export type HintType = 'cell' | 'technique' | 'note';
+export type HintType = 'cell' | 'technique' | 'note' | 'value' | 'elimination';
 
 export interface Hint {
   type: HintType;
@@ -94,6 +94,7 @@ export interface Hint {
   targetCells?: [number, number][];
   suggestedValue?: number;
   autoFill?: boolean; // Whether this hint should auto-fill the cell
+  detailedExplanation?: string; // Detailed explanation of the technique
 }
 
 // API response types

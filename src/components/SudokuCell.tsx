@@ -7,6 +7,8 @@ interface SudokuCellProps {
     isSelected: boolean;
     isHighlighted: boolean;
     isSameNumber: boolean;
+    isHintTarget?: boolean;
+    isHintFilled?: boolean;
     onClick: () => void;
     onKeyDown: (event: React.KeyboardEvent) => void;
 }
@@ -16,6 +18,8 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
     isSelected,
     isHighlighted,
     isSameNumber,
+    isHintTarget = false,
+    isHintFilled = false,
     onClick,
     onKeyDown,
 }) => {
@@ -72,6 +76,8 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
             data-selected={isSelected}
             data-highlighted={isHighlighted}
             data-same-number={isSameNumber}
+            data-hint-target={isHintTarget}
+            data-hint-filled={isHintFilled}
             data-fixed={isFixed}
             data-correct={isCorrect}
             data-incorrect={isIncorrect}

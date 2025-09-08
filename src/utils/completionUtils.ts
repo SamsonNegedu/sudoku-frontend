@@ -32,7 +32,7 @@ export const getDifficultyEmoji = (difficulty: string) => {
   }
 };
 
-export const getPerformanceRating = (mistakes: number, difficulty: string) => {
+export const getPerformanceRating = (mistakes: number) => {
   if (mistakes === 0)
     return { rating: 'Perfect!', emoji: '🏆', color: 'text-yellow-500' };
   if (mistakes <= 1)

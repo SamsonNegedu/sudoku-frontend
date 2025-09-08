@@ -7,6 +7,7 @@ import { CompletionAnimation } from './components/CompletionAnimation';
 import { MistakesModal } from './components/MistakesModal';
 import { useGameStore } from './stores/gameStore';
 import { storageManager } from './utils/storageManager';
+import { gameEngineService } from './services/gameEngineService';
 import { AnalyticsProvider } from './components/AnalyticsProvider';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { LearningCenter } from './components/learning/LearningCenter';
@@ -33,17 +34,22 @@ function App() {
   // App navigation state
   const [currentPage, setCurrentPage] = useState<'game' | 'analytics' | 'learning'>('game');
 
-  // Initialize storage manager on app start
+  // Initialize storage manager and game engine on app start
   useEffect(() => {
-    const initializeStorage = async () => {
+    const initializeApp = async () => {
       try {
+        // Initialize storage manager
         await storageManager.init();
+
+        // Initialize game engine
+        await gameEngineService.initialize();
+
       } catch (error) {
-        console.error('Failed to initialize storage manager:', error);
+        console.error('Failed to initialize app:', error);
       }
     };
 
-    initializeStorage();
+    initializeApp();
   }, []);
 
   // Debug logging removed - completion animation working correctly
@@ -54,10 +60,6 @@ function App() {
 
   const handleNewGame = (difficulty: Difficulty) => {
     startNewGame(difficulty);
-  };
-
-  const handleShowSettings = () => {
-    console.log('Settings clicked - to be implemented');
   };
 
   const handleShowAnalytics = () => {
@@ -116,7 +118,6 @@ function App() {
           <AppNavbar
             onNewGame={handleNewGame}
             onRestart={restartCurrentGame}
-            onShowSettings={handleShowSettings}
             onShowAnalytics={handleShowAnalytics}
             onShowLearning={handleShowLearning}
             onShowGame={handleBackToGame}

@@ -38,47 +38,6 @@ export function generateId(): string {
 }
 
 /**
- * Check if a number is valid for Sudoku (1-9)
- */
-export function isValidSudokuNumber(num: number): boolean {
-  return Number.isInteger(num) && num >= 1 && num <= 9;
-}
-
-/**
- * Get the 3x3 box coordinates for a given cell
- */
-export function getBoxCoordinates(
-  row: number,
-  col: number
-): { startRow: number; startCol: number; endRow: number; endCol: number } {
-  const startRow = Math.floor(row / 3) * 3;
-  const startCol = Math.floor(col / 3) * 3;
-  return {
-    startRow,
-    startCol,
-    endRow: startRow + 2,
-    endCol: startCol + 2,
-  };
-}
-
-/**
- * Check if two cells are in the same row, column, or 3x3 box
- */
-export function areCellsRelated(
-  row1: number,
-  col1: number,
-  row2: number,
-  col2: number
-): boolean {
-  return (
-    row1 === row2 ||
-    col1 === col2 ||
-    (Math.floor(row1 / 3) === Math.floor(row2 / 3) &&
-      Math.floor(col1 / 3) === Math.floor(col2 / 3))
-  );
-}
-
-/**
  * Debounce function for performance optimization
  */
 export function debounce<T extends (...args: unknown[]) => unknown>(
@@ -112,40 +71,27 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 }
 
 /**
- * Local storage utilities with error handling
+ * Check if two cells are in the same row, column, or 3x3 box
+ * This is a UI utility function for cell highlighting
  */
-export const storage = {
-  get: <T>(key: string, defaultValue: T): T => {
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue;
-    } catch (error) {
-      console.warn(`Failed to get item from localStorage: ${key}`, error);
-      return defaultValue;
-    }
-  },
+export function areCellsRelated(
+  row1: number,
+  col1: number,
+  row2: number,
+  col2: number
+): boolean {
+  return (
+    row1 === row2 ||
+    col1 === col2 ||
+    (Math.floor(row1 / 3) === Math.floor(row2 / 3) &&
+      Math.floor(col1 / 3) === Math.floor(col2 / 3))
+  );
+}
 
-  set: <T>(key: string, value: T): void => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn(`Failed to set item in localStorage: ${key}`, error);
-    }
-  },
+/**
+ * Note: Storage utilities have been moved to storageManager.ts
+ * Other game-specific utilities have been moved to the game engine
+ */
 
-  remove: (key: string): void => {
-    try {
-      localStorage.removeItem(key);
-    } catch (error) {
-      console.warn(`Failed to remove item from localStorage: ${key}`, error);
-    }
-  },
-
-  clear: (): void => {
-    try {
-      localStorage.clear();
-    } catch (error) {
-      console.warn('Failed to clear localStorage', error);
-    }
-  },
-};
+// Re-export game engine utilities for convenience
+export * from './gameEngine';

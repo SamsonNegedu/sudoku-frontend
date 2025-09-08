@@ -17,7 +17,7 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
     onCellClick,
     onCellKeyDown,
 }) => {
-    const { currentGame } = useGameStore();
+    const { currentGame, hintHighlights, hintFilledCells } = useGameStore();
     const [showCompletionGlow, setShowCompletionGlow] = useState(false);
 
     // Trigger completion glow effect
@@ -33,6 +33,16 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
     const isCellHighlighted = (row: number, col: number): boolean => {
         if (!selectedCell) return false;
         return areCellsRelated(row, col, selectedCell.row, selectedCell.col);
+    };
+
+    // Check if a cell is a hint target (primary highlight)
+    const isHintTarget = (row: number, col: number): boolean => {
+        return hintHighlights.cells.some(([r, c]) => r === row && c === col);
+    };
+
+    // Check if a cell was filled by a hint
+    const isHintFilled = (row: number, col: number): boolean => {
+        return hintFilledCells.some(([r, c]) => r === row && c === col);
     };
 
     // Check if a cell has the same number as the selected cell
@@ -65,6 +75,8 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
                                     isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
                                     isHighlighted={isCellHighlighted(rowIndex, colIndex)}
                                     isSameNumber={hasSameNumber(rowIndex, colIndex)}
+                                    isHintTarget={isHintTarget(rowIndex, colIndex)}
+                                    isHintFilled={isHintFilled(rowIndex, colIndex)}
                                     onClick={() => onCellClick(rowIndex, colIndex)}
                                     onKeyDown={(event) => onCellKeyDown(rowIndex, colIndex, event)}
                                 />

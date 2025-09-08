@@ -10,7 +10,6 @@ import type { Difficulty } from '../types';
 interface AppNavbarProps {
     onNewGame: (difficulty: Difficulty) => void;
     onRestart: () => void;
-    onShowSettings: () => void;
     onShowAnalytics: () => void;
     onShowLearning: () => void;
     onShowGame?: () => void;

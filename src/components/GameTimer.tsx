@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { formatTime } from '../utils';
 import { StopwatchIcon } from '@radix-ui/react-icons';
 
@@ -26,10 +26,13 @@ export const GameTimer: React.FC<GameTimerProps> = ({
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     // Convert startTime to Date object if it's a string
-    const startTimeDate = startTime ? (startTime instanceof Date ? startTime : new Date(startTime)) : null;
+    const startTimeDate = useMemo(() =>
+        startTime ? (startTime instanceof Date ? startTime : new Date(startTime)) : null,
+        [startTime]
+    );
 
     // Calculate the current elapsed time
-    const calculateElapsedTime = () => {
+    const calculateElapsedTime = useCallback(() => {
         if (!startTimeDate) return 0;
         if (isCompleted && currentTime) {
             // For completed games, calculate total duration using completion time
@@ -46,7 +49,7 @@ export const GameTimer: React.FC<GameTimerProps> = ({
             const now = Date.now();
             return Math.max(0, Math.floor((now - startTimeMs - totalPausedTime) / 1000));
         }
-    };
+    }, [startTimeDate, isCompleted, currentTime, isPaused, pausedElapsedTime, totalPausedTime]);
 
     useEffect(() => {
         // Clear any existing interval

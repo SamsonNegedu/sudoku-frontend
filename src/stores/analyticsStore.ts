@@ -11,6 +11,16 @@ import type {
 import type { Difficulty } from '../types';
 import type { GameMove } from '../types';
 
+// Type for difficulty progress data
+export interface DifficultyProgressData {
+  gamesPlayed: number;
+  gamesCompleted: number;
+  averageTime: number;
+  bestTime: number;
+  accuracy: number;
+  lastPlayed: Date;
+}
+
 /**
  * Calculate overall statistics from the games played array
  */
@@ -91,7 +101,7 @@ interface AnalyticsStore {
   // Actions
   initializeUser: () => void;
   startGameRecording: (gameId: string, difficulty: Difficulty) => void;
-  recordMove: (move: GameMove, gameContext: any) => void;
+  recordMove: (move: GameMove, gameContext: Record<string, unknown>) => void;
   recordCellSelection: (
     cell: { row: number; col: number },
     value: number,
@@ -113,8 +123,13 @@ interface AnalyticsStore {
   // Analytics
   getGameInsights: (gameId?: string) => AnalyticsInsight[];
   getUserInsights: () => AnalyticsInsight[];
-  getTechniqueInsights: () => any[];
-  getProgressData: (difficulty?: Difficulty) => any;
+  getTechniqueInsights: () => Record<string, unknown>[];
+  getProgressData: (
+    difficulty?: Difficulty
+  ) =>
+    | DifficultyProgressData
+    | Record<Difficulty, DifficultyProgressData>
+    | null;
   // Privacy
   clearAllData: () => void;
 }
@@ -135,12 +150,10 @@ const detectSolvingTechnique = (move: GameMove): string => {
 
 const getCellKey = (row: number, col: number): string => `${row},${col}`;
 
-const getTechniqueLevel = (
-  technique: string
-): 'basic' | 'intermediate' | 'advanced' | 'expert' => {
+const getTechniqueLevel = (technique: string): Difficulty => {
   const levels = {
-    naked_single: 'basic',
-    hidden_single: 'basic',
+    naked_single: 'beginner',
+    hidden_single: 'beginner',
     naked_pair: 'intermediate',
     pointing_pair: 'intermediate',
     x_wing: 'advanced',
@@ -148,7 +161,7 @@ const getTechniqueLevel = (
     swordfish: 'expert',
   } as const;
 
-  return (levels as any)[technique] || 'intermediate';
+  return (levels as Record<string, Difficulty>)[technique] || 'beginner';
 };
 
 const formatTechniqueName = (technique: string): string => {
@@ -163,7 +176,7 @@ const formatTechniqueName = (technique: string): string => {
   } as const;
 
   return (
-    (names as any)[technique] ||
+    (names as Record<string, string>)[technique] ||
     technique.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
   );
 };
@@ -174,7 +187,7 @@ const analyticsStorage = {
     try {
       const data = await storageManager.loadAnalytics(name);
       return data ? JSON.stringify(data) : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   },
@@ -186,7 +199,7 @@ const analyticsStorage = {
       console.error('Failed to save analytics data:', error);
     }
   },
-  removeItem: async (_name: string): Promise<void> => {
+  removeItem: async (): Promise<void> => {
     try {
       await storageManager.clearAllAnalytics();
     } catch (error) {
@@ -436,7 +449,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         });
       },
 
-      recordMove: (move: GameMove, gameContext: any) => {
+      recordMove: (move: GameMove, gameContext: Record<string, unknown>) => {
         const state = get();
 
         if (!state.isRecording || !state.currentGameAnalytics) {
@@ -460,14 +473,14 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           moveNumber: state.currentGameAnalytics.moves.length + 1,
           timeFromStart,
           timeFromLastMove,
-          isCorrect: gameContext.isCorrect ?? null,
+          isCorrect: (gameContext.isCorrect as boolean | null) ?? null,
           technique: detectSolvingTechnique(move),
           hesitationTime,
           undoChainLength: 0, // Will be updated if undos follow
-          emptyCellsRemaining: gameContext.emptyCellsRemaining || 0,
-          difficultyAtMove: gameContext.difficultyAtMove || 1,
-          mistakesSoFar: gameContext.mistakes || 0,
-          hintsSoFar: gameContext.hintsUsed || 0,
+          emptyCellsRemaining: (gameContext.emptyCellsRemaining as number) || 0,
+          difficultyAtMove: (gameContext.difficultyAtMove as number) || 1,
+          mistakesSoFar: (gameContext.mistakes as number) || 0,
+          hintsSoFar: (gameContext.hintsUsed as number) || 0,
         };
 
         // Update current game analytics
@@ -724,7 +737,9 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           m => m.isCorrect === true
         ).length;
         const totalUndos = moves.filter(
-          m => (m as any).value === null && !(m as any).isNote
+          m =>
+            (m as DetailedGameMove).value === null &&
+            !(m as DetailedGameMove).isNote
         ).length;
         const finalAccuracy =
           moves.length > 0 ? (correctFirstTries / moves.length) * 100 : 0;
@@ -889,8 +904,22 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           return [];
         }
 
-        const insights: any[] = [];
-        const allTechniques: any = {};
+        const insights: Record<string, unknown>[] = [];
+        const allTechniques: Record<
+          string,
+          {
+            name: string;
+            timesUsed: number;
+            timesSuccessful: number;
+            totalTime: number;
+            recentUses: Array<{
+              successful: boolean;
+              timeToApply: number;
+              wasHintBased: boolean;
+            }>;
+            level: Difficulty;
+          }
+        > = {};
 
         // Aggregate technique usage across all games
         state.userAnalytics.gamesPlayed.forEach(game => {
@@ -924,7 +953,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         });
 
         // Generate insights for each technique
-        Object.values(allTechniques).forEach((tech: any) => {
+        Object.values(allTechniques).forEach(tech => {
           const successRate = (tech.timesSuccessful / tech.timesUsed) * 100;
           const avgTime = tech.totalTime / tech.timesUsed;
 
@@ -1007,7 +1036,11 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           });
         }
 
-        return insights.sort((a, b) => b.priority - a.priority);
+        return insights.sort((a, b) => {
+          const aPriority = (a.priority as number) || 0;
+          const bPriority = (b.priority as number) || 0;
+          return bPriority - aPriority;
+        });
       },
 
       getProgressData: (difficulty?: Difficulty) => {
@@ -1091,7 +1124,10 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           'master',
           'grandmaster',
         ];
-        const result: Record<Difficulty, any> = {} as Record<Difficulty, any>;
+        const result: Record<Difficulty, DifficultyProgressData> = {} as Record<
+          Difficulty,
+          DifficultyProgressData
+        >;
 
         difficulties.forEach(diff => {
           result[diff] = calculateDifficultyStats(diff);

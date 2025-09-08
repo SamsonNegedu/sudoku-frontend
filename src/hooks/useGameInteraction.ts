@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useGameStore } from '../stores/gameStore';
-import { useGameAnalytics } from '../components/AnalyticsProvider';
+import { useGameAnalytics } from './useGameAnalytics';
 import type { Game } from '../types';
 
 interface UseGameInteractionProps {

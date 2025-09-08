@@ -1,23 +1,22 @@
-// Analytics and Move Recording Types
 import type { GameMove, Difficulty } from './index';
 
 export interface TechniqueUsage {
   technique: string;
   timesUsed: number;
   timesSuccessful: number;
-  averageTimeToApply: number; // milliseconds
+  averageTimeToApply: number;
   lastUsed: Date;
   difficultyLevel: 'basic' | 'intermediate' | 'advanced' | 'expert';
-  successRate: number; // percentage
-  improvementTrend: number; // positive = getting better
+  successRate: number;
+  improvementTrend: number;
 }
 
 export interface TechniqueInsight {
   type: 'strength' | 'weakness' | 'improvement' | 'suggestion';
   technique: string;
   message: string;
-  actionable: string; // What the player should do
-  priority: number; // 1-5, higher = more important
+  actionable: string;
+  priority: number;
 }
 
 export interface OverallStats {
@@ -167,7 +166,7 @@ export interface AnalyticsInsight {
   type: 'strength' | 'weakness' | 'suggestion' | 'achievement';
   title: string;
   description: string;
-  data?: any;
+  data?: Record<string, unknown>;
   actionable?: boolean;
   priority: 'low' | 'medium' | 'high';
 }

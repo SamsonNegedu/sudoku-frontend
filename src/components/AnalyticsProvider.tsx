@@ -52,7 +52,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
         // Update the ref to current count
         movesCountRef.current = newMovesCount;
-    }, [currentGame?.moves?.length, currentGame?.id, isRecording, recordCellSelection]);
+    }, [currentGame?.moves?.length, currentGame?.id, currentGame, isRecording, recordCellSelection, startGameRecording]);
 
     // Initialize user analytics on mount
     useEffect(() => {
@@ -64,18 +64,10 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const lastGameIdRef = useRef<string | null>(null);
 
     useEffect(() => {
-        console.log('🎯 Game ID tracking:', {
-            currentGameId: currentGame?.id,
-            lastGameId: lastGameIdRef.current,
-            isRecording,
-            gameChanged: currentGame?.id !== lastGameIdRef.current
-        });
-
         // Detect game changes (new game or restart)
         if (currentGame?.id !== lastGameIdRef.current) {
             // If we had a previous game, it was abandoned/restarted
             if (lastGameIdRef.current && isRecording) {
-                console.log('🔄 Game changed - previous game abandoned:', lastGameIdRef.current);
                 stopGameRecording();
             }
             lastGameIdRef.current = currentGame?.id || null;
@@ -89,7 +81,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 startGameRecording(currentGame.id, currentGame.difficulty);
             }
         }
-    }, [currentGame?.id, currentGame?.isCompleted, isRecording]);
+    }, [currentGame?.id, currentGame?.isCompleted, currentGame, isRecording, startGameRecording, stopGameRecording]);
 
     // Track game completion (with ref to prevent multiple calls)
     const completionRecordedRef = useRef<string | null>(null);
@@ -117,56 +109,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 }
             }
         }
-    }, [currentGame?.isCompleted, currentGame?.id, isRecording]);
+    }, [currentGame?.isCompleted, currentGame?.id, currentGame?.difficulty, currentGame, isRecording, recordGameCompletion, startGameRecording]);
 
     return <>{children}</>;
-};
-
-// Hook for components to easily access analytics
-export const useGameAnalytics = () => {
-    const analyticsStore = useAnalyticsStore();
-    const gameStore = useGameStore();
-
-    // Enhanced move recording function
-    const recordGameMove = (move: any, additionalContext?: any) => {
-        if (!gameStore.currentGame) return;
-
-
-
-        const gameContext = {
-            isCorrect: additionalContext?.isCorrect,
-            boardBefore: additionalContext?.boardBefore,
-            boardAfter: gameStore.currentGame.board,
-            emptyCellsRemaining: calculateEmptyCells(gameStore.currentGame.board),
-            mistakes: gameStore.currentGame.mistakes,
-            hintsUsed: gameStore.currentGame.hintsUsed,
-            difficultyAtMove: 1, // TODO: Calculate dynamic difficulty
-            ...additionalContext,
-        };
-
-        analyticsStore.recordMove(move, gameContext);
-    };
-
-    const recordHintUsage = (hintType: string, techniqueRevealed?: string) => {
-        analyticsStore.recordHint(hintType, techniqueRevealed);
-    };
-
-    return {
-        ...analyticsStore,
-        recordGameMove,
-        recordHintUsage,
-    };
-};
-
-// Utility function
-const calculateEmptyCells = (board: any[][]): number => {
-    let empty = 0;
-    for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-            if (board[row][col].value === null) {
-                empty++;
-            }
-        }
-    }
-    return empty;
 };
