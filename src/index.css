@@ -59,11 +59,25 @@
     font-weight: 600 !important;
   }
 
+  /* Ensure notes are visible in selected cells */
+  div.sudoku-cell[data-selected="true"] .sudoku-cell-notes,
+  .sudoku-cell[data-selected="true"] .sudoku-cell-notes {
+    color: rgb(248 250 252) !important; /* text-slate-50 - almost white for maximum contrast against dark blue */
+    font-weight: 600 !important; /* Make text bolder for better visibility */
+  }
+
   /* Related cells (same row/col/box) - light blue */
   div.sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-hint-target="true"]):not([data-same-number="true"]),
   .sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-hint-target="true"]):not([data-same-number="true"]) {
     background-color: rgb(239 246 255) !important; /* bg-blue-50 */
     background: rgb(239 246 255) !important;
+  }
+
+  /* Ensure notes have better contrast in highlighted cells */
+  div.sudoku-cell[data-highlighted="true"] .sudoku-cell-notes,
+  .sudoku-cell[data-highlighted="true"] .sudoku-cell-notes {
+    color: rgb(17 24 39) !important; /* text-gray-900 - much darker for better contrast */
+    font-weight: 600 !important; /* Make text bolder for better visibility */
   }
 
   /* Same number highlighting - medium blue */
@@ -72,6 +86,13 @@
     background-color: rgb(191 219 254) !important; /* bg-blue-200 */
     background: rgb(191 219 254) !important;
     border-color: rgb(59 130 246) !important; /* border-blue-500 */
+  }
+
+  /* Ensure notes have better contrast in same number highlighted cells */
+  div.sudoku-cell[data-same-number="true"] .sudoku-cell-notes,
+  .sudoku-cell[data-same-number="true"] .sudoku-cell-notes {
+    color: rgb(15 23 42) !important; /* text-slate-900 - very dark for maximum contrast */
+    font-weight: 600 !important; /* Make text bolder for better visibility */
   }
 
   /* 2. AMBER FAMILY - Hints and attention */
