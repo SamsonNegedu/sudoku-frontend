@@ -33,22 +33,20 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      {/* Confetti particles */}
-      <ConfettiEffect isVisible={stage === 'confetti' || stage === 'celebration'} />
+      {/* Confetti particles - show during confetti stage and briefly into stats */}
+      <ConfettiEffect isVisible={stage === 'confetti'} />
 
-      {/* Main content */}
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full text-center overflow-hidden">
-        {/* Header with success icon */}
-        {(stage === 'celebration' || stage === 'stats') && (
+      {/* Main content - only show during stats stage */}
+      {stage === 'stats' && (
+        <div className="completion-modal bg-white rounded-2xl shadow-2xl max-w-md w-full text-center overflow-hidden">
+          {/* Header with success icon */}
           <CelebrationHeader
             stage={stage}
             difficulty={difficulty}
             mistakes={mistakes}
           />
-        )}
 
-        {/* Content */}
-        {stage === 'stats' && (
+          {/* Content */}
           <div className="p-6">
             {/* Stats grid */}
             <CompletionStats
@@ -63,56 +61,8 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
               onClose={onAnimationComplete}
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
-
-const animationStyles = `
-@keyframes confetti-fall {
-  0% {
-    transform: translateY(-10px) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0;
-  }
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scale(0.3) rotate(-10deg);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.1) rotate(5deg);
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-bounce-in {
-  animation: bounce-in 0.6s ease-out forwards;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.4s ease-out forwards;
-}
-`;
-
-export { animationStyles };

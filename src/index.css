@@ -232,6 +232,20 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Crisp completion modal typography */
+  .completion-modal {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .completion-modal .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
   /* Mobile-specific adjustments */
   @media (max-width: 639px) {
     .sudoku-cell {

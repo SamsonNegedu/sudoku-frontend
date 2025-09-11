@@ -7,14 +7,15 @@ interface ConfettiEffectProps {
 export const ConfettiEffect: React.FC<ConfettiEffectProps> = ({ isVisible }) => {
     if (!isVisible) return null;
 
-    const confettiColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
+    // Subtle, brand-consistent colors
+    const confettiColors = ['#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#6b7280', '#9ca3af'];
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(50)].map((_, i) => (
+            {[...Array(30)].map((_, i) => (
                 <div
                     key={i}
-                    className="absolute w-3 h-3 opacity-90"
+                    className="absolute w-2 h-2 opacity-70"
                     style={{
                         left: `${Math.random() * 100}%`,
                         top: '-10px',

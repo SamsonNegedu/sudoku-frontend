@@ -16,7 +16,7 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
                 onClick={onStartNewGame}
                 size="3"
                 variant="solid"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
                 🎯 Start New Game
             </Button>
@@ -26,7 +26,7 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
                 size="3"
                 variant="soft"
                 color="gray"
-                className="w-full"
+                className="w-full font-medium"
             >
                 ✨ Admire My Solution
             </Button>

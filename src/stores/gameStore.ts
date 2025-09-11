@@ -349,6 +349,41 @@ export const useGameStore = create<GameStore>()(
           isIncorrect: value !== null ? !isCorrect : false,
         };
 
+        // If a value was placed (not cleared), remove that number from notes in same row, column, and box
+        if (value !== null) {
+          // Helper function to get box index
+          const getBoxIndex = (r: number, c: number) =>
+            Math.floor(r / 3) * 3 + Math.floor(c / 3);
+          const boxIndex = getBoxIndex(row, col);
+
+          // Remove notes from same row, column, and box
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              // Skip the cell we just updated
+              if (r === row && c === col) continue;
+
+              const currentCell = newBoard[r][c];
+              const currentBoxIndex = getBoxIndex(r, c);
+
+              // Check if this cell is in the same row, column, or box
+              const isSameRow = r === row;
+              const isSameCol = c === col;
+              const isSameBox = currentBoxIndex === boxIndex;
+
+              if (
+                (isSameRow || isSameCol || isSameBox) &&
+                currentCell.notes.includes(value)
+              ) {
+                // Remove the note from this cell
+                newBoard[r][c] = {
+                  ...currentCell,
+                  notes: currentCell.notes.filter(note => note !== value),
+                };
+              }
+            }
+          }
+        }
+
         // Create move record
         const move: GameMove = {
           row,

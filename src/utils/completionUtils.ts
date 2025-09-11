@@ -34,14 +34,14 @@ export const getDifficultyEmoji = (difficulty: string) => {
 
 export const getPerformanceRating = (mistakes: number) => {
   if (mistakes === 0)
-    return { rating: 'Perfect!', emoji: '🏆', color: 'text-yellow-500' };
+    return { rating: 'Perfect!', emoji: '🏆', color: 'text-blue-600' };
   if (mistakes <= 1)
     return { rating: 'Excellent!', emoji: '🌟', color: 'text-blue-600' };
   if (mistakes <= 3)
-    return { rating: 'Great Job!', emoji: '👏', color: 'text-green-500' };
+    return { rating: 'Great Job!', emoji: '👏', color: 'text-blue-600' };
   if (mistakes <= 5)
-    return { rating: 'Well Done!', emoji: '👍', color: 'text-orange-500' };
-  return { rating: 'Completed!', emoji: '🎉', color: 'text-purple-500' };
+    return { rating: 'Well Done!', emoji: '👍', color: 'text-blue-600' };
+  return { rating: 'Completed!', emoji: '🎉', color: 'text-blue-600' };
 };
 
 export const getMistakeColor = (mistakes: number) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-type CompletionStage = 'hidden' | 'confetti' | 'celebration' | 'stats';
+type CompletionStage = 'hidden' | 'confetti' | 'stats';
 
 export const useCompletionStages = (isVisible: boolean) => {
   const [stage, setStage] = useState<CompletionStage>('hidden');
@@ -10,11 +10,8 @@ export const useCompletionStages = (isVisible: boolean) => {
       // Stage 1: Confetti burst
       setStage('confetti');
 
-      // Stage 2: Celebration message
-      setTimeout(() => setStage('celebration'), 800);
-
-      // Stage 3: Show stats (and stay there until user action)
-      setTimeout(() => setStage('stats'), 2000);
+      // Stage 2: Show stats directly (skip celebration stage)
+      setTimeout(() => setStage('stats'), 1200);
 
       // No auto-dismiss - modal stays until user clicks an action
     } else {
