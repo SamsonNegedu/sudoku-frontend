@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface MistakesHeaderProps {
     mistakes: number;
@@ -9,6 +10,7 @@ export const MistakesHeader: React.FC<MistakesHeaderProps> = ({
     mistakes,
     maxMistakes,
 }) => {
+    const { t } = useTranslation();
     return (
         <div className="bg-red-50 px-6 py-4 border-b border-red-100">
             <div className="w-16 h-16 mx-auto mb-3 bg-red-100 rounded-full flex items-center justify-center">
@@ -17,10 +19,10 @@ export const MistakesHeader: React.FC<MistakesHeaderProps> = ({
                 </svg>
             </div>
             <h2 className="text-xl font-bold text-red-800 mb-1">
-                Maximum Mistakes Reached!
+                {t('mistakes.maximumReached')}
             </h2>
             <p className="text-red-600 text-sm">
-                You've made {mistakes} out of {maxMistakes} allowed mistakes
+                {t('mistakes.youveMade', { mistakes, maxMistakes })}
             </p>
         </div>
     );

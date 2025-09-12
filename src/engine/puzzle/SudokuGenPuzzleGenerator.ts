@@ -15,13 +15,13 @@ import type {
 export class SudokuGenPuzzleGenerator implements IPuzzleGenerator {
   private isInitialized = false;
 
-  async init(): Promise<void> {
+  init(): void {
     if (this.isInitialized) return;
 
     this.isInitialized = true;
   }
 
-  async destroy(): Promise<void> {
+  destroy(): void {
     this.isInitialized = false;
   }
 

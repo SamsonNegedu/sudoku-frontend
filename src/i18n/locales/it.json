@@ -1,0 +1,210 @@
+{
+  "app": {
+    "title": "Grid Logic",
+    "subtitle": "Sfida la tua mente con puzzle classici di Sudoku"
+  },
+  "navigation": {
+    "game": "Gioco",
+    "analytics": "Statistiche",
+    "learning": "Centro di Apprendimento",
+    "newGame": "Nuovo Gioco",
+    "settings": "Impostazioni",
+    "backToGame": "Torna al Gioco",
+    "cancel": "Annulla"
+  },
+  "difficulty": {
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzato",
+    "expert": "Esperto",
+    "master": "Maestro",
+    "grandmaster": "Gran Maestro",
+    "descriptions": {
+      "beginner": "Perfetto per i principianti",
+      "intermediate": "Sviluppa le tue abilità",
+      "advanced": "Per giocatori esperti",
+      "expert": "Metti alla prova la tua maestria",
+      "master": "Sfida di livello elite",
+      "grandmaster": "La prova definitiva"
+    }
+  },
+  "game": {
+    "timer": "Tempo",
+    "hints": "Suggerimenti",
+    "mistakes": "Errori",
+    "hintsUsed": "Suggerimenti Usati",
+    "mistakesCount": "{{count}}/{{max}}",
+    "gameInfo": "Info Gioco",
+    "selectedCell": "Cella Selezionata",
+    "pause": "Pausa",
+    "resume": "Riprendi",
+    "restart": "Ricomincia",
+    "newGame": "Nuovo Gioco",
+    "undo": "Annulla",
+    "clear": "Cancella",
+    "notes": "Note",
+    "hint": "Suggerimento",
+    "completed": "COMPLETATO",
+    "gameOver": "Fine Gioco",
+    "unlimitedHints": "Suggerimenti illimitati (sviluppo)",
+    "noHintsRemaining": "Nessun suggerimento rimasto",
+    "hintsRemaining": "{{count}} rimanenti",
+    "difficulty": "Difficoltà"
+  },
+  "controls": {
+    "penMode": "Modalità Penna",
+    "pencilMode": "Modalità Matita",
+    "currentMode": "Attuale: Modalità {{mode}}"
+  },
+  "hints": {
+    "noHintsAvailable": "Nessun suggerimento ovvio disponibile. Prova a cercare celle con il minor numero di possibilità, o esamina se alcuni numeri appaiono solo una volta in una riga, colonna o riquadro 3×3.",
+    "unableToAnalyze": "Impossibile analizzare la griglia in questo momento. Prova a esaminare celle con meno numeri possibili o cerca posizionamenti ovvi.",
+    "generalAdvice": "Consiglio Generale",
+    "errorFallback": "Errore di Analisi",
+    "autoFilled": "Compilato automaticamente",
+    "cellHint": "Suggerimento cella",
+    "techniqueHint": "Suggerimento tecnica",
+    "notesHint": "Suggerimento note",
+    "hint": "Suggerimento",
+    "gotIt": "Capito!",
+    "aboutTechnique": "Su questa tecnica:",
+    "techniques": {
+      "naked_single": "Una cella che può contenere solo un numero basato sui numeri esistenti nella sua riga, colonna e riquadro 3×3.",
+      "hidden_single": "Un numero che può andare solo in un posto in una riga, colonna o riquadro.",
+      "naked_pair": "Due celle nella stessa unità che possono contenere solo gli stessi due numeri, eliminando quei numeri dalle altre celle.",
+      "pointing_pair": "Tutti i candidati per un numero in un riquadro sono confinati a una singola riga o colonna.",
+      "box_line_reduction": "Tutti i candidati per un numero in una riga o colonna sono confinati a un singolo riquadro.",
+      "x_wing": "Un pattern rettangolare che permette l'eliminazione di candidati.",
+      "xy_wing": "Un pattern con un perno e due pinze che elimina candidati.",
+      "swordfish": "Un pattern 3×3 che permette l'eliminazione di candidati tra righe e colonne.",
+      "note_elimination": "Rimuovere note che non sono più valide",
+      "error_detection": "Trovare e correggere valori incorretti",
+      "direct_hint": "Il valore corretto per questa cella",
+      "candidate_suggestion": "Valori possibili per questa cella",
+      "confirmation": "Questa cella è correttamente compilata",
+      "cell_selection": "Prova a selezionare una cella diversa",
+      "general_strategy": "Approccio generale alla risoluzione",
+      "general_advice": "Cerca pattern di risoluzione di base"
+    },
+    "detailedExplanations": {
+      "naked_single": "{{techniqueName}}: Tutti gli altri numeri sono bloccati in questa cella dai valori esistenti nella riga, colonna e riquadro.",
+      "hidden_single_row": "{{techniqueName}}: {{number}} può andare solo in questa posizione nella riga {{row}}.",
+      "hidden_single_col": "{{techniqueName}}: {{number}} può andare solo in questa posizione nella colonna {{col}}.",
+      "hidden_single_box": "{{techniqueName}}: {{number}} può andare solo in questa posizione in {{boxName}}.",
+      "naked_pair": "{{techniqueName}}: Due celle possono contenere solo {{num1}} e {{num2}}, quindi elimina questi numeri dalle altre celle in questa {{unitType}}.",
+      "pointing_pair_row": "{{techniqueName}}: {{number}} in questo riquadro è confinato a una riga, quindi elimina {{number}} da questa riga fuori dal riquadro.",
+      "pointing_pair_col": "{{techniqueName}}: {{number}} in questo riquadro è confinato a una colonna, quindi elimina {{number}} da questa colonna fuori dal riquadro.",
+      "x_wing": "{{techniqueName}}: Un X-Wing si forma quando un numero appare come candidato in esattamente due celle in ciascuna di due righe, e queste celle sono allineate nelle stesse due colonne (formando un rettangolo). Poiché il numero deve apparire esattamente una volta in ogni riga e colonna, possiamo eliminarlo da tutte le altre celle in quelle due colonne.",
+      "xy_wing": "{{techniqueName}}: Un XY-Wing consiste di tre celle: un perno con candidati XY, e due pinze con candidati XZ e YZ. Poiché il perno deve contenere X o Y, una pinza deve contenere Z. Questo ci permette di eliminare Z da qualsiasi cella che può vedere entrambe le pinze.",
+      "swordfish": "{{techniqueName}}: Un Swordfish si forma quando un numero appare come candidato in esattamente 2-3 celle in ciascuna di tre righe, e questi candidati sono confinati alle stesse tre colonne. Questo crea un pattern che permette l'eliminazione da altre celle in quelle colonne.",
+      "box_line_reduction": "{{techniqueName}}: La Riduzione Linea-Riquadro si verifica quando tutti i candidati per un numero in una riga (o colonna) sono confinati a un singolo riquadro 3×3. Poiché il numero deve apparire da qualche parte in quella riga, può essere eliminato da altre parti del riquadro."
+    },
+    "techniqueNames": {
+      "naked_single": "Naked Single",
+      "hidden_single": "Hidden Single",
+      "naked_pair": "Naked Pair",
+      "pointing_pair": "Pointing Pair",
+      "box_line_reduction": "Box Line Reduction",
+      "x_wing": "X-Wing",
+      "xy_wing": "XY-Wing",
+      "swordfish": "Swordfish"
+    }
+  },
+  "completion": {
+    "congratulations": "Congratulazioni!",
+    "puzzleSolved": "Puzzle Risolto",
+    "yourTime": "Il Tuo Tempo",
+    "hintsUsed": "Suggerimenti Usati",
+    "mistakesMade": "Errori Commessi",
+    "playAgain": "Gioca Ancora",
+    "newPuzzle": "Nuovo Puzzle",
+    "time": "Tempo",
+    "mistakes": "Errori",
+    "performance": "Prestazione"
+  },
+  "mistakes": {
+    "tooManyMistakes": "Troppi Errori",
+    "limitReached": "Hai raggiunto il limite di errori per questo livello di difficoltà.",
+    "continueUnlimited": "Continua con Errori Illimitati",
+    "startOver": "Ricomincia",
+    "maximumReached": "Massimo di Errori Raggiunto!",
+    "youveMade": "Hai commesso {{mistakes}} di {{maxMistakes}} errori consentiti",
+    "restartLabel": "Riavvia",
+    "restartDescription": "Riavvia questo puzzle per riprovare con gli stessi numeri",
+    "continueLabel": "Continua",
+    "continueDescription": "Continua a giocare senza limite di errori",
+    "disableNote": "Questo disabiliterà il limite di errori solo per questa partita"
+  },
+  "analytics": {
+    "title": "Statistiche di Gioco",
+    "overview": "Panoramica",
+    "totalGames": "Giochi Totali",
+    "averageTime": "Tempo Medio",
+    "bestTime": "Miglior Tempo",
+    "completionRate": "Tasso di Completamento",
+    "difficultyProgress": "Progresso per Difficoltà",
+    "techniqueAnalysis": "Analisi delle Tecniche di Risoluzione",
+    "recentGames": "Giochi Recenti",
+    "insights": "Approfondimenti",
+    "dataManagement": "Gestione Dati",
+    "gamesPlayed": "Partite Giocate",
+    "completed": "Completate",
+    "incomplete": "Incomplete",
+    "abandoned": "Abbandonate",
+    "accuracy": "Precisione",
+    "moves": "mosse",
+    "avgTime": "Tempo Medio",
+    "dashboardTitle": "Dashboard Statistiche",
+    "trackProgress": "Traccia i tuoi progressi e migliora le tue abilità di risoluzione",
+    "noCompletedGames": "Nessun gioco completato ancora. Finisci un gioco per vedere le tue statistiche!",
+    "noDataAvailable": "Nessun dato statistico disponibile ancora. Gioca alcuni giochi per vedere i tuoi progressi!",
+    "insightsRecommendations": "Approfondimenti e Raccomandazioni",
+    "confirmDelete": "Sei sicuro di voler eliminare tutti i dati di analisi? Questo non può essere annullato.",
+    "permanentWarning": "Queste azioni sono permanenti e non possono essere annullate.",
+    "clearAllData": "Cancella Tutti i Dati"
+  },
+  "learning": {
+    "title": "Centro di Apprendimento",
+    "techniques": "Tecniche",
+    "allLevels": "Tutti i Livelli",
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzato",
+    "backToCenter": "Torna al Centro di Apprendimento"
+  },
+  "settings": {
+    "language": "Lingua",
+    "theme": "Tema",
+    "sounds": "Suoni",
+    "notifications": "Notifiche"
+  },
+  "languages": {
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "fr": "Français"
+  },
+  "loading": {
+    "generatingPuzzle": "Generazione puzzle",
+    "creatingChallenge": "Creando la tua sfida Sudoku perfetta",
+    "chooseChallenge": "Scegli il tuo livello di sfida",
+    "selectDifficulty": "Seleziona difficoltà",
+    "selectToStart": "Seleziona una difficoltà per iniziare a giocare",
+    "advancedChallenges": "Sfide avanzate"
+  },
+  "pause": {
+    "gamePaused": "Gioco in Pausa",
+    "progressSaved": "I tuoi progressi sono salvati. Riprendi quando sei pronto!",
+    "orUseButton": "O usa il pulsante Riprendi nella barra di navigazione"
+  },
+  "tips": {
+    "quickTips": "Suggerimenti Rapidi",
+    "spaceToggle": "Usa",
+    "toggleMode": "per alternare modalità penna/matita",
+    "pressKey": "Premi",
+    "undoMoves": "per annullare le mosse",
+    "clickCells": "Clicca sulle celle per selezionare ed evidenziare numeri correlati",
+    "numbersAppear": "I numeri appaiono orizzontalmente sotto la griglia"
+  }
+}

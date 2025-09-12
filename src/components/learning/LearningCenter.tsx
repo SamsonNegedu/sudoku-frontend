@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { LearningProvider, useLearning } from '../../contexts/LearningContext';
 import { TechniqueDetail } from './TechniqueDetail';
 import { TechniqueGrid } from './TechniqueGrid';
@@ -12,6 +13,7 @@ import {
 } from '@radix-ui/react-icons';
 
 const LearningContent: React.FC = () => {
+    const { t } = useTranslation();
     const {
         techniques,
         selectedTechnique,
@@ -23,11 +25,11 @@ const LearningContent: React.FC = () => {
     const { filteredTechniques } = useTechniqueFiltering(techniques, selectedLevel);
 
     const levels = [
-        { id: 'all', name: 'All Levels', icon: ReaderIcon },
-        { id: 'basic', name: 'Basic', icon: PlayIcon },
-        { id: 'intermediate', name: 'Intermediate', icon: LightningBoltIcon },
-        { id: 'advanced', name: 'Advanced', icon: TargetIcon },
-        { id: 'expert', name: 'Expert', icon: TargetIcon },
+        { id: 'all', name: t('learning.allLevels'), icon: ReaderIcon },
+        { id: 'basic', name: t('difficulty.beginner'), icon: PlayIcon },
+        { id: 'intermediate', name: t('difficulty.intermediate'), icon: LightningBoltIcon },
+        { id: 'advanced', name: t('difficulty.advanced'), icon: TargetIcon },
+        { id: 'expert', name: t('difficulty.expert'), icon: TargetIcon },
     ] as const;
 
     if (selectedTechnique) {

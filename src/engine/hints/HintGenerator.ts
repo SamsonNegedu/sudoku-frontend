@@ -13,6 +13,7 @@ import type {
   SudokuBoard,
   IValidator,
 } from '../types';
+import i18n from '../../i18n';
 
 // Additional types for advanced hint generation
 interface CellCandidate {
@@ -47,7 +48,7 @@ export class HintGenerator implements IHintGenerator {
     this.validator = validator;
   }
 
-  async init(): Promise<void> {
+  init(): void {
     // Initialization logic if needed
   }
 
@@ -69,7 +70,7 @@ export class HintGenerator implements IHintGenerator {
     };
   }
 
-  async destroy(): Promise<void> {
+  destroy(): void {
     // Cleanup logic if needed
     this.suggestedEliminations.clear();
   }
@@ -163,13 +164,13 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Generate the best available hint for the current board state
    */
-  async generateHint(request: HintRequest): Promise<HintResult | null> {
+  generateHint(request: HintRequest): HintResult | null {
     try {
       // Reset tracking if board has changed
       const board = this.convertSudokuBoardToNumeric(request.board);
       this.resetTrackingIfBoardChanged(board);
 
-      const allHints = await this.generateAllHints(request);
+      const allHints = this.generateAllHints(request);
 
       // Filter out hints that have already been suggested
       const hints = allHints.filter(hint => {
@@ -254,21 +255,18 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Generate all available hints sorted by effectiveness
    */
-  async generateAllHints(request: HintRequest): Promise<HintResult[]> {
+  generateAllHints(request: HintRequest): HintResult[] {
     const board = this.convertSudokuBoardToNumeric(request.board);
     const allHints: HintResult[] = [];
 
     // If a specific cell is selected, try contextual hints first
     if (request.selectedCell) {
-      const contextualHints = await this.generateContextualHints(
-        request,
-        board
-      );
+      const contextualHints = this.generateContextualHints(request, board);
       allHints.push(...contextualHints);
     }
 
     // Generate technique-based hints
-    const techniqueHints = await this.generateTechniqueHints(request, board);
+    const techniqueHints = this.generateTechniqueHints(request, board);
     allHints.push(...techniqueHints);
 
     // Remove duplicates and sort by effectiveness
@@ -306,10 +304,10 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Generate contextual hints for selected cell
    */
-  private async generateContextualHints(
+  private generateContextualHints(
     request: HintRequest,
     board: NumericBoard
-  ): Promise<HintResult[]> {
+  ): HintResult[] {
     const hints: HintResult[] = [];
     const [row, col] = request.selectedCell!;
     const cell = request.board[row][col];
@@ -340,7 +338,9 @@ export class HintGenerator implements IHintGenerator {
       hints.push({
         hint: {
           type: 'cell',
-          message: `This cell contains an incorrect value. The correct answer is ${request.solution[row][col]}.`,
+          message: i18n.t('hints.messages.incorrectValue', {
+            correctValue: request.solution[row][col],
+          }),
           targetCells: [[row, col]],
           suggestedValue: request.solution[row][col],
           technique: 'direct_hint',
@@ -374,7 +374,9 @@ export class HintGenerator implements IHintGenerator {
         hints.push({
           hint: {
             type: 'cell',
-            message: `Auto-filled ${candidateInfo.candidates[0]} in selected cell. This was the only valid number.`,
+            message: i18n.t('hints.messages.autoFilled', {
+              value: candidateInfo.candidates[0],
+            }),
             targetCells: [[row, col]],
             suggestedValue: candidateInfo.candidates[0],
             technique: 'naked_single',
@@ -389,7 +391,9 @@ export class HintGenerator implements IHintGenerator {
         hints.push({
           hint: {
             type: 'note',
-            message: `This cell can be ${candidateInfo.candidates.join(', ')}. Try adding these as notes to help you solve the puzzle.`,
+            message: i18n.t('hints.messages.candidateSuggestion', {
+              candidates: candidateInfo.candidates.join(', '),
+            }),
             targetCells: [[row, col]],
             technique: 'candidate_suggestion',
           },
@@ -407,25 +411,23 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Generate technique-based hints
    */
-  private async generateTechniqueHints(
+  private generateTechniqueHints(
     request: HintRequest,
     board: NumericBoard
-  ): Promise<HintResult[]> {
+  ): HintResult[] {
     const hints: HintResult[] = [];
 
     // Basic techniques (always check these)
-    hints.push(...(await this.findNakedSingles(board)));
-    hints.push(...(await this.findHiddenSingles(board)));
+    hints.push(...this.findNakedSingles(board));
+    hints.push(...this.findHiddenSingles(board));
 
     // Error detection (if solution available)
     if (request.solution) {
-      hints.push(
-        ...(await this.findIncorrectValues(request.board, request.solution))
-      );
+      hints.push(...this.findIncorrectValues(request.board, request.solution));
     }
 
     // Note elimination
-    hints.push(...(await this.findNoteEliminationHints(request.board, board)));
+    hints.push(...this.findNoteEliminationHints(request.board, board));
 
     // Advanced techniques based on difficulty and complexity
     const maxComplexity = this.getMaxComplexityForDifficulty(
@@ -433,18 +435,18 @@ export class HintGenerator implements IHintGenerator {
     );
 
     if (maxComplexity >= 2) {
-      hints.push(...(await this.findNakedPairs(board)));
-      hints.push(...(await this.findPointingPairs(board)));
+      hints.push(...this.findNakedPairs(board));
+      hints.push(...this.findPointingPairs(board));
     }
 
     if (maxComplexity >= 3) {
-      hints.push(...(await this.findBoxLineReduction(board)));
-      hints.push(...(await this.findXWingTechnique(board)));
+      hints.push(...this.findBoxLineReduction(board));
+      hints.push(...this.findXWingTechnique(board));
     }
 
     if (maxComplexity >= 4) {
-      hints.push(...(await this.findXYWingTechnique(board)));
-      hints.push(...(await this.findSwordfishTechnique(board)));
+      hints.push(...this.findXYWingTechnique(board));
+      hints.push(...this.findSwordfishTechnique(board));
     }
 
     return hints;
@@ -453,7 +455,7 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Find cells that have only one possible candidate (Naked Singles)
    */
-  private async findNakedSingles(board: NumericBoard): Promise<HintResult[]> {
+  private findNakedSingles(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
 
     for (let row = 0; row < 9; row++) {
@@ -466,12 +468,21 @@ export class HintGenerator implements IHintGenerator {
             hints.push({
               hint: {
                 type: 'cell',
-                message: `Place ${value} in row ${row + 1}, column ${col + 1}`,
+                message: i18n.t('hints.messages.placeValue', {
+                  value: value,
+                  row: row + 1,
+                  col: col + 1,
+                }),
                 targetCells: [[row, col]],
                 suggestedValue: value,
                 technique: 'naked_single',
                 autoFill: true,
-                detailedExplanation: `Naked Single: All other numbers are blocked in this cell by existing values in the row, column, and box.`,
+                detailedExplanation: i18n.t(
+                  'hints.detailedExplanations.naked_single',
+                  {
+                    techniqueName: i18n.t('hints.techniqueNames.naked_single'),
+                  }
+                ),
               },
               confidence: 0.95,
               priority: 5,
@@ -489,22 +500,22 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Find numbers that can only go in one place in a unit (Hidden Singles)
    */
-  private async findHiddenSingles(board: NumericBoard): Promise<HintResult[]> {
+  private findHiddenSingles(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
 
     // Check rows
     for (let row = 0; row < 9; row++) {
-      hints.push(...(await this.findHiddenSinglesInRow(board, row)));
+      hints.push(...this.findHiddenSinglesInRow(board, row));
     }
 
     // Check columns
     for (let col = 0; col < 9; col++) {
-      hints.push(...(await this.findHiddenSinglesInColumn(board, col)));
+      hints.push(...this.findHiddenSinglesInColumn(board, col));
     }
 
     // Check 3x3 boxes
     for (let box = 0; box < 9; box++) {
-      hints.push(...(await this.findHiddenSinglesInBox(board, box)));
+      hints.push(...this.findHiddenSinglesInBox(board, box));
     }
 
     return hints;
@@ -513,10 +524,10 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Find hidden singles in a specific row
    */
-  private async findHiddenSinglesInRow(
+  private findHiddenSinglesInRow(
     board: NumericBoard,
     row: number
-  ): Promise<HintResult[]> {
+  ): HintResult[] {
     const hints: HintResult[] = [];
     const emptyCells = this.getEmptyCellsInRow(board, row);
 
@@ -531,12 +542,23 @@ export class HintGenerator implements IHintGenerator {
         hints.push({
           hint: {
             type: 'value',
-            message: `Place ${num} in row ${r + 1}, column ${c + 1}`,
+            message: i18n.t('hints.messages.placeValue', {
+              value: num,
+              row: r + 1,
+              col: c + 1,
+            }),
             targetCells: [[r, c]],
             suggestedValue: num,
             technique: 'hidden_single',
             autoFill: true,
-            detailedExplanation: `Hidden Single: ${num} can only go in this position within row ${row + 1}.`,
+            detailedExplanation: i18n.t(
+              'hints.detailedExplanations.hidden_single_row',
+              {
+                techniqueName: i18n.t('hints.techniqueNames.hidden_single'),
+                number: num,
+                row: row + 1,
+              }
+            ),
           },
           confidence: 0.9,
           priority: 4,
@@ -552,10 +574,10 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Find hidden singles in a specific column
    */
-  private async findHiddenSinglesInColumn(
+  private findHiddenSinglesInColumn(
     board: NumericBoard,
     col: number
-  ): Promise<HintResult[]> {
+  ): HintResult[] {
     const hints: HintResult[] = [];
     const emptyCells = this.getEmptyCellsInColumn(board, col);
 
@@ -570,12 +592,23 @@ export class HintGenerator implements IHintGenerator {
         hints.push({
           hint: {
             type: 'value',
-            message: `Place ${num} in row ${r + 1}, column ${c + 1}`,
+            message: i18n.t('hints.messages.placeValue', {
+              value: num,
+              row: r + 1,
+              col: c + 1,
+            }),
             targetCells: [[r, c]],
             suggestedValue: num,
             technique: 'hidden_single',
             autoFill: true,
-            detailedExplanation: `Hidden Single: ${num} can only go in this position within column ${col + 1}.`,
+            detailedExplanation: i18n.t(
+              'hints.detailedExplanations.hidden_single_col',
+              {
+                techniqueName: i18n.t('hints.techniqueNames.hidden_single'),
+                number: num,
+                col: col + 1,
+              }
+            ),
           },
           confidence: 0.9,
           priority: 4,
@@ -591,10 +624,10 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Find hidden singles in a specific 3x3 box
    */
-  private async findHiddenSinglesInBox(
+  private findHiddenSinglesInBox(
     board: NumericBoard,
     boxIndex: number
-  ): Promise<HintResult[]> {
+  ): HintResult[] {
     const hints: HintResult[] = [];
     const emptyCells = this.getEmptyCellsInBox(board, boxIndex);
 
@@ -610,12 +643,23 @@ export class HintGenerator implements IHintGenerator {
         hints.push({
           hint: {
             type: 'value',
-            message: `Place ${num} in row ${r + 1}, column ${c + 1}`,
+            message: i18n.t('hints.messages.placeValue', {
+              value: num,
+              row: r + 1,
+              col: c + 1,
+            }),
             targetCells: [[r, c]],
             suggestedValue: num,
             technique: 'hidden_single',
             autoFill: true,
-            detailedExplanation: `Hidden Single: ${num} can only go in this position within ${boxName}.`,
+            detailedExplanation: i18n.t(
+              'hints.detailedExplanations.hidden_single_box',
+              {
+                techniqueName: i18n.t('hints.techniqueNames.hidden_single'),
+                number: num,
+                boxName: boxName,
+              }
+            ),
           },
           confidence: 0.9,
           priority: 4,
@@ -631,10 +675,10 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Find cells with incorrect values (compared to solution)
    */
-  private async findIncorrectValues(
+  private findIncorrectValues(
     board: SudokuBoard,
     solution: NumericBoard
-  ): Promise<HintResult[]> {
+  ): HintResult[] {
     const hints: HintResult[] = [];
 
     for (let row = 0; row < 9; row++) {
@@ -646,7 +690,11 @@ export class HintGenerator implements IHintGenerator {
             hints.push({
               hint: {
                 type: 'cell',
-                message: `The value ${cell.value} in row ${row + 1}, column ${col + 1} is incorrect. Try clearing this cell and looking for the right number.`,
+                message: i18n.t('hints.messages.incorrectCellValue', {
+                  value: cell.value,
+                  row: row + 1,
+                  col: col + 1,
+                }),
                 targetCells: [[row, col]],
                 technique: 'error_detection',
               },
@@ -666,10 +714,10 @@ export class HintGenerator implements IHintGenerator {
   /**
    * Find opportunities for note elimination
    */
-  private async findNoteEliminationHints(
+  private findNoteEliminationHints(
     board: SudokuBoard,
     numericBoard: NumericBoard
-  ): Promise<HintResult[]> {
+  ): HintResult[] {
     const hints: HintResult[] = [];
 
     for (let row = 0; row < 9; row++) {
@@ -690,7 +738,16 @@ export class HintGenerator implements IHintGenerator {
             hints.push({
               hint: {
                 type: 'note',
-                message: `In row ${row + 1}, column ${col + 1}, you can eliminate the note${invalidNotes.length > 1 ? 's' : ''} ${invalidNotes.join(', ')} because ${invalidNotes.length > 1 ? 'they conflict' : 'it conflicts'} with other numbers in the same row, column, or box.`,
+                message: i18n.t('hints.messages.eliminateNotes', {
+                  row: row + 1,
+                  col: col + 1,
+                  plural: invalidNotes.length > 1 ? 's' : '',
+                  notes: invalidNotes.join(', '),
+                  reason:
+                    invalidNotes.length > 1
+                      ? i18n.t('hints.messages.noteConflictPlural')
+                      : i18n.t('hints.messages.noteConflictSingle'),
+                }),
                 targetCells: [[row, col]],
                 technique: 'note_elimination',
               },
@@ -707,8 +764,7 @@ export class HintGenerator implements IHintGenerator {
     return hints;
   }
 
-  // Placeholder implementations for advanced techniques
-  private async findNakedPairs(board: NumericBoard): Promise<HintResult[]> {
+  private findNakedPairs(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
     const sudokuBoard = this.convertNumericToSudokuBoard(board);
     const candidates = this.getAllCandidates(sudokuBoard);
@@ -742,7 +798,7 @@ export class HintGenerator implements IHintGenerator {
     return hints;
   }
 
-  private async findPointingPairs(board: NumericBoard): Promise<HintResult[]> {
+  private findPointingPairs(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
     const sudokuBoard = this.convertNumericToSudokuBoard(board);
     const candidates = this.getAllCandidates(sudokuBoard);
@@ -754,9 +810,7 @@ export class HintGenerator implements IHintGenerator {
     return hints;
   }
 
-  private async findBoxLineReduction(
-    board: NumericBoard
-  ): Promise<HintResult[]> {
+  private findBoxLineReduction(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
     const sudokuBoard = this.convertNumericToSudokuBoard(board);
     const candidates = this.getAllCandidates(sudokuBoard);
@@ -768,7 +822,7 @@ export class HintGenerator implements IHintGenerator {
     return hints;
   }
 
-  private async findXWingTechnique(board: NumericBoard): Promise<HintResult[]> {
+  private findXWingTechnique(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
     const sudokuBoard = this.convertNumericToSudokuBoard(board);
     const candidates = this.getAllCandidates(sudokuBoard);
@@ -783,9 +837,7 @@ export class HintGenerator implements IHintGenerator {
     return hints;
   }
 
-  private async findXYWingTechnique(
-    board: NumericBoard
-  ): Promise<HintResult[]> {
+  private findXYWingTechnique(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
     const sudokuBoard = this.convertNumericToSudokuBoard(board);
     const candidates = this.getAllCandidates(sudokuBoard);
@@ -802,9 +854,7 @@ export class HintGenerator implements IHintGenerator {
     return hints;
   }
 
-  private async findSwordfishTechnique(
-    board: NumericBoard
-  ): Promise<HintResult[]> {
+  private findSwordfishTechnique(board: NumericBoard): HintResult[] {
     const hints: HintResult[] = [];
     const sudokuBoard = this.convertNumericToSudokuBoard(board);
     const candidates = this.getAllCandidates(sudokuBoard);
@@ -946,13 +996,25 @@ export class HintGenerator implements IHintGenerator {
           hints.push({
             hint: {
               type: 'technique',
-              message: `Eliminate ${num1} and ${num2} from other cells in ${unitType} ${unitIndex + 1}`,
+              message: i18n.t('hints.messages.eliminateFromUnit', {
+                numbers: `${num1} and ${num2}`,
+                unitType: unitType,
+                unitIndex: unitIndex + 1,
+              }),
               technique: 'naked_pair',
               targetCells: [
                 [cell1.row, cell1.col],
                 [cell2.row, cell2.col],
               ],
-              detailedExplanation: `Naked Pair: Two cells can only contain ${num1} and ${num2}, so eliminate these numbers from other cells in this ${unitType}.`,
+              detailedExplanation: i18n.t(
+                'hints.detailedExplanations.naked_pair',
+                {
+                  techniqueName: i18n.t('hints.techniqueNames.naked_pair'),
+                  num1: num1,
+                  num2: num2,
+                  unitType: unitType,
+                }
+              ),
             },
             confidence: 0.9,
             priority: 3,
@@ -991,10 +1053,19 @@ export class HintGenerator implements IHintGenerator {
           hints.push({
             hint: {
               type: 'technique',
-              message: `Eliminate ${num} from row ${rows[0] + 1} outside the box`,
+              message: i18n.t('hints.messages.eliminateFromRow', {
+                number: num,
+                row: rows[0] + 1,
+              }),
               technique: 'pointing_pair',
               targetCells: boxCandidates.map(c => [c.row, c.col]),
-              detailedExplanation: `Pointing Pair: ${num} in this box is confined to one row, so eliminate ${num} from this row outside the box.`,
+              detailedExplanation: i18n.t(
+                'hints.detailedExplanations.pointing_pair_row',
+                {
+                  techniqueName: i18n.t('hints.techniqueNames.pointing_pair'),
+                  number: num,
+                }
+              ),
             },
             confidence: 0.8,
             priority: 3,
@@ -1009,10 +1080,19 @@ export class HintGenerator implements IHintGenerator {
           hints.push({
             hint: {
               type: 'technique',
-              message: `Eliminate ${num} from column ${cols[0] + 1} outside the box`,
+              message: i18n.t('hints.messages.eliminateFromColumn', {
+                number: num,
+                col: cols[0] + 1,
+              }),
               technique: 'pointing_pair',
               targetCells: boxCandidates.map(c => [c.row, c.col]),
-              detailedExplanation: `Pointing Pair: ${num} in this box is confined to one column, so eliminate ${num} from this column outside the box.`,
+              detailedExplanation: i18n.t(
+                'hints.detailedExplanations.pointing_pair_col',
+                {
+                  techniqueName: i18n.t('hints.techniqueNames.pointing_pair'),
+                  number: num,
+                }
+              ),
             },
             confidence: 0.8,
             priority: 3,
@@ -1058,7 +1138,13 @@ export class HintGenerator implements IHintGenerator {
           hints.push({
             hint: {
               type: 'technique',
-              message: `X-Wing pattern found for ${num}: forms rectangle in rows ${row1.row + 1} and ${row2.row + 1}, columns ${row1.cols[0] + 1} and ${row1.cols[1] + 1}. This eliminates ${num} from other cells in these columns.`,
+              message: i18n.t('hints.messages.xWingRows', {
+                number: num,
+                row1: row1.row + 1,
+                row2: row2.row + 1,
+                col1: row1.cols[0] + 1,
+                col2: row1.cols[1] + 1,
+              }),
               technique: 'x_wing',
               targetCells: [
                 [row1.row, row1.cols[0]],
@@ -1066,7 +1152,9 @@ export class HintGenerator implements IHintGenerator {
                 [row2.row, row2.cols[0]],
                 [row2.row, row2.cols[1]],
               ],
-              detailedExplanation: `An X-Wing is formed when a number appears as a candidate in exactly two cells in each of two rows, and these cells are aligned in the same two columns (forming a rectangle). Since the number must appear exactly once in each row and column, we can eliminate it from all other cells in those two columns.`,
+              detailedExplanation: i18n.t('hints.detailedExplanations.x_wing', {
+                techniqueName: i18n.t('hints.techniqueNames.x_wing'),
+              }),
             },
             confidence: 0.9,
             priority: 4,
@@ -1111,7 +1199,13 @@ export class HintGenerator implements IHintGenerator {
           hints.push({
             hint: {
               type: 'technique',
-              message: `X-Wing pattern found for ${num}: forms rectangle in columns ${col1.col + 1} and ${col2.col + 1}, rows ${col1.rows[0] + 1} and ${col1.rows[1] + 1}. This eliminates ${num} from other cells in these rows.`,
+              message: i18n.t('hints.messages.xWingCols', {
+                number: num,
+                col1: col1.col + 1,
+                col2: col2.col + 1,
+                row1: col1.rows[0] + 1,
+                row2: col1.rows[1] + 1,
+              }),
               technique: 'x_wing',
               targetCells: [
                 [col1.rows[0], col1.col],
@@ -1119,7 +1213,9 @@ export class HintGenerator implements IHintGenerator {
                 [col2.rows[0], col2.col],
                 [col2.rows[1], col2.col],
               ],
-              detailedExplanation: `An X-Wing is formed when a number appears as a candidate in exactly two cells in each of two columns, and these cells are aligned in the same two rows (forming a rectangle). Since the number must appear exactly once in each row and column, we can eliminate it from all other cells in those two rows.`,
+              detailedExplanation: i18n.t('hints.detailedExplanations.x_wing', {
+                techniqueName: i18n.t('hints.techniqueNames.x_wing'),
+              }),
             },
             confidence: 0.9,
             priority: 4,
@@ -1177,14 +1273,27 @@ export class HintGenerator implements IHintGenerator {
             hints.push({
               hint: {
                 type: 'technique',
-                message: `XY-Wing pattern found: pivot at (${pivot.row + 1},${pivot.col + 1}) with pincers at (${pincer1.row + 1},${pincer1.col + 1}) and (${pincer2.row + 1},${pincer2.col + 1}). This eliminates ${eliminationCandidate} from cells that see both pincers.`,
+                message: i18n.t('hints.messages.xyWingPattern', {
+                  pivotRow: pivot.row + 1,
+                  pivotCol: pivot.col + 1,
+                  pincer1Row: pincer1.row + 1,
+                  pincer1Col: pincer1.col + 1,
+                  pincer2Row: pincer2.row + 1,
+                  pincer2Col: pincer2.col + 1,
+                  candidate: eliminationCandidate,
+                }),
                 technique: 'xy_wing',
                 targetCells: [
                   [pivot.row, pivot.col],
                   [pincer1.row, pincer1.col],
                   [pincer2.row, pincer2.col],
                 ],
-                detailedExplanation: `An XY-Wing consists of three cells: a pivot with candidates XY, and two pincers with candidates XZ and YZ. Since the pivot must contain either X or Y, one pincer must contain Z. This allows us to eliminate Z from any cell that can see both pincers.`,
+                detailedExplanation: i18n.t(
+                  'hints.detailedExplanations.xy_wing',
+                  {
+                    techniqueName: i18n.t('hints.techniqueNames.xy_wing'),
+                  }
+                ),
               },
               confidence: 0.9,
               priority: 4,
@@ -1236,10 +1345,19 @@ export class HintGenerator implements IHintGenerator {
               hints.push({
                 hint: {
                   type: 'technique',
-                  message: `Swordfish pattern found for ${num} in rows ${candidateRows[i].row + 1}, ${candidateRows[j].row + 1}, ${candidateRows[k].row + 1}. This eliminates ${num} from other cells in columns ${pattern.columns.join(', ')}.`,
+                  message: i18n.t('hints.messages.swordfishPattern', {
+                    number: num,
+                    rows: `${candidateRows[i].row + 1}, ${candidateRows[j].row + 1}, ${candidateRows[k].row + 1}`,
+                    columns: pattern.columns.join(', '),
+                  }),
                   technique: 'swordfish',
                   targetCells: pattern.targetCells,
-                  detailedExplanation: `A Swordfish is formed when a number appears as a candidate in exactly 2-3 cells in each of three rows, and these candidates are confined to the same three columns. This creates a pattern that allows elimination from other cells in those columns.`,
+                  detailedExplanation: i18n.t(
+                    'hints.detailedExplanations.swordfish',
+                    {
+                      techniqueName: i18n.t('hints.techniqueNames.swordfish'),
+                    }
+                  ),
                 },
                 confidence: 0.95,
                 priority: 5,
@@ -1286,10 +1404,21 @@ export class HintGenerator implements IHintGenerator {
           hints.push({
             hint: {
               type: 'technique',
-              message: `Box Line Reduction: ${num} in row ${row + 1} is confined to box ${box + 1}. This eliminates ${num} from other cells in this box outside row ${row + 1}.`,
+              message: i18n.t('hints.messages.boxLineReductionRow', {
+                number: num,
+                row: row + 1,
+                box: box + 1,
+              }),
               technique: 'box_line_reduction',
               targetCells: rowCandidates.map(c => [c.row, c.col]),
-              detailedExplanation: `Box Line Reduction occurs when all candidates for a number in a row (or column) are confined to a single 3×3 box. Since the number must appear somewhere in that row, it can be eliminated from other parts of the box.`,
+              detailedExplanation: i18n.t(
+                'hints.detailedExplanations.box_line_reduction',
+                {
+                  techniqueName: i18n.t(
+                    'hints.techniqueNames.box_line_reduction'
+                  ),
+                }
+              ),
             },
             confidence: 0.85,
             priority: 3,
@@ -1322,10 +1451,21 @@ export class HintGenerator implements IHintGenerator {
           hints.push({
             hint: {
               type: 'technique',
-              message: `Box Line Reduction: ${num} in column ${col + 1} is confined to box ${box + 1}. This eliminates ${num} from other cells in this box outside column ${col + 1}.`,
+              message: i18n.t('hints.messages.boxLineReductionCol', {
+                number: num,
+                col: col + 1,
+                box: box + 1,
+              }),
               technique: 'box_line_reduction',
               targetCells: colCandidates.map(c => [c.row, c.col]),
-              detailedExplanation: `Box Line Reduction occurs when all candidates for a number in a row (or column) are confined to a single 3×3 box. Since the number must appear somewhere in that column, it can be eliminated from other parts of the box.`,
+              detailedExplanation: i18n.t(
+                'hints.detailedExplanations.box_line_reduction',
+                {
+                  techniqueName: i18n.t(
+                    'hints.techniqueNames.box_line_reduction'
+                  ),
+                }
+              ),
             },
             confidence: 0.85,
             priority: 3,

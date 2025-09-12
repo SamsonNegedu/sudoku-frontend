@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import { useGameAnalytics } from '../hooks/useGameAnalytics';
 import { useGameInteraction } from '../hooks/useGameInteraction';
+import { LoadingSpinner } from './shared';
 import { GameLoadingView } from './game/GameLoadingView';
 import { GamePauseOverlay } from './game/GamePauseOverlay';
 import { GamePlayView } from './game/GamePlayView';
@@ -104,8 +105,8 @@ export const GameBoard: React.FC = () => {
     if (!isHydrated) {
         // Still loading persisted state, show minimal loading
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full"></div>
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+                <LoadingSpinner size="medium" />
             </div>
         );
     }

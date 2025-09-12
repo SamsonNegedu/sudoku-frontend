@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
 
 interface GamePauseOverlayProps {
     isPaused: boolean;
@@ -10,6 +11,7 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
     isPaused,
     onResume
 }) => {
+    const { t } = useTranslation();
     if (!isPaused) return null;
 
     return (
@@ -34,9 +36,9 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
                             <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-bold text-neutral-800 mb-2">Game Paused</h2>
+                    <h2 className="text-2xl font-bold text-neutral-800 mb-2">{t('pause.gamePaused')}</h2>
                     <p className="text-neutral-600 text-sm">
-                        Your progress is saved. Resume when you're ready!
+                        {t('pause.progressSaved')}
                     </p>
                 </div>
 
@@ -49,11 +51,11 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                     </svg>
-                    Resume Game
+                    {t('game.resume')}
                 </Button>
 
                 <p className="text-neutral-500 text-xs flex items-center justify-center gap-1">
-                    Or use the Resume button in the navbar
+                    {t('pause.orUseButton')}
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M7 14l5-5 5 5z" />
                     </svg>

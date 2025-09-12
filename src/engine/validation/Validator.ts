@@ -21,11 +21,11 @@ export class Validator implements IValidator {
     this.boardDimensions = boardDimensions;
   }
 
-  async init(): Promise<void> {
+  init(): void {
     // Initialization logic if needed
   }
 
-  async destroy(): Promise<void> {
+  destroy(): void {
     // Cleanup logic if needed
   }
 

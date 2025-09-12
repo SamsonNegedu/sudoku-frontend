@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { AnalyticsInsight } from '../../types/analytics';
 
 interface InsightsSectionProps {
@@ -6,6 +7,7 @@ interface InsightsSectionProps {
 }
 
 export const InsightsSection: React.FC<InsightsSectionProps> = ({ insights }) => {
+    const { t } = useTranslation();
     if (insights.length === 0) return null;
 
     const getInsightStyles = (type: AnalyticsInsight['type']) => {
@@ -26,7 +28,7 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({ insights }) =>
     return (
         <div className="bg-white rounded-lg border border-neutral-200 p-4 sm:p-6">
             <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
-                Insights & Recommendations
+                {t('analytics.insightsRecommendations')}
             </h2>
             <div className="space-y-3">
                 {insights.map((insight, index) => (

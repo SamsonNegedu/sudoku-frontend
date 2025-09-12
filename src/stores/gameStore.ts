@@ -12,6 +12,7 @@ import type {
 import { gameEngineService } from '../services/gameEngineService';
 import { DifficultyConfigManager } from '../config/difficulty';
 import { enableUnlimitedHints } from '../config/systemConfig';
+import i18n from '../i18n';
 
 interface GameStore {
   // State
@@ -603,8 +604,7 @@ export const useGameStore = create<GameStore>()(
             // Return a helpful fallback if no hints are found
             return {
               type: 'technique' as const,
-              message:
-                'No obvious hints available. Try looking for cells with the fewest possible numbers, or examine if any numbers appear only once in a row, column, or 3×3 box.',
+              message: i18n.t('hints.noHintsAvailable'),
               technique: 'general_advice',
             };
           }
@@ -683,8 +683,7 @@ export const useGameStore = create<GameStore>()(
 
           return {
             type: 'technique' as const,
-            message:
-              'Unable to analyze the board right now. Try examining cells with fewer possible numbers or look for obvious placements.',
+            message: i18n.t('hints.unableToAnalyze'),
             technique: 'error_fallback',
           };
         }

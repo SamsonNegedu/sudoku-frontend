@@ -1,0 +1,210 @@
+{
+  "app": {
+    "title": "Grid Logic",
+    "subtitle": "Fordere deinen Geist mit klassischen Sudoku-Rätseln heraus"
+  },
+  "navigation": {
+    "game": "Spiel",
+    "analytics": "Statistiken",
+    "learning": "Lernzentrum",
+    "newGame": "Neues Spiel",
+    "settings": "Einstellungen",
+    "backToGame": "Zurück zum Spiel",
+    "cancel": "Abbrechen"
+  },
+  "difficulty": {
+    "beginner": "Anfänger",
+    "intermediate": "Fortgeschritten",
+    "advanced": "Erfahren",
+    "expert": "Experte",
+    "master": "Meister",
+    "grandmaster": "Großmeister",
+    "descriptions": {
+      "beginner": "Perfekt für Einsteiger",
+      "intermediate": "Baue deine Fähigkeiten aus",
+      "advanced": "Für erfahrene Spieler",
+      "expert": "Teste deine Meisterschaft",
+      "master": "Elite-Level Herausforderung",
+      "grandmaster": "Der ultimative Test"
+    }
+  },
+  "game": {
+    "timer": "Zeit",
+    "hints": "Hinweise",
+    "mistakes": "Fehler",
+    "hintsUsed": "Hinweise verwendet",
+    "mistakesCount": "{{count}}/{{max}}",
+    "gameInfo": "Spiel-Info",
+    "selectedCell": "Ausgewählte Zelle",
+    "pause": "Pause",
+    "resume": "Fortsetzen",
+    "restart": "Neustart",
+    "newGame": "Neues Spiel",
+    "undo": "Rückgängig",
+    "clear": "Löschen",
+    "notes": "Notizen",
+    "hint": "Hinweis",
+    "completed": "VOLLENDET",
+    "gameOver": "Spiel beendet",
+    "unlimitedHints": "Unbegrenzte Hinweise (Entwicklung)",
+    "noHintsRemaining": "Keine Hinweise mehr",
+    "hintsRemaining": "{{count}} verbleibend",
+    "difficulty": "Schwierigkeit"
+  },
+  "controls": {
+    "penMode": "Stift-Modus",
+    "pencilMode": "Bleistift-Modus",
+    "currentMode": "Aktuell: {{mode}}-Modus"
+  },
+  "hints": {
+    "noHintsAvailable": "Keine offensichtlichen Hinweise verfügbar. Versuche nach Zellen mit den wenigsten möglichen Zahlen zu suchen oder prüfe, ob Zahlen nur einmal in einer Reihe, Spalte oder 3×3-Box vorkommen.",
+    "unableToAnalyze": "Das Brett kann im Moment nicht analysiert werden. Versuche Zellen mit weniger möglichen Zahlen zu untersuchen oder nach offensichtlichen Platzierungen zu suchen.",
+    "generalAdvice": "Allgemeiner Rat",
+    "errorFallback": "Analysefehler",
+    "autoFilled": "Automatisch ausgefüllt",
+    "cellHint": "Zellen-Hinweis",
+    "techniqueHint": "Technik-Hinweis",
+    "notesHint": "Notizen-Hinweis",
+    "hint": "Hinweis",
+    "gotIt": "Verstanden!",
+    "aboutTechnique": "Über diese Technik:",
+    "techniques": {
+      "naked_single": "Eine Zelle, die nur eine Zahl enthalten kann, basierend auf den vorhandenen Zahlen in ihrer Reihe, Spalte und 3×3-Box.",
+      "hidden_single": "Eine Zahl, die nur an einen Ort in einer Reihe, Spalte oder Box gehen kann.",
+      "naked_pair": "Zwei Zellen in derselben Einheit, die nur dieselben zwei Zahlen enthalten können, wodurch diese Zahlen aus anderen Zellen eliminiert werden.",
+      "pointing_pair": "Alle Kandidaten für eine Zahl in einer Box sind auf eine einzige Reihe oder Spalte beschränkt.",
+      "box_line_reduction": "Alle Kandidaten für eine Zahl in einer Reihe oder Spalte sind auf eine einzige Box beschränkt.",
+      "x_wing": "Ein rechteckiges Muster, das die Eliminierung von Kandidaten ermöglicht.",
+      "xy_wing": "Ein Muster mit einem Drehpunkt und zwei Zangen, das Kandidaten eliminiert.",
+      "swordfish": "Ein 3×3-Muster, das die Eliminierung von Kandidaten zwischen Reihen und Spalten ermöglicht.",
+      "note_elimination": "Notizen entfernen, die nicht mehr gültig sind",
+      "error_detection": "Falsche Werte finden und korrigieren",
+      "direct_hint": "Der korrekte Wert für diese Zelle",
+      "candidate_suggestion": "Mögliche Werte für diese Zelle",
+      "confirmation": "Diese Zelle ist korrekt ausgefüllt",
+      "cell_selection": "Versuche eine andere Zelle auszuwählen",
+      "general_strategy": "Allgemeiner Lösungsansatz",
+      "general_advice": "Suche nach grundlegenden Lösungsmustern"
+    },
+    "detailedExplanations": {
+      "naked_single": "{{techniqueName}}: Alle anderen Zahlen sind in dieser Zelle durch vorhandene Werte in der Reihe, Spalte und Box blockiert.",
+      "hidden_single_row": "{{techniqueName}}: {{number}} kann nur an diese Position in Reihe {{row}} gehen.",
+      "hidden_single_col": "{{techniqueName}}: {{number}} kann nur an diese Position in Spalte {{col}} gehen.",
+      "hidden_single_box": "{{techniqueName}}: {{number}} kann nur an diese Position in {{boxName}} gehen.",
+      "naked_pair": "{{techniqueName}}: Zwei Zellen können nur {{num1}} und {{num2}} enthalten, daher eliminiere diese Zahlen aus anderen Zellen in dieser {{unitType}}.",
+      "pointing_pair_row": "{{techniqueName}}: {{number}} in dieser Box ist auf eine Reihe beschränkt, daher eliminiere {{number}} aus dieser Reihe außerhalb der Box.",
+      "pointing_pair_col": "{{techniqueName}}: {{number}} in dieser Box ist auf eine Spalte beschränkt, daher eliminiere {{number}} aus dieser Spalte außerhalb der Box.",
+      "x_wing": "{{techniqueName}}: Ein X-Wing entsteht, wenn eine Zahl als Kandidat in genau zwei Zellen in jeder von zwei Reihen erscheint, und diese Zellen in denselben zwei Spalten ausgerichtet sind (ein Rechteck bildend). Da die Zahl genau einmal in jeder Reihe und Spalte erscheinen muss, können wir sie aus allen anderen Zellen in diesen zwei Spalten eliminieren.",
+      "xy_wing": "{{techniqueName}}: Ein XY-Wing besteht aus drei Zellen: einem Drehpunkt mit Kandidaten XY und zwei Zangen mit Kandidaten XZ und YZ. Da der Drehpunkt entweder X oder Y enthalten muss, muss eine Zange Z enthalten. Dies ermöglicht es uns, Z aus jeder Zelle zu eliminieren, die beide Zangen sehen kann.",
+      "swordfish": "{{techniqueName}}: Ein Swordfish entsteht, wenn eine Zahl als Kandidat in genau 2-3 Zellen in jeder von drei Reihen erscheint, und diese Kandidaten auf dieselben drei Spalten beschränkt sind. Dies schafft ein Muster, das die Eliminierung aus anderen Zellen in diesen Spalten ermöglicht.",
+      "box_line_reduction": "{{techniqueName}}: Box-Linien-Reduktion tritt auf, wenn alle Kandidaten für eine Zahl in einer Reihe (oder Spalte) auf eine einzige 3×3-Box beschränkt sind. Da die Zahl irgendwo in dieser Reihe erscheinen muss, kann sie aus anderen Teilen der Box eliminiert werden."
+    },
+    "techniqueNames": {
+      "naked_single": "Naked Single",
+      "hidden_single": "Hidden Single",
+      "naked_pair": "Naked Pair",
+      "pointing_pair": "Pointing Pair",
+      "box_line_reduction": "Box Line Reduction",
+      "x_wing": "X-Wing",
+      "xy_wing": "XY-Wing",
+      "swordfish": "Swordfish"
+    }
+  },
+  "completion": {
+    "congratulations": "Glückwunsch!",
+    "puzzleSolved": "Rätsel gelöst",
+    "yourTime": "Deine Zeit",
+    "hintsUsed": "Hinweise verwendet",
+    "mistakesMade": "Fehler gemacht",
+    "playAgain": "Nochmal spielen",
+    "newPuzzle": "Neues Rätsel",
+    "time": "Zeit",
+    "mistakes": "Fehler",
+    "performance": "Leistung"
+  },
+  "mistakes": {
+    "tooManyMistakes": "Zu viele Fehler",
+    "limitReached": "Du hast das Fehlerlimit für diesen Schwierigkeitsgrad erreicht.",
+    "continueUnlimited": "Mit unbegrenzten Fehlern fortfahren",
+    "startOver": "Von vorne beginnen",
+    "maximumReached": "Maximale Fehleranzahl erreicht!",
+    "youveMade": "Du hast {{mistakes}} von {{maxMistakes}} erlaubten Fehlern gemacht",
+    "restartLabel": "Neustart",
+    "restartDescription": "Dieses Rätsel zurücksetzen und mit denselben Zahlen erneut versuchen",
+    "continueLabel": "Fortfahren",
+    "continueDescription": "Ohne Fehlerlimit weiterspielen",
+    "disableNote": "Dies deaktiviert das Fehlerlimit nur für dieses Spiel"
+  },
+  "analytics": {
+    "title": "Spiel-Statistiken",
+    "overview": "Übersicht",
+    "totalGames": "Spiele gesamt",
+    "averageTime": "Durchschnittszeit",
+    "bestTime": "Beste Zeit",
+    "completionRate": "Abschlussrate",
+    "difficultyProgress": "Schwierigkeitsfortschritt",
+    "techniqueAnalysis": "Lösungstechnik-Analyse",
+    "recentGames": "Letzte Spiele",
+    "insights": "Erkenntnisse",
+    "dataManagement": "Datenverwaltung",
+    "gamesPlayed": "Spiele Gespielt",
+    "completed": "Abgeschlossen",
+    "incomplete": "Unvollständig",
+    "abandoned": "Abgebrochen",
+    "accuracy": "Genauigkeit",
+    "moves": "Züge",
+    "avgTime": "Durchschn. Zeit",
+    "dashboardTitle": "Statistik-Dashboard",
+    "trackProgress": "Verfolge deinen Fortschritt und verbessere deine Lösungsfähigkeiten",
+    "noCompletedGames": "Noch keine abgeschlossenen Spiele. Beende ein Spiel, um deine Statistiken zu sehen!",
+    "noDataAvailable": "Noch keine Statistikdaten verfügbar. Spiele einige Spiele, um deinen Fortschritt zu sehen!",
+    "insightsRecommendations": "Einblicke & Empfehlungen",
+    "confirmDelete": "Sind Sie sicher, dass Sie alle Analysedaten löschen möchten? Dies kann nicht rückgängig gemacht werden.",
+    "permanentWarning": "Diese Aktionen sind dauerhaft und können nicht rückgängig gemacht werden.",
+    "clearAllData": "Alle Daten löschen"
+  },
+  "learning": {
+    "title": "Lernzentrum",
+    "techniques": "Techniken",
+    "allLevels": "Alle Stufen",
+    "beginner": "Anfänger",
+    "intermediate": "Fortgeschritten",
+    "advanced": "Erfahren",
+    "backToCenter": "Zurück zum Lernzentrum"
+  },
+  "settings": {
+    "language": "Sprache",
+    "theme": "Design",
+    "sounds": "Sounds",
+    "notifications": "Benachrichtigungen"
+  },
+  "languages": {
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "fr": "Français"
+  },
+  "loading": {
+    "generatingPuzzle": "Puzzle wird generiert",
+    "creatingChallenge": "Erstelle deine perfekte Sudoku-Herausforderung",
+    "chooseChallenge": "Wähle dein Herausforderungslevel",
+    "selectDifficulty": "Schwierigkeit auswählen",
+    "selectToStart": "Wähle eine Schwierigkeit, um zu spielen",
+    "advancedChallenges": "Fortgeschrittene Herausforderungen"
+  },
+  "pause": {
+    "gamePaused": "Spiel pausiert",
+    "progressSaved": "Dein Fortschritt ist gespeichert. Setze fort, wenn du bereit bist!",
+    "orUseButton": "Oder verwende den Fortsetzen-Button in der Navigationsleiste"
+  },
+  "tips": {
+    "quickTips": "Schnelle Tipps",
+    "spaceToggle": "Verwende",
+    "toggleMode": "um zwischen Stift-/Bleistift-Modus zu wechseln",
+    "pressKey": "Drücke",
+    "undoMoves": "um Züge rückgängig zu machen",
+    "clickCells": "Klicke Zellen an, um verwandte Zahlen auszuwählen und hervorzuheben",
+    "numbersAppear": "Zahlen erscheinen horizontal unter dem Raster"
+  }
+}

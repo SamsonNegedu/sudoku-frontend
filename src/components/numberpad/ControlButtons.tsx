@@ -7,6 +7,7 @@ import {
     TrashIcon,
     QuestionMarkCircledIcon,
 } from '@radix-ui/react-icons';
+import { useTranslation } from 'react-i18next';
 import { enableUnlimitedHints } from '../../config/systemConfig';
 import { IconButton } from '../shared/index';
 
@@ -33,6 +34,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
     hintsUsed = 0,
     maxHints = 3,
 }) => {
+    const { t } = useTranslation();
     const useUnlimitedHints = enableUnlimitedHints();
 
     return (
@@ -41,8 +43,8 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                 onClick={onUndo}
                 disabled={!canUndo}
                 color="blue"
-                aria-label="Undo last move"
-                title={!canUndo ? "No moves to undo" : "Undo (Ctrl+Z)"}
+                aria-label={t('game.undo')}
+                title={!canUndo ? t('game.undo') : `${t('game.undo')} (Ctrl+Z)`}
             >
                 <ResetIcon className="w-4 h-4 sm:w-5 sm:h-5" />
             </IconButton>
@@ -51,8 +53,8 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                 onClick={onClear}
                 disabled={disabled}
                 color="red"
-                aria-label="Clear cell"
-                title="Clear cell"
+                aria-label={t('game.clear')}
+                title={t('game.clear')}
             >
                 <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
             </IconButton>
@@ -65,10 +67,10 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                     variant="outline"
                     color={inputMode === 'pencil' ? "green" : "blue"}
                     className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${disabled ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' :
-                            inputMode === 'pencil' ? 'border-green-500 text-green-600 hover:bg-green-50' : 'border-blue-600 text-blue-600 hover:bg-blue-50'
+                        inputMode === 'pencil' ? 'border-green-500 text-green-600 hover:bg-green-50' : 'border-blue-600 text-blue-600 hover:bg-blue-50'
                         }`}
-                    aria-label={`Currently in ${inputMode} mode. Click to switch to ${inputMode === 'pen' ? 'notes' : 'writing'} mode`}
-                    title={`Current: ${inputMode === 'pen' ? 'Writing' : 'Notes'} Mode`}
+                    aria-label={t('controls.currentMode', { mode: inputMode === 'pen' ? t('controls.penMode') : t('controls.pencilMode') })}
+                    title={t('controls.currentMode', { mode: inputMode === 'pen' ? t('controls.penMode') : t('controls.pencilMode') })}
                 >
                     {inputMode === 'pen' ? <Pencil1Icon className="w-4 h-4 sm:w-5 sm:h-5" /> : <Pencil2Icon className="w-4 h-4 sm:w-5 sm:h-5" />}
                 </Button>
@@ -88,8 +90,8 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                     color={(!useUnlimitedHints && hintsUsed >= maxHints) ? "gray" : "blue"}
                     className={`w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white ${(!useUnlimitedHints && hintsUsed >= maxHints) ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400' : 'border-blue-600 text-blue-600 hover:bg-blue-50'
                         }`}
-                    aria-label={useUnlimitedHints ? 'Get hint (unlimited)' : `Get hint (${maxHints - hintsUsed} remaining)`}
-                    title={useUnlimitedHints ? 'Hint (unlimited in development)' : (hintsUsed >= maxHints ? 'No hints remaining' : `Hint (${maxHints - hintsUsed} remaining)`)}
+                    aria-label={useUnlimitedHints ? t('game.hint') + ' (unlimited)' : t('game.hint') + ` (${t('game.hintsRemaining', { count: maxHints - hintsUsed })})`}
+                    title={useUnlimitedHints ? t('game.unlimitedHints') : (hintsUsed >= maxHints ? t('game.noHintsRemaining') : t('game.hintsRemaining', { count: maxHints - hintsUsed }))}
                     data-hint-button="true"
                 >
                     <QuestionMarkCircledIcon className="w-4 h-4 sm:w-5 sm:h-5" />

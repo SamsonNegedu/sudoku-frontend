@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@radix-ui/themes';
 import { TrashIcon } from '@radix-ui/react-icons';
 
@@ -7,8 +8,10 @@ interface DataManagementProps {
 }
 
 export const DataManagement: React.FC<DataManagementProps> = ({ onClearAllData }) => {
+    const { t } = useTranslation();
+
     const handleClearData = () => {
-        if (confirm('Are you sure you want to delete all analytics data? This cannot be undone.')) {
+        if (confirm(t('analytics.confirmDelete'))) {
             onClearAllData();
         }
     };
@@ -16,11 +19,11 @@ export const DataManagement: React.FC<DataManagementProps> = ({ onClearAllData }
     return (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6">
             <h2 className="text-base sm:text-lg font-semibold text-red-800 mb-2">
-                Data Management
+                {t('analytics.dataManagement')}
             </h2>
 
             <p className="text-red-700 text-xs sm:text-sm mb-3 sm:mb-4">
-                These actions are permanent and cannot be undone.
+                {t('analytics.permanentWarning')}
             </p>
 
             <Button
@@ -30,7 +33,7 @@ export const DataManagement: React.FC<DataManagementProps> = ({ onClearAllData }
                 className="text-xs sm:text-sm"
             >
                 <TrashIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                Clear All Data
+                {t('analytics.clearAllData')}
             </Button>
         </div>
     );

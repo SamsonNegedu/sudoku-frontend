@@ -196,7 +196,7 @@ export interface IGameEngine {
   validateBoard(board: SudokuBoard): BoardValidationResult;
 
   // Hint operations
-  generateHint(request: HintRequest): Promise<HintResult | null>;
+  generateHint(request: HintRequest): HintResult | null;
 
   // Utility operations
   convertBoard(board: SudokuBoard): NumericBoard;
@@ -232,12 +232,10 @@ export interface IValidator {
 }
 
 export interface IHintGenerator {
-  generateHint(request: HintRequest): Promise<HintResult | null>;
-  generateAllHints(request: HintRequest): Promise<HintResult[]>;
+  generateHint(request: HintRequest): HintResult | null;
+  generateAllHints(request: HintRequest): HintResult[];
   analyzeBoard(board: SudokuBoard): CandidateInfo[];
 }
-
-
 
 // ============= Utility Types =============
 

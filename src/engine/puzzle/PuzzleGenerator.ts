@@ -15,11 +15,11 @@ export class PuzzleGenerator implements IPuzzleGenerator {
   private static readonly BOARD_SIZE = 9;
   private static readonly BOX_SIZE = 3;
 
-  async init(): Promise<void> {
+  init(): void {
     // Initialization logic if needed
   }
 
-  async destroy(): Promise<void> {
+  destroy(): void {
     // Cleanup logic if needed
   }
 

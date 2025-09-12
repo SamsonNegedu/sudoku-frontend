@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatTime } from '../utils';
 import { StopwatchIcon } from '@radix-ui/react-icons';
 
@@ -22,6 +23,7 @@ export const GameTimer: React.FC<GameTimerProps> = ({
 
     currentTime,
 }) => {
+    const { t } = useTranslation();
     const [elapsedTime, setElapsedTime] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -110,7 +112,7 @@ export const GameTimer: React.FC<GameTimerProps> = ({
 
             {isCompleted && (
                 <span className="text-sm text-neutral-600 bg-green-100 px-2 py-1 rounded">
-                    COMPLETED
+                    {t('game.completed')}
                 </span>
             )}
         </div>

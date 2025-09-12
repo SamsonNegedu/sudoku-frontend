@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { PlusIcon, ChevronDownIcon } from '@radix-ui/react-icons';
+import { useTranslation } from 'react-i18next';
 import { DifficultyConfigManager } from '../../config/difficulty';
 import type { Difficulty } from '../../types';
 
@@ -21,9 +22,10 @@ export const NewGameDropdown: React.FC<NewGameDropdownProps> = ({
     isPaused,
     isCompleted,
 }) => {
+    const { t } = useTranslation();
     const difficultyLevels = DifficultyConfigManager.getDifficultyOptions().map(option => ({
         level: option.value,
-        label: option.label,
+        label: t(`difficulty.${option.value}`),
         description: option.description,
     }));
 
@@ -41,12 +43,12 @@ export const NewGameDropdown: React.FC<NewGameDropdownProps> = ({
                     {isGeneratingPuzzle ? (
                         <>
                             <div className="w-4 h-4 mr-2 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-                            Generating...
+                            {t('navigation.newGame')}...
                         </>
                     ) : (
                         <>
                             <PlusIcon className="mr-2" />
-                            New Game
+                            {t('navigation.newGame')}
                             <ChevronDownIcon className="ml-1" />
                         </>
                     )}
@@ -69,7 +71,7 @@ export const NewGameDropdown: React.FC<NewGameDropdownProps> = ({
                         </svg>
                         <div className="flex flex-col gap-1">
                             <div className="font-semibold text-neutral-900 text-sm">
-                                Restart This Puzzle
+                                {t('game.restart')}
                             </div>
                             <div className="text-xs text-neutral-500 leading-normal">
                                 Reset to starting state

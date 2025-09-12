@@ -70,10 +70,10 @@ export class GameEngine implements IGameEngine {
       this.config = { ...this.config, ...config };
     }
 
-    await this.puzzleGenerator.init();
-    await this.sudokuGenGenerator.init();
-    await this.validator.init();
-    await this.hintGenerator.init();
+    this.puzzleGenerator.init();
+    this.sudokuGenGenerator.init();
+    this.validator.init();
+    this.hintGenerator.init();
 
     if (this.config.puzzle.preGeneratePuzzles) {
       await this.preGeneratePuzzles();
@@ -90,9 +90,9 @@ export class GameEngine implements IGameEngine {
     this.puzzleCache.clear();
 
     await this.puzzleGenerator.destroy?.();
-    await this.sudokuGenGenerator.destroy?.();
-    await this.validator.destroy?.();
-    await this.hintGenerator.destroy?.();
+    this.sudokuGenGenerator.destroy?.();
+    this.validator.destroy?.();
+    this.hintGenerator.destroy?.();
 
     this.isInitialized = false;
   }
@@ -151,9 +151,9 @@ export class GameEngine implements IGameEngine {
     return result;
   }
 
-  async generateHint(request: HintRequest): Promise<HintResult | null> {
+  generateHint(request: HintRequest): HintResult | null {
     this.ensureInitialized();
-    return await this.hintGenerator.generateHint(request);
+    return this.hintGenerator.generateHint(request);
   }
 
   convertBoard(board: SudokuBoard): NumericBoard {

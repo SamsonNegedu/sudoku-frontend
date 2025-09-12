@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@radix-ui/themes';
 import { HintTargetCells } from './HintTargetCells';
 import { HintSuggestedValue } from './HintSuggestedValue';
@@ -11,6 +12,8 @@ interface HintContentProps {
 }
 
 export const HintContent: React.FC<HintContentProps> = ({ hint, onClose }) => {
+    const { t } = useTranslation();
+
     return (
         <>
             {/* Hint Message */}
@@ -38,7 +41,7 @@ export const HintContent: React.FC<HintContentProps> = ({ hint, onClose }) => {
                     color="gray"
                     className="text-sm"
                 >
-                    Got it!
+                    {t('hints.gotIt')}
                 </Button>
             </div>
         </>

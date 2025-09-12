@@ -1,16 +1,18 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface AnalyticsEmptyStateProps {
     hasGames: boolean;
 }
 
 export const AnalyticsEmptyState: React.FC<AnalyticsEmptyStateProps> = ({ hasGames }) => {
+    const { t } = useTranslation();
     return (
         <div className="p-6 text-center">
             <p className="text-neutral-600">
                 {hasGames
-                    ? "No completed games yet. Finish a game to see your analytics!"
-                    : "No analytics data available yet. Play some games to see your progress!"
+                    ? t('analytics.noCompletedGames')
+                    : t('analytics.noDataAvailable')
                 }
             </p>
         </div>

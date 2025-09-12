@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { TechniqueInsight } from '../../types/analytics';
 
 interface TechniqueAnalysisProps {
@@ -6,6 +7,7 @@ interface TechniqueAnalysisProps {
 }
 
 export const TechniqueAnalysis: React.FC<TechniqueAnalysisProps> = ({ insights }) => {
+    const { t } = useTranslation();
     if (insights.length === 0) return null;
 
     const getInsightStyles = (type: TechniqueInsight['type']) => {
@@ -50,7 +52,7 @@ export const TechniqueAnalysis: React.FC<TechniqueAnalysisProps> = ({ insights }
     return (
         <div className="bg-white rounded-lg border border-neutral-200 p-4 sm:p-6">
             <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
-                Solving Technique Analysis
+                {t('analytics.techniqueAnalysis')}
             </h2>
 
             <div className="space-y-3">

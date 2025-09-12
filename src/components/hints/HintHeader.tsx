@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@radix-ui/themes';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { HintIcon } from './HintIcon';
@@ -10,20 +11,22 @@ interface HintHeaderProps {
 }
 
 export const HintHeader: React.FC<HintHeaderProps> = ({ hint, onClose }) => {
+    const { t } = useTranslation();
+
     const getHintTypeLabel = () => {
         if (hint.autoFill) {
-            return 'Auto-filled';
+            return t('hints.autoFilled');
         }
 
         switch (hint.type) {
             case 'cell':
-                return 'Cell Hint';
+                return t('hints.cellHint');
             case 'technique':
-                return 'Technique Hint';
+                return t('hints.techniqueHint');
             case 'note':
-                return 'Notes Hint';
+                return t('hints.notesHint');
             default:
-                return 'Hint';
+                return t('hints.hint');
         }
     };
 

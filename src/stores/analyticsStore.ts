@@ -185,7 +185,7 @@ const formatTechniqueName = (technique: string): string => {
 const analyticsStorage = {
   getItem: async (name: string): Promise<string | null> => {
     try {
-      const data = await storageManager.loadAnalytics(name);
+      const data = storageManager.loadAnalytics(name);
       return data ? JSON.stringify(data) : null;
     } catch {
       return null;
@@ -194,14 +194,14 @@ const analyticsStorage = {
   setItem: async (name: string, value: string): Promise<void> => {
     try {
       const parsedValue = JSON.parse(value);
-      await storageManager.saveAnalytics(name, parsedValue);
+      storageManager.saveAnalytics(name, parsedValue);
     } catch (error) {
       console.error('Failed to save analytics data:', error);
     }
   },
   removeItem: async (): Promise<void> => {
     try {
-      await storageManager.clearAllAnalytics();
+      storageManager.clearAllAnalytics();
     } catch (error) {
       console.error('Failed to remove analytics data:', error);
     }

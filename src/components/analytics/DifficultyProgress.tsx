@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@radix-ui/themes';
 import type { Difficulty } from '../../types';
 import type { UserAnalytics } from '../../types/analytics';
@@ -17,6 +18,7 @@ export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({
     onDifficultyChange,
     progressData,
 }) => {
+    const { t } = useTranslation();
     const formatTime = (time: number) => {
         if (!time || time === Infinity) return 'N/A';
         return time < 60000
@@ -27,7 +29,7 @@ export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({
     return (
         <div className="bg-white rounded-lg border border-neutral-200 p-4 sm:p-6">
             <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
-                Progress by Difficulty
+                {t('analytics.difficultyProgress')}
             </h2>
 
             <div className="flex flex-wrap gap-2 mb-4">
@@ -42,7 +44,7 @@ export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({
                             : 'border-gray-300 text-gray-600 hover:bg-gray-50'
                             }`}
                     >
-                        {difficulty}
+                        {t(`difficulty.${difficulty}`)}
                     </Button>
                 ))}
             </div>
@@ -53,28 +55,28 @@ export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({
                         <div className="text-base sm:text-lg font-semibold">
                             {progressData.gamesPlayed}
                         </div>
-                        <div className="text-xs sm:text-sm text-neutral-600">Games Played</div>
+                        <div className="text-xs sm:text-sm text-neutral-600">{t('analytics.gamesPlayed')}</div>
                     </div>
 
                     <div>
                         <div className="text-base sm:text-lg font-semibold">
                             {progressData.gamesCompleted}
                         </div>
-                        <div className="text-xs sm:text-sm text-neutral-600">Completed</div>
+                        <div className="text-xs sm:text-sm text-neutral-600">{t('analytics.completed')}</div>
                     </div>
 
                     <div>
                         <div className="text-base sm:text-lg font-semibold">
                             {progressData.accuracy.toFixed(1)}%
                         </div>
-                        <div className="text-xs sm:text-sm text-neutral-600">Accuracy</div>
+                        <div className="text-xs sm:text-sm text-neutral-600">{t('analytics.accuracy')}</div>
                     </div>
 
                     <div>
                         <div className="text-base sm:text-lg font-semibold">
                             {formatTime(progressData.bestTime)}
                         </div>
-                        <div className="text-xs sm:text-sm text-neutral-600">Best Time</div>
+                        <div className="text-xs sm:text-sm text-neutral-600">{t('analytics.bestTime')}</div>
                     </div>
                 </div>
             )}

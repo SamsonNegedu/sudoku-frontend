@@ -1,6 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Theme, Button } from '@radix-ui/themes';
+import { LoadingSpinner } from './components/shared';
 import { AppNavbar } from './components/AppNavbar';
 import { GameBoard } from './components/GameBoard';
 import { CompletionAnimation } from './components/CompletionAnimation';
@@ -17,6 +19,7 @@ import type { Difficulty } from './types';
 import './index.css';
 
 function App() {
+  const { t } = useTranslation();
   const {
     currentGame,
     isGeneratingPuzzle,
@@ -39,7 +42,7 @@ function App() {
     const initializeApp = async () => {
       try {
         // Initialize storage manager
-        await storageManager.init();
+        storageManager.init();
 
         // Initialize game engine
         await gameEngineService.initialize();
@@ -143,76 +146,44 @@ function App() {
             <>
               <GameBoard />
 
-              {/* Prominent Center-Screen Loading Overlay */}
+              {/* Modern Loading Overlay */}
               {isGeneratingPuzzle && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-                  <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-sm w-full mx-4 text-center">
-                    {/* Large Spinning Sudoku Grid */}
-                    <div className="relative w-20 h-20 mx-auto mb-6">
-                      <div className="absolute inset-0 grid grid-cols-3 gap-1">
-                        {[...Array(9)].map((_, i) => (
-                          <div
-                            key={i}
-                            className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-sm animate-pulse"
-                            style={{
-                              animationDelay: `${i * 150}ms`,
-                              animationDuration: '2s'
-                            }}
-                          />
-                        ))}
-                      </div>
-                      {/* Rotating outer ring */}
-                      <div className="absolute -inset-2 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin opacity-70"></div>
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8 max-w-sm w-full mx-4 text-center">
+                    {/* Clean Loading Spinner */}
+                    <LoadingSpinner size="large" className="mx-auto mb-6" />
+
+                    {/* Modern Typography */}
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-slate-800">
+                        {t('loading.generatingPuzzle')}
+                      </h3>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        {t('loading.creatingChallenge')}
+                      </p>
                     </div>
 
-                    {/* Loading Text */}
-                    <div className="space-y-3">
-                      <h3 className="text-2xl font-bold text-gray-800">
-                        Generating Puzzle
-                      </h3>
-                      <p className="text-gray-600">
-                        Creating your perfect Sudoku challenge
-                        <span className="inline-flex ml-1">
-                          <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
-                          <span className="animate-bounce" style={{ animationDelay: '200ms' }}>.</span>
-                          <span className="animate-bounce" style={{ animationDelay: '400ms' }}>.</span>
-                        </span>
-                      </p>
-                      <div className="mt-4 text-sm text-gray-500">
-                        ⚡ Optimizing difficulty and ensuring uniqueness
-                      </div>
+                    {/* Action Buttons */}
+                    <div className="mt-8 space-y-3">
+                      <button
+                        onClick={() => {
+                          // Force stop current generation and try easy
+                          forceStopGeneration();
+                          setTimeout(() => handleNewGame('beginner'), 100);
+                        }}
+                        className="w-full px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                      >
+                        Switch to easier puzzle
+                      </button>
 
-                      {/* Emergency Recovery Button */}
-                      <div className="mt-6 pt-4 border-t border-gray-200 space-y-2">
-                        <button
-                          onClick={() => {
-                            // Force stop current generation and try easy
-                            forceStopGeneration();
-                            setTimeout(() => handleNewGame('beginner'), 100);
-                          }}
-                          className="block w-full text-sm text-blue-600 hover:text-blue-700 underline font-medium"
-                        >
-                          🚨 Stop & Switch to Easy
-                        </button>
-                        <button
-                          onClick={() => {
-                            // Force stop and clear loading state
-                            forceStopGeneration();
-                          }}
-                          className="block w-full text-sm text-orange-600 hover:text-orange-800 underline"
-                        >
-                          Just stop generation
-                        </button>
-                        <button
-                          onClick={() => {
-                            // Force reset the generation state
-                            window.location.reload();
-                          }}
-                          className="block w-full text-sm text-red-600 hover:text-red-800 underline"
-                        >
-                          Restart entire app
-                        </button>
-                      </div>
+                      <Button
+                        onClick={forceStopGeneration}
+                        size="2"
+                        variant="outline"
+                        className="w-full text-slate-600 border-slate-300 hover:bg-slate-50"
+                      >
+                        {t('navigation.cancel') || 'Cancel'}
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -248,8 +219,8 @@ function App() {
           {currentPage === 'analytics' && (
             <PageLayout className="bg-gray-50">
               <PageHeader
-                title="Analytics Dashboard"
-                subtitle="Track your progress and improve your solving skills"
+                title={t('analytics.dashboardTitle')}
+                subtitle={t('analytics.trackProgress')}
               >
                 <Button
                   onClick={handleBackToGame}
@@ -257,7 +228,7 @@ function App() {
                   variant="solid"
                   className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                  ← Back to Game
+                  ← {t('navigation.backToGame')}
                 </Button>
               </PageHeader>
 
@@ -271,8 +242,8 @@ function App() {
           {currentPage === 'learning' && (
             <PageLayout>
               <PageHeader
-                title="Sudoku Learning Center"
-                subtitle="Master every solving technique with interactive guides and examples. Experimental AI-generated guides."
+                title={t('learning.centerTitle')}
+                subtitle={t('learning.centerSubtitle')}
               >
                 <Button
                   onClick={handleBackToGame}
@@ -280,7 +251,7 @@ function App() {
                   variant="solid"
                   className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                  ← Back to Game
+                  ← {t('navigation.backToGame')}
                 </Button>
               </PageHeader>
 

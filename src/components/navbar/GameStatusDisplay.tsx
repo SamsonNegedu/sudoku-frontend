@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { GameTimer } from '../GameTimer';
 import type { Difficulty } from '../../types';
 
@@ -29,6 +30,7 @@ export const GameStatusDisplay: React.FC<GameStatusDisplayProps> = ({
     hintsUsed,
     maxHints,
 }) => {
+    const { t } = useTranslation();
     if (!isPlaying && !isPaused) return null;
 
     return (
@@ -46,11 +48,15 @@ export const GameStatusDisplay: React.FC<GameStatusDisplayProps> = ({
             <div className="flex items-center space-x-4 text-sm text-neutral-600">
                 <div className="flex items-center space-x-2">
                     <span>Difficulty:</span>
-                    <span className="font-medium capitalize text-neutral-800">{currentDifficulty}</span>
+                    <span className="font-medium capitalize text-neutral-800">
+                        {currentDifficulty ? t(`difficulty.${currentDifficulty}`) : ''}
+                    </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <span>Hints:</span>
-                    <span className="font-medium text-neutral-800">{hintsUsed}/{maxHints}</span>
+                    <span>{t('game.hints')}:</span>
+                    <span className="font-medium text-neutral-800">
+                        {hintsUsed}/{maxHints}
+                    </span>
                 </div>
             </div>
         </div>

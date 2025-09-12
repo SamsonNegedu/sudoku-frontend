@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
 
 interface CompletionActionsProps {
     onStartNewGame: () => void;
@@ -10,6 +11,7 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
     onStartNewGame,
     onClose,
 }) => {
+    const { t } = useTranslation();
     return (
         <div className="space-y-3">
             <Button
@@ -18,7 +20,7 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
                 variant="solid"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
-                🎯 Start New Game
+                🎯 {t('completion.newPuzzle')}
             </Button>
 
             <Button

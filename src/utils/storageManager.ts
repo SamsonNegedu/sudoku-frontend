@@ -32,13 +32,13 @@ class CompressionUtils {
 
 // Simplified storage manager
 export class StorageManager {
-  async init(): Promise<void> {
+  init(): void {
     // Simple initialization - no IndexedDB needed
     // Analytics data is small enough for localStorage
   }
 
   // Save analytics data with compression
-  async saveAnalytics(key: string, data: unknown): Promise<boolean> {
+  saveAnalytics(key: string, data: unknown): boolean {
     try {
       const compressed = CompressionUtils.compress(data);
       localStorage.setItem(key, compressed);
@@ -60,7 +60,7 @@ export class StorageManager {
   }
 
   // Load analytics data
-  async loadAnalytics(key: string): Promise<unknown> {
+  loadAnalytics(key: string): unknown {
     try {
       const compressed = localStorage.getItem(key);
       if (!compressed) return null;
@@ -72,7 +72,7 @@ export class StorageManager {
   }
 
   // Clear all analytics data
-  async clearAllAnalytics(): Promise<boolean> {
+  clearAllAnalytics(): boolean {
     try {
       const keys = Object.keys(localStorage);
       keys

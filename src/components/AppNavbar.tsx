@@ -5,6 +5,7 @@ import { GameControlButtons } from './navbar/GameControlButtons';
 import { NewGameDropdown } from './navbar/NewGameDropdown';
 import { NavigationButtons } from './navbar/NavigationButtons';
 import { MobileNavigation } from './navbar/MobileNavigation';
+import { LanguageSelector } from './LanguageSelector';
 import type { Difficulty } from '../types';
 
 interface AppNavbarProps {
@@ -99,6 +100,8 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                 onShowAnalytics={onShowAnalytics}
                                 onShowLearning={onShowLearning}
                             />
+
+                            <LanguageSelector />
                         </div>
 
                         {/* Mobile Navigation */}

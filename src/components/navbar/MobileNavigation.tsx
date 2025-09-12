@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, DropdownMenu } from '@radix-ui/themes';
-import { HamburgerMenuIcon, PlusIcon, PlayIcon, BarChartIcon, ReaderIcon } from '@radix-ui/react-icons';
+import { HamburgerMenuIcon, PlusIcon, PlayIcon, BarChartIcon, ReaderIcon, GlobeIcon } from '@radix-ui/react-icons';
+import { useTranslation } from 'react-i18next';
 import { GameControlButtons } from './GameControlButtons';
 import { DifficultyConfigManager } from '../../config/difficulty';
 import type { Difficulty } from '../../types';
@@ -34,6 +35,15 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
     isCompleted,
     isGeneratingPuzzle,
 }) => {
+    const { i18n, t } = useTranslation();
+
+    const languages = [
+        { code: 'en', name: 'English', flag: '🇺🇸' },
+        { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+        { code: 'es', name: 'Español', flag: '🇪🇸' },
+        { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+        { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    ];
     const difficultyLevels = DifficultyConfigManager.getDifficultyOptions().map(option => ({
         level: option.value,
         label: option.label,
@@ -153,6 +163,31 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                             </DropdownMenu.Item>
                         </>
                     )}
+
+                    {/* Language Selection */}
+                    <DropdownMenu.Separator className="my-1" />
+                    <DropdownMenu.Label className="px-3 py-1 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {t('settings.language')}
+                    </DropdownMenu.Label>
+                    {languages.map((language) => (
+                        <DropdownMenu.Item
+                            key={language.code}
+                            className={`px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0 ${i18n.language === language.code ? 'bg-blue-50' : ''
+                                }`}
+                            onClick={() => i18n.changeLanguage(language.code)}
+                        >
+                            <div className="flex items-center gap-2">
+                                <span className="text-lg">{language.flag}</span>
+                                <span className={`font-medium text-sm ${i18n.language === language.code ? 'text-blue-600' : 'text-gray-700'
+                                    }`}>
+                                    {t(`languages.${language.code}`)}
+                                </span>
+                                {i18n.language === language.code && (
+                                    <span className="ml-auto text-blue-600 text-sm">✓</span>
+                                )}
+                            </div>
+                        </DropdownMenu.Item>
+                    ))}
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
         </div>

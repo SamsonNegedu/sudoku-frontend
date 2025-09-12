@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface NavBrandProps {
     onShowGame?: () => void;
 }
 
 export const NavBrand: React.FC<NavBrandProps> = ({ onShowGame }) => {
+    const { t } = useTranslation();
     return (
         <button
             onClick={onShowGame}
@@ -15,7 +17,7 @@ export const NavBrand: React.FC<NavBrandProps> = ({ onShowGame }) => {
             </div>
             <div className="block">
                 <h1 className="text-lg sm:text-xl font-bold text-blue-600">
-                    Grid Logic
+                    {t('app.title')}
                 </h1>
             </div>
         </button>
