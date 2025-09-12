@@ -29,7 +29,9 @@ class SystemConfigManager {
   }
 
   private initializeConfig(): SystemConfig {
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    // Use Vite's environment detection instead of process.env.NODE_ENV
+    const isDevelopment =
+      import.meta.env.MODE === 'development' || !import.meta.env.PROD;
 
     return {
       // Development features

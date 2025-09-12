@@ -1,16 +1,12 @@
 import React from 'react';
-import { getDifficultyEmoji, getPerformanceRating } from '../../utils/completionUtils';
+import { getDifficultyEmoji, } from '../../utils/completionUtils';
 
 interface CelebrationHeaderProps {
-    stage: 'stats';
     difficulty: string;
-    mistakes: number;
 }
 
 export const CelebrationHeader: React.FC<CelebrationHeaderProps> = ({
-    stage,
     difficulty,
-    mistakes,
 }) => {
     return (
         <div className="bg-neutral-50 px-6 py-4 border-b border-neutral-100">

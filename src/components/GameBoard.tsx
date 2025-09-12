@@ -22,6 +22,7 @@ export const GameBoard: React.FC = () => {
         getCompletedNumbers,
     } = useGameStore();
 
+
     // Get analytics functions
     const { recordHintUsage } = useGameAnalytics();
 

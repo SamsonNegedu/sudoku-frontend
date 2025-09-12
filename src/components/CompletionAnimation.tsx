@@ -41,9 +41,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
         <div className="completion-modal bg-white rounded-2xl shadow-2xl max-w-md w-full text-center overflow-hidden">
           {/* Header with success icon */}
           <CelebrationHeader
-            stage={stage}
             difficulty={difficulty}
-            mistakes={mistakes}
           />
 
           {/* Content */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getDifficultyColor, getPerformanceRating, getMistakeColor } from '../../utils/completionUtils';
+import { getPerformanceRating, } from '../../utils/completionUtils';
 
 interface CompletionStatsProps {
     difficulty: string;
@@ -12,7 +12,7 @@ export const CompletionStats: React.FC<CompletionStatsProps> = ({
     completionTime,
     mistakes,
 }) => {
-    const performance = getPerformanceRating(mistakes, difficulty);
+    const performance = getPerformanceRating(mistakes);
 
     return (
         <div className="space-y-3 mb-6">

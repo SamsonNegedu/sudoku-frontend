@@ -16,8 +16,10 @@ export async function getGameEngine(): Promise<GameEngine> {
   if (!gameEngineInstance) {
     gameEngineInstance = createGameEngine({
       performance: {
-        enableProfiling: process.env.NODE_ENV === 'development',
-        logPerformanceMetrics: process.env.NODE_ENV === 'development',
+        enableProfiling:
+          import.meta.env.MODE === 'development' || !import.meta.env.PROD,
+        logPerformanceMetrics:
+          import.meta.env.MODE === 'development' || !import.meta.env.PROD,
       },
     });
     await gameEngineInstance.init();

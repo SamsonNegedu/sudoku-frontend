@@ -556,6 +556,9 @@ export const useGameStore = create<GameStore>()(
       getHint: async () => {
         const state = get();
 
+        // Check if we have a current game and enforce hint limits
+        // Note: In development mode, unlimited hints are enabled
+        // In production mode, hints are limited based on difficulty level
         if (
           !state.currentGame ||
           (!enableUnlimitedHints() &&
@@ -587,6 +590,16 @@ export const useGameStore = create<GameStore>()(
           );
 
           if (!hintResult) {
+            // Increment hint count even for fallback hints
+            const currentState = get();
+            const newHintsUsed = currentState.currentGame!.hintsUsed + 1;
+            set({
+              currentGame: {
+                ...currentState.currentGame!,
+                hintsUsed: newHintsUsed,
+              },
+            });
+
             // Return a helpful fallback if no hints are found
             return {
               type: 'technique' as const,
@@ -596,16 +609,15 @@ export const useGameStore = create<GameStore>()(
             };
           }
 
-          // Handle auto-fill hints and track filled cells
+          // Track auto-fill info but don't execute yet
           let filledCell: [number, number] | null = null;
-          if (
+          const shouldAutoFill =
             hintResult.hint.autoFill &&
             hintResult.hint.targetCells &&
-            hintResult.hint.suggestedValue
-          ) {
-            const [row, col] = hintResult.hint.targetCells[0];
-            get().setCellValue(row, col, hintResult.hint.suggestedValue);
-            filledCell = [row, col];
+            hintResult.hint.suggestedValue;
+
+          if (shouldAutoFill && hintResult.hint.targetCells) {
+            filledCell = hintResult.hint.targetCells[0];
           }
 
           // Update hints used count and set highlighting
@@ -626,14 +638,23 @@ export const useGameStore = create<GameStore>()(
 
             // Get fresh state right before setting to avoid stale state issues
             const currentState = get();
+            const newHintsUsed = currentState.currentGame!.hintsUsed + 1;
             set({
               currentGame: {
                 ...currentState.currentGame!,
-                hintsUsed: currentState.currentGame!.hintsUsed + 1,
+                hintsUsed: newHintsUsed,
               },
               hintHighlights: highlights,
               hintFilledCells: filledCell ? [filledCell] : [],
             });
+
+            // Execute auto-fill AFTER hint count is incremented
+            if (shouldAutoFill && filledCell) {
+              const [row, col] = filledCell;
+              get().setCellValue(row, col, hintResult.hint.suggestedValue!);
+              // Update filled cells state
+              set({ hintFilledCells: [filledCell] });
+            }
           }
 
           // Return the actual hint with proper formatting
@@ -650,6 +671,16 @@ export const useGameStore = create<GameStore>()(
             detailedExplanation: hintResult.hint.detailedExplanation,
           };
         } catch {
+          // Increment hint count even for error fallback hints
+          const currentState = get();
+          const newHintsUsed = currentState.currentGame!.hintsUsed + 1;
+          set({
+            currentGame: {
+              ...currentState.currentGame!,
+              hintsUsed: newHintsUsed,
+            },
+          });
+
           return {
             type: 'technique' as const,
             message:
