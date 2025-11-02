@@ -31,16 +31,16 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     className = '',
 }) => {
     return (
-        <header className={`bg-white border-b border-neutral-200 shadow-sm ${className}`}>
+        <header className={`bg-white dark:bg-gray-800 border-b border-neutral-200 dark:border-gray-700 shadow-sm ${className}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                     {/* Title and subtitle section */}
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 truncate">
                             {title}
                         </h1>
                         {subtitle && (
-                            <p className="mt-1 text-sm sm:text-base text-gray-600">
+                            <p className="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-400">
                                 {subtitle}
                             </p>
                         )}

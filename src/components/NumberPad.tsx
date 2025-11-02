@@ -31,7 +31,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     selectedCell,
 }) => {
     return (
-        <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-neutral-200">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-sm border border-neutral-200 dark:border-gray-700">
             {/* Mode indicator */}
             <ModeIndicator inputMode={inputMode} />
 

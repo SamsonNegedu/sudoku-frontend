@@ -22,7 +22,7 @@ export const MistakesModal: React.FC<MistakesModalProps> = ({
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full text-center overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full text-center overflow-hidden">
                 <MistakesHeader mistakes={mistakes} maxMistakes={maxMistakes} />
                 <MistakesContent />
                 <MistakesActions onRestart={onRestart} onContinue={onContinue} />

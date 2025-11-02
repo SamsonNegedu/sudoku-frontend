@@ -26,20 +26,20 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({ insights }) =>
     };
 
     return (
-        <div className="bg-white rounded-lg border border-neutral-200 p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-neutral-200 dark:border-gray-700 p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">
                 {t('analytics.insightsRecommendations')}
             </h2>
             <div className="space-y-3">
                 {insights.map((insight, index) => (
                     <div
                         key={index}
-                        className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)}`}
+                        className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)} dark:bg-opacity-20`}
                     >
-                        <div className="text-sm sm:text-base font-medium text-neutral-900">
+                        <div className="text-sm sm:text-base font-medium text-neutral-900 dark:text-gray-100">
                             {insight.title}
                         </div>
-                        <div className="text-xs sm:text-sm text-neutral-600">
+                        <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-400">
                             {insight.description}
                         </div>
                     </div>

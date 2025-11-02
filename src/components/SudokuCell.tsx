@@ -49,16 +49,16 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
     // Add borders - subtle for individual cells, emphasized for 3x3 box boundaries  
     const borderClasses = cn(
         // Base borders for all cells
-        'border border-neutral-200',
+        'border border-neutral-200 dark:border-gray-700',
         {
             // Slightly thicker borders for 3x3 box separations (4 inner borders total)
             // Vertical separators (after columns 2 and 5)
-            'border-r border-r-neutral-400': col === 2 || col === 5,
+            'border-r border-r-neutral-400 dark:border-r-gray-600': col === 2 || col === 5,
             // Horizontal separators (after rows 2 and 5) 
-            'border-b border-b-neutral-400': row === 2 || row === 5,
+            'border-b border-b-neutral-400 dark:border-b-gray-600': row === 2 || row === 5,
             // Grid edges (outer border) - same thickness as separators
-            'border-r border-r-neutral-300': col === 8, // Right edge
-            'border-b border-b-neutral-300': row === 8, // Bottom edge
+            'border-r border-r-neutral-300 dark:border-r-gray-700': col === 8, // Right edge
+            'border-b border-b-neutral-300 dark:border-b-gray-700': row === 8, // Bottom edge
         }
     );
 
@@ -91,10 +91,14 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
             {value && (
                 <div className="absolute inset-0 flex items-center justify-center">
                     <span className={cn(
-                        "sudoku-cell-number text-xl sm:text-2xl font-medium sm:font-semibold",
+                        "sudoku-cell-number text-xl sm:text-2xl font-medium sm:font-semibold transition-colors duration-200",
                         {
-                            "text-neutral-700 sm:text-neutral-900": !isIncorrect,
-                            "text-red-600 sm:text-red-700": isIncorrect,
+                            // Fixed cells - bolder, darker (puzzle numbers)
+                            "font-bold text-neutral-800 dark:text-gray-100": isFixed,
+                            // User-entered correct numbers - standard weight, slightly muted
+                            "font-medium text-neutral-700 dark:text-gray-200": !isFixed && !isIncorrect,
+                            // User-entered incorrect numbers - red with emphasis
+                            "font-semibold text-red-600 dark:text-red-400": isIncorrect,
                         }
                     )}>
                         {value}
@@ -120,7 +124,7 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
                         >
                             {notes.includes(num) && (
                                 <span
-                                    className="sudoku-cell-notes text-neutral-500 sm:text-neutral-700 font-normal sm:font-medium select-none"
+                                    className="sudoku-cell-notes text-neutral-500 sm:text-neutral-600 dark:text-gray-400 font-normal sm:font-medium select-none"
                                     style={{
                                         lineHeight: 1,
                                         display: 'block',

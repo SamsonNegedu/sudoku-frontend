@@ -6,6 +6,7 @@ import { NewGameDropdown } from './navbar/NewGameDropdown';
 import { NavigationButtons } from './navbar/NavigationButtons';
 import { MobileNavigation } from './navbar/MobileNavigation';
 import { LanguageSelector } from './LanguageSelector';
+import { DarkModeToggle } from './DarkModeToggle';
 import type { Difficulty } from '../types';
 
 interface AppNavbarProps {
@@ -54,7 +55,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     maxHints,
 }) => {
     return (
-        <nav className="bg-white border-b border-neutral-200 shadow-sm sticky top-0 z-50">
+        <nav className="bg-white dark:bg-gray-800 border-b border-neutral-200 dark:border-gray-700 shadow-sm sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo and Brand */}
@@ -102,6 +103,8 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                             />
 
                             <LanguageSelector />
+
+                            <DarkModeToggle />
                         </div>
 
                         {/* Mobile Navigation */}

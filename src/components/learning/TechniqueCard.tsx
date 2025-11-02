@@ -14,7 +14,7 @@ export const TechniqueCard: React.FC<TechniqueCardProps> = ({
 }) => {
     return (
         <article
-            className="bg-white border border-neutral-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+            className="bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg dark:hover:shadow-gray-900/50 transition-shadow cursor-pointer"
             onClick={() => onClick(technique)}
             role="button"
             tabIndex={0}
@@ -25,15 +25,15 @@ export const TechniqueCard: React.FC<TechniqueCardProps> = ({
             }}
         >
             <header className="flex items-start justify-between mb-3">
-                <h3 className="text-xl font-semibold text-neutral-900">
+                <h3 className="text-xl font-semibold text-neutral-900 dark:text-gray-100">
                     {technique.name}
                 </h3>
-                <ChevronRightIcon className="w-5 h-5 text-neutral-400 flex-shrink-0" />
+                <ChevronRightIcon className="w-5 h-5 text-neutral-400 dark:text-gray-600 flex-shrink-0" />
             </header>
 
             <TechniqueBadge level={technique.level} className="mb-3" />
 
-            <p className="text-neutral-600 text-sm mb-4 line-clamp-2">
+            <p className="text-neutral-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
                 {technique.description}
             </p>
 
@@ -41,7 +41,7 @@ export const TechniqueCard: React.FC<TechniqueCardProps> = ({
                 {technique.difficulty.map(diff => (
                     <span
                         key={diff}
-                        className="px-2 py-1 bg-neutral-100 text-neutral-600 rounded text-xs capitalize"
+                        className="px-2 py-1 bg-neutral-100 dark:bg-gray-700 text-neutral-600 dark:text-gray-300 rounded text-xs capitalize"
                     >
                         {diff}
                     </span>

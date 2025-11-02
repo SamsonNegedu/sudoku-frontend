@@ -14,8 +14,8 @@ export const RecentGames: React.FC<RecentGamesProps> = ({ games }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg border border-neutral-200 p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-neutral-200 dark:border-gray-700 p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">
                 {t('analytics.recentGames')}
             </h2>
 
@@ -23,22 +23,22 @@ export const RecentGames: React.FC<RecentGamesProps> = ({ games }) => {
                 {games.map((game) => (
                     <div
                         key={game.gameId}
-                        className="flex justify-between items-center p-3 bg-neutral-50 rounded-lg"
+                        className="flex justify-between items-center p-3 bg-neutral-50 dark:bg-gray-700 rounded-lg"
                     >
                         <div className="flex-1 min-w-0">
-                            <div className="text-sm sm:text-base font-medium capitalize truncate">
+                            <div className="text-sm sm:text-base font-medium capitalize truncate text-gray-900 dark:text-gray-100">
                                 {t(`difficulty.${game.difficulty}`)}
                             </div>
-                            <div className="text-xs sm:text-sm text-neutral-600">
+                            <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-400">
                                 {game.completed ? t('analytics.completed') : t('analytics.incomplete')} • {game.finalStats.totalMoves} {t('analytics.moves')}
                             </div>
                         </div>
 
                         <div className="text-right ml-3">
-                            <div className="text-sm sm:text-base font-medium">
+                            <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-gray-100">
                                 {game.accuracy.toFixed(1)}%
                             </div>
-                            <div className="text-xs sm:text-sm text-neutral-600">
+                            <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-400">
                                 {formatDuration(game.duration)}
                             </div>
                         </div>

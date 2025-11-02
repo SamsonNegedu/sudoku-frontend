@@ -28,7 +28,7 @@ export const LevelFilter: React.FC<LevelFilterProps> = ({
                         key={level.id}
                         onClick={() => onLevelChange(level.id)}
                         variant={selectedLevel === level.id ? "solid" : "outline"}
-                        className={selectedLevel === level.id ? "bg-blue-600 text-white" : ""}
+                        className={selectedLevel === level.id ? "bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-600" : "dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"}
                     >
                         <Icon className="w-4 h-4 mr-2" />
                         {level.name}

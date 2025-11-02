@@ -9,7 +9,7 @@ interface HintIconProps {
 export const HintIcon: React.FC<HintIconProps> = ({ hint }) => {
     if (hint.autoFill) {
         return (
-            <div className="w-5 h-5 flex items-center justify-center text-green-600">
+            <div className="w-5 h-5 flex items-center justify-center text-green-600 dark:text-green-400">
                 <span className="text-lg">✨</span>
             </div>
         );
@@ -18,17 +18,17 @@ export const HintIcon: React.FC<HintIconProps> = ({ hint }) => {
     switch (hint.type) {
         case 'cell':
             return (
-                <div className="w-5 h-5 flex items-center justify-center text-amber-600">
+                <div className="w-5 h-5 flex items-center justify-center text-amber-600 dark:text-amber-400">
                     <span className="text-lg">💡</span>
                 </div>
             );
         case 'technique':
-            return <InfoCircledIcon className="w-5 h-5 text-blue-600" />;
+            return <InfoCircledIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
         case 'note':
-            return <Pencil2Icon className="w-5 h-5 text-purple-600" />;
+            return <Pencil2Icon className="w-5 h-5 text-purple-600 dark:text-purple-400" />;
         default:
             return (
-                <div className="w-5 h-5 flex items-center justify-center text-gray-600">
+                <div className="w-5 h-5 flex items-center justify-center text-gray-600 dark:text-gray-400">
                     <span className="text-lg">💡</span>
                 </div>
             );

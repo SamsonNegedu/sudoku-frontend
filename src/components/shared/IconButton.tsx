@@ -28,15 +28,15 @@ export const IconButton: React.FC<IconButtonProps> = ({
 }) => {
     const effectiveColor = disabled ? 'gray' : color;
 
-    const baseClasses = 'w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white';
+    const baseClasses = 'w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center text-sm bg-white dark:bg-gray-800';
 
     const dynamicClasses = disabled
-        ? 'opacity-50 cursor-not-allowed border-gray-300 text-gray-400'
+        ? 'opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500'
         : color === 'red'
-            ? 'border-red-500 text-red-600 hover:bg-red-50'
+            ? 'border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 dark:text-red-400'
             : color === 'green'
-                ? 'border-green-500 text-green-600 hover:bg-green-50'
-                : 'border-blue-600 text-blue-600 hover:bg-blue-50';
+                ? 'border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/30 dark:text-green-400'
+                : 'border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 dark:text-blue-400 dark:border-blue-500';
 
     return (
         <Button

@@ -9,7 +9,7 @@ export const AnalyticsEmptyState: React.FC<AnalyticsEmptyStateProps> = ({ hasGam
     const { t } = useTranslation();
     return (
         <div className="p-6 text-center">
-            <p className="text-neutral-600">
+            <p className="text-neutral-600 dark:text-gray-400">
                 {hasGames
                     ? t('analytics.noCompletedGames')
                     : t('analytics.noDataAvailable')

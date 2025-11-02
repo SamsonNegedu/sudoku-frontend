@@ -50,8 +50,8 @@ export const TechniqueAnalysis: React.FC<TechniqueAnalysisProps> = ({ insights }
     };
 
     return (
-        <div className="bg-white rounded-lg border border-neutral-200 p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-neutral-200 dark:border-gray-700 p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">
                 {t('analytics.techniqueAnalysis')}
             </h2>
 
@@ -59,7 +59,7 @@ export const TechniqueAnalysis: React.FC<TechniqueAnalysisProps> = ({ insights }
                 {insights.slice(0, 6).map((insight, index) => (
                     <div
                         key={index}
-                        className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)}`}
+                        className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)} dark:bg-opacity-20`}
                     >
                         <div className="flex items-start justify-between">
                             <div className="flex-1">

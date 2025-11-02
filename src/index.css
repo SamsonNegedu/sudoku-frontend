@@ -11,7 +11,7 @@
   }
   
   body {
-    @apply bg-neutral-50 text-neutral-900;
+    @apply bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -38,6 +38,10 @@
   /* Smooth hover effect */
   .sudoku-cell:hover:not([data-selected="true"]):not([data-fixed="true"]) {
     background-color: rgb(249 250 251) !important; /* bg-neutral-50 */
+  }
+
+  .dark .sudoku-cell:hover:not([data-selected="true"]):not([data-fixed="true"]) {
+    background-color: rgb(31 41 55) !important; /* dark bg-gray-800 */
   }
 
   /* Subtle click effect */
@@ -73,11 +77,23 @@
     background: rgb(239 246 255) !important;
   }
 
+  .dark div.sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-hint-target="true"]):not([data-same-number="true"]),
+  .dark .sudoku-cell[data-highlighted="true"]:not([data-selected="true"]):not([data-hint-target="true"]):not([data-same-number="true"]) {
+    background-color: rgb(30 58 138) !important; /* dark: darker blue */
+    background: rgb(30 58 138) !important;
+  }
+
   /* Ensure notes have better contrast in highlighted cells */
   div.sudoku-cell[data-highlighted="true"] .sudoku-cell-notes,
   .sudoku-cell[data-highlighted="true"] .sudoku-cell-notes {
     color: rgb(17 24 39) !important; /* text-gray-900 - much darker for better contrast */
     font-weight: 600 !important; /* Make text bolder for better visibility */
+  }
+
+  .dark div.sudoku-cell[data-highlighted="true"] .sudoku-cell-notes,
+  .dark .sudoku-cell[data-highlighted="true"] .sudoku-cell-notes {
+    color: rgb(219 234 254) !important; /* light blue text for dark mode */
+    font-weight: 600 !important;
   }
 
   /* Same number highlighting - medium blue */
@@ -88,11 +104,24 @@
     border-color: rgb(59 130 246) !important; /* border-blue-500 */
   }
 
+  .dark div.sudoku-cell[data-same-number="true"]:not([data-selected="true"]):not([data-hint-target="true"]),
+  .dark .sudoku-cell[data-same-number="true"]:not([data-selected="true"]):not([data-hint-target="true"]) {
+    background-color: rgb(37 99 235) !important; /* dark: medium blue */
+    background: rgb(37 99 235) !important;
+    border-color: rgb(59 130 246) !important;
+  }
+
   /* Ensure notes have better contrast in same number highlighted cells */
   div.sudoku-cell[data-same-number="true"] .sudoku-cell-notes,
   .sudoku-cell[data-same-number="true"] .sudoku-cell-notes {
     color: rgb(15 23 42) !important; /* text-slate-900 - very dark for maximum contrast */
     font-weight: 600 !important; /* Make text bolder for better visibility */
+  }
+
+  .dark div.sudoku-cell[data-same-number="true"] .sudoku-cell-notes,
+  .dark .sudoku-cell[data-same-number="true"] .sudoku-cell-notes {
+    color: rgb(240 253 250) !important; /* light text for dark mode */
+    font-weight: 600 !important;
   }
 
   /* 2. AMBER FAMILY - Hints and attention */
@@ -133,6 +162,16 @@
     color: rgb(153 27 27) !important; /* text-red-800 */
   }
 
+  .dark div.sudoku-cell[data-correct="false"],
+  .dark .sudoku-cell[data-correct="false"],
+  .dark div.sudoku-cell[data-incorrect="true"],
+  .dark .sudoku-cell[data-incorrect="true"] {
+    background-color: rgb(127 29 29) !important; /* dark: darker red */
+    background: rgb(127 29 29) !important;
+    border-color: rgb(239 68 68) !important;
+    color: rgb(254 226 226) !important; /* light red text */
+  }
+
   /* 4. NEUTRAL - Fixed cells */
   
   /* Fixed cells - subtle neutral */
@@ -142,6 +181,14 @@
     background: rgb(248 250 252) !important;
     font-weight: 600 !important;
     color: rgb(51 65 85) !important; /* text-slate-700 */
+  }
+
+  .dark div.sudoku-cell[data-fixed="true"],
+  .dark .sudoku-cell[data-fixed="true"] {
+    background-color: rgb(55 65 81) !important; /* dark: gray-700 */
+    background: rgb(55 65 81) !important;
+    font-weight: 600 !important;
+    color: rgb(229 231 235) !important; /* light text */
   }
 
   /* Remove old success green - not needed */
@@ -262,6 +309,11 @@
       opacity: 0.95;
     }
     
+    .dark .sudoku-cell-number {
+      color: rgb(209 213 219); /* light gray text */
+      opacity: 0.95;
+    }
+    
     /* Smaller note text on mobile */
     .sudoku-cell .notes {
       font-size: 0.5rem;
@@ -325,6 +377,11 @@
     margin: 0 auto; /* Center the grid within its container */
     aspect-ratio: 1; /* Keep the grid square */
     background-color: rgb(209 213 219); /* Gap color (neutral-300) */
+  }
+
+  .dark .sudoku-grid-container {
+    background-color: rgb(55 65 81); /* dark gray gap color */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   /* Remove the last row bottom border since cells now have individual borders */

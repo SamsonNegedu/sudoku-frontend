@@ -38,7 +38,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
 
       {/* Main content - only show during stats stage */}
       {stage === 'stats' && (
-        <div className="completion-modal bg-white rounded-2xl shadow-2xl max-w-md w-full text-center overflow-hidden">
+        <div className="completion-modal bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full text-center overflow-hidden">
           {/* Header with success icon */}
           <CelebrationHeader
             difficulty={difficulty}

@@ -41,7 +41,7 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
     getCompletedNumbers,
 }) => {
     return (
-        <PageLayout className="bg-gradient-to-br from-neutral-50 to-neutral-100">
+        <PageLayout className="bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800">
             {/* Hint Display Overlay */}
             <HintDisplay
                 hint={currentHint}

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Theme, Button } from '@radix-ui/themes';
 import { LoadingSpinner } from './components/shared';
@@ -7,6 +7,7 @@ import { AppNavbar } from './components/AppNavbar';
 import { GameBoard } from './components/GameBoard';
 import { CompletionAnimation } from './components/CompletionAnimation';
 import { MistakesModal } from './components/MistakesModal';
+import { ThemeProvider } from './components/ThemeProvider';
 import { useGameStore } from './stores/gameStore';
 import { storageManager } from './utils/storageManager';
 import { gameEngineService } from './services/gameEngineService';
@@ -115,154 +116,156 @@ function App() {
   // No cleanup needed anymore
 
   return (
-    <Theme>
-      <AnalyticsProvider>
-        <div className="App relative">
-          <AppNavbar
-            onNewGame={handleNewGame}
-            onRestart={restartCurrentGame}
-            onShowAnalytics={handleShowAnalytics}
-            onShowLearning={handleShowLearning}
-            onShowGame={handleBackToGame}
-            onPause={pauseGame}
-            onResume={resumeGame}
-            currentDifficulty={currentGame?.difficulty}
-            currentPage={currentPage}
-            isPlaying={!!isPlaying}
-            isPaused={!!isPaused}
-            isCompleted={currentGame?.isCompleted || false}
-            isGeneratingPuzzle={isGeneratingPuzzle}
-            startTime={currentGame?.startTime}
-            pauseStartTime={currentGame?.pauseStartTime}
-            totalPausedTime={currentGame?.totalPausedTime || 0}
-            pausedElapsedTime={currentGame?.pausedElapsedTime}
-            currentTime={currentGame?.currentTime}
-            hintsUsed={currentGame?.hintsUsed || 0}
-            maxHints={currentGame?.maxHints || 3}
-          />
+    <ThemeProvider>
+      <Theme>
+        <AnalyticsProvider>
+          <div className="App relative">
+            <AppNavbar
+              onNewGame={handleNewGame}
+              onRestart={restartCurrentGame}
+              onShowAnalytics={handleShowAnalytics}
+              onShowLearning={handleShowLearning}
+              onShowGame={handleBackToGame}
+              onPause={pauseGame}
+              onResume={resumeGame}
+              currentDifficulty={currentGame?.difficulty}
+              currentPage={currentPage}
+              isPlaying={!!isPlaying}
+              isPaused={!!isPaused}
+              isCompleted={currentGame?.isCompleted || false}
+              isGeneratingPuzzle={isGeneratingPuzzle}
+              startTime={currentGame?.startTime}
+              pauseStartTime={currentGame?.pauseStartTime}
+              totalPausedTime={currentGame?.totalPausedTime || 0}
+              pausedElapsedTime={currentGame?.pausedElapsedTime}
+              currentTime={currentGame?.currentTime}
+              hintsUsed={currentGame?.hintsUsed || 0}
+              maxHints={currentGame?.maxHints || 3}
+            />
 
-          {/* Conditional page rendering */}
-          {currentPage === 'game' && (
-            <>
-              <GameBoard />
+            {/* Conditional page rendering */}
+            {currentPage === 'game' && (
+              <>
+                <GameBoard />
 
-              {/* Modern Loading Overlay */}
-              {isGeneratingPuzzle && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center">
-                  <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8 max-w-sm w-full mx-4 text-center">
-                    {/* Clean Loading Spinner */}
-                    <LoadingSpinner size="large" className="mx-auto mb-6" />
+                {/* Modern Loading Overlay */}
+                {isGeneratingPuzzle && (
+                  <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center">
+                    <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 p-8 max-w-sm w-full mx-4 text-center">
+                      {/* Clean Loading Spinner */}
+                      <LoadingSpinner size="large" className="mx-auto mb-6" />
 
-                    {/* Modern Typography */}
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-slate-800">
-                        {t('loading.generatingPuzzle')}
-                      </h3>
-                      <p className="text-slate-600 text-sm leading-relaxed">
-                        {t('loading.creatingChallenge')}
-                      </p>
-                    </div>
+                      {/* Modern Typography */}
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                          {t('loading.generatingPuzzle')}
+                        </h3>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                          {t('loading.creatingChallenge')}
+                        </p>
+                      </div>
 
-                    {/* Action Buttons */}
-                    <div className="mt-8 space-y-3">
-                      <button
-                        onClick={() => {
-                          // Force stop current generation and try easy
-                          forceStopGeneration();
-                          setTimeout(() => handleNewGame('beginner'), 100);
-                        }}
-                        className="w-full px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
-                      >
-                        Switch to easier puzzle
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="mt-8 space-y-3">
+                        <button
+                          onClick={() => {
+                            // Force stop current generation and try easy
+                            forceStopGeneration();
+                            setTimeout(() => handleNewGame('beginner'), 100);
+                          }}
+                          className="w-full px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950 rounded-lg transition-colors"
+                        >
+                          Switch to easier puzzle
+                        </button>
 
-                      <Button
-                        onClick={forceStopGeneration}
-                        size="2"
-                        variant="outline"
-                        className="w-full text-slate-600 border-slate-300 hover:bg-slate-50"
-                      >
-                        {t('navigation.cancel') || 'Cancel'}
-                      </Button>
+                        <Button
+                          onClick={forceStopGeneration}
+                          size="2"
+                          variant="outline"
+                          className="w-full text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        >
+                          {t('navigation.cancel') || 'Cancel'}
+                        </Button>
+                      </div>
                     </div>
                   </div>
+                )}
+
+                {/* Completion Animation */}
+                {currentGame && (
+                  <CompletionAnimation
+                    isVisible={showCompletionAnimation}
+                    onAnimationComplete={handleCompletionAnimationEnd}
+                    onStartNewGame={handleStartNewGameFromModal}
+                    difficulty={currentGame.difficulty}
+                    completionTime={formatCompletionTime()}
+                    mistakes={currentGame.mistakes || 0}
+                  />
+                )}
+
+                {/* Mistakes Modal */}
+                {currentGame && (
+                  <MistakesModal
+                    isVisible={showMistakesModal}
+                    difficulty={currentGame.difficulty}
+                    mistakes={currentGame.mistakes}
+                    maxMistakes={currentGame.maxMistakes}
+                    onRestart={handleRestartFromMistakes}
+                    onContinue={handleContinueWithMistakes}
+                  />
+                )}
+              </>
+            )}
+
+            {/* Analytics Dashboard Page */}
+            {currentPage === 'analytics' && (
+              <PageLayout className="bg-gray-50 dark:bg-gray-900">
+                <PageHeader
+                  title={t('analytics.dashboardTitle')}
+                  subtitle={t('analytics.trackProgress')}
+                >
+                  <Button
+                    onClick={handleBackToGame}
+                    size="2"
+                    variant="solid"
+                    className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    ← {t('navigation.backToGame')}
+                  </Button>
+                </PageHeader>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                  <AnalyticsDashboard />
                 </div>
-              )}
+              </PageLayout>
+            )}
 
-              {/* Completion Animation */}
-              {currentGame && (
-                <CompletionAnimation
-                  isVisible={showCompletionAnimation}
-                  onAnimationComplete={handleCompletionAnimationEnd}
-                  onStartNewGame={handleStartNewGameFromModal}
-                  difficulty={currentGame.difficulty}
-                  completionTime={formatCompletionTime()}
-                  mistakes={currentGame.mistakes || 0}
-                />
-              )}
-
-              {/* Mistakes Modal */}
-              {currentGame && (
-                <MistakesModal
-                  isVisible={showMistakesModal}
-                  difficulty={currentGame.difficulty}
-                  mistakes={currentGame.mistakes}
-                  maxMistakes={currentGame.maxMistakes}
-                  onRestart={handleRestartFromMistakes}
-                  onContinue={handleContinueWithMistakes}
-                />
-              )}
-            </>
-          )}
-
-          {/* Analytics Dashboard Page */}
-          {currentPage === 'analytics' && (
-            <PageLayout className="bg-gray-50">
-              <PageHeader
-                title={t('analytics.dashboardTitle')}
-                subtitle={t('analytics.trackProgress')}
-              >
-                <Button
-                  onClick={handleBackToGame}
-                  size="2"
-                  variant="solid"
-                  className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+            {/* Learning Center Page */}
+            {currentPage === 'learning' && (
+              <PageLayout>
+                <PageHeader
+                  title={t('learning.centerTitle')}
+                  subtitle={t('learning.centerSubtitle')}
                 >
-                  ← {t('navigation.backToGame')}
-                </Button>
-              </PageHeader>
+                  <Button
+                    onClick={handleBackToGame}
+                    size="2"
+                    variant="solid"
+                    className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    ← {t('navigation.backToGame')}
+                  </Button>
+                </PageHeader>
 
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <AnalyticsDashboard />
-              </div>
-            </PageLayout>
-          )}
-
-          {/* Learning Center Page */}
-          {currentPage === 'learning' && (
-            <PageLayout>
-              <PageHeader
-                title={t('learning.centerTitle')}
-                subtitle={t('learning.centerSubtitle')}
-              >
-                <Button
-                  onClick={handleBackToGame}
-                  size="2"
-                  variant="solid"
-                  className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  ← {t('navigation.backToGame')}
-                </Button>
-              </PageHeader>
-
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <LearningCenter />
-              </div>
-            </PageLayout>
-          )}
-        </div>
-      </AnalyticsProvider>
-    </Theme>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                  <LearningCenter />
+                </div>
+              </PageLayout>
+            )}
+          </div>
+        </AnalyticsProvider>
+      </Theme>
+    </ThemeProvider>
   );
 }
 

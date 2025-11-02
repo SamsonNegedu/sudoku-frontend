@@ -45,16 +45,16 @@ export const GameStatusDisplay: React.FC<GameStatusDisplayProps> = ({
                 currentTime={currentTime}
             />
 
-            <div className="flex items-center space-x-4 text-sm text-neutral-600">
+            <div className="flex items-center space-x-4 text-sm text-neutral-600 dark:text-gray-400">
                 <div className="flex items-center space-x-2">
                     <span>Difficulty:</span>
-                    <span className="font-medium capitalize text-neutral-800">
+                    <span className="font-medium capitalize text-neutral-800 dark:text-gray-200">
                         {currentDifficulty ? t(`difficulty.${currentDifficulty}`) : ''}
                     </span>
                 </div>
                 <div className="flex items-center space-x-2">
                     <span>{t('game.hints')}:</span>
-                    <span className="font-medium text-neutral-800">
+                    <span className="font-medium text-neutral-800 dark:text-gray-200">
                         {hintsUsed}/{maxHints}
                     </span>
                 </div>

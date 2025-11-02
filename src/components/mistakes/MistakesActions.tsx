@@ -42,8 +42,8 @@ export const MistakesActions: React.FC<MistakesActionsProps> = ({
             </ActionButton>
 
             {/* Note */}
-            <div className="mt-4 pt-4 border-t border-neutral-200">
-                <p className="text-neutral-500 text-xs">
+            <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-gray-600">
+                <p className="text-neutral-500 dark:text-gray-400 text-xs">
                     {t('mistakes.disableNote')}
                 </p>
             </div>

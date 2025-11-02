@@ -29,8 +29,8 @@ export const NumberButton: React.FC<NumberButtonProps> = ({
                 variant={isCompleted ? "soft" : "solid"}
                 color={isCompleted ? "gray" : undefined}
                 className={`w-8 h-8 sm:w-16 sm:h-16 font-bold text-base sm:text-xl transition-all duration-200 flex items-center justify-center ${!isCompleted && !disabled
-                        ? 'hover:scale-105 active:scale-95 bg-blue-600 hover:bg-blue-700 text-white'
-                        : ''
+                    ? 'hover:scale-105 active:scale-95 bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600'
+                    : isCompleted ? 'dark:bg-gray-600 dark:text-gray-300' : 'dark:bg-gray-700 dark:text-gray-100'
                     } ${inputMode === 'pencil' && !isCompleted ? 'italic' : ''
                     } ${isCompleted ? 'opacity-60 cursor-not-allowed' : ''
                     }`}
@@ -50,7 +50,7 @@ export const NumberButton: React.FC<NumberButtonProps> = ({
                 {number}
             </Button>
             {isCompleted && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full text-[8px] text-white flex items-center justify-center font-bold shadow-sm">
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 dark:bg-green-600 rounded-full text-[8px] text-white flex items-center justify-center font-bold shadow-sm">
                     ✓
                 </span>
             )}

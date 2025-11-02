@@ -18,7 +18,7 @@ export const HintContent: React.FC<HintContentProps> = ({ hint, onClose }) => {
         <>
             {/* Hint Message */}
             <div className="mb-3">
-                <p className="text-neutral-700 text-sm leading-relaxed">
+                <p className="text-neutral-700 dark:text-gray-300 text-sm leading-relaxed">
                     {hint.message}
                 </p>
             </div>

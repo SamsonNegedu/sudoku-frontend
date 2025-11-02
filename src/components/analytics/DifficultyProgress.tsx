@@ -27,8 +27,8 @@ export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-lg border border-neutral-200 p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-neutral-200 dark:border-gray-700 p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">
                 {t('analytics.difficultyProgress')}
             </h2>
 
@@ -41,7 +41,7 @@ export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({
                         size="1"
                         className={`capitalize text-xs sm:text-sm px-2 sm:px-3 ${selectedDifficulty === difficulty
                             ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                            : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                            : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                             }`}
                     >
                         {t(`difficulty.${difficulty}`)}
