@@ -6,6 +6,8 @@ import {
     Pencil2Icon,
     TrashIcon,
     QuestionMarkCircledIcon,
+    PlayIcon,
+    PauseIcon,
 } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 import { enableUnlimitedHints } from '../../config/systemConfig';
@@ -21,6 +23,10 @@ interface ControlButtonsProps {
     canUndo?: boolean;
     hintsUsed?: number;
     maxHints?: number;
+    isPlaying?: boolean;
+    isPaused?: boolean;
+    onPause?: () => void;
+    onResume?: () => void;
 }
 
 export const ControlButtons: React.FC<ControlButtonsProps> = ({
@@ -33,6 +39,10 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
     canUndo = false,
     hintsUsed = 0,
     maxHints = 3,
+    isPlaying = false,
+    isPaused = false,
+    onPause,
+    onResume,
 }) => {
     const { t } = useTranslation();
     const useUnlimitedHints = enableUnlimitedHints();
@@ -58,6 +68,31 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
             >
                 <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
             </IconButton>
+
+            {/* Pause/Resume Button */}
+            {(isPlaying || isPaused) && (
+                <>
+                    {isPaused ? (
+                        <IconButton
+                            onClick={onResume || (() => { })}
+                            color="blue"
+                            aria-label={t('game.resume')}
+                            title={t('game.resume')}
+                        >
+                            <PlayIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            onClick={onPause || (() => { })}
+                            color="blue"
+                            aria-label={t('game.pause')}
+                            title={t('game.pause')}
+                        >
+                            <PauseIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </IconButton>
+                    )}
+                </>
+            )}
 
             <div className="relative">
                 <Button

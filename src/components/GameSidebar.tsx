@@ -55,13 +55,15 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
       </div>
 
       {/* Quick Tips Section */}
-      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-indigo-800 dark:text-indigo-300 mb-3">💡 {t('tips.quickTips')}</h3>
-        <div className="space-y-2 text-sm text-indigo-700 dark:text-indigo-300">
+      <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">💡 {t('tips.quickTips')}</h3>
+        <div className="space-y-2 text-sm text-blue-700 dark:text-blue-300">
           <p>• {t('tips.spaceToggle')} <kbd className="px-1 py-0.5 bg-white dark:bg-gray-700 dark:text-gray-100 rounded text-xs">Space</kbd> {t('tips.toggleMode')}</p>
           <p>• {t('tips.pressKey')} <kbd className="px-1 py-0.5 bg-white dark:bg-gray-700 dark:text-gray-100 rounded text-xs">Ctrl+Z</kbd> {t('tips.undoMoves')}</p>
-          <p>• {t('tips.clickCells')}</p>
-          <p>• {t('tips.numbersAppear')}</p>
+          <p>• Use <kbd className="px-1 py-0.5 bg-white dark:bg-gray-700 dark:text-gray-100 rounded text-xs">↑↓←→</kbd> to navigate cells</p>
+          <p>• Press <kbd className="px-1 py-0.5 bg-white dark:bg-gray-700 dark:text-gray-100 rounded text-xs">1-9</kbd> to enter numbers</p>
+          <p>• Press <kbd className="px-1 py-0.5 bg-white dark:bg-gray-700 dark:text-gray-100 rounded text-xs">Del</kbd> to clear a cell</p>
+          <p>• Press <kbd className="px-1 py-0.5 bg-white dark:bg-gray-700 dark:text-gray-100 rounded text-xs">?</kbd> for help with shortcuts</p>
         </div>
       </div>
     </div>

@@ -68,12 +68,12 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     <Button
                         size="2"
                         variant="ghost"
-                        className="text-blue-600 hover:bg-blue-50"
+                        className="text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30"
                         disabled={isGeneratingPuzzle}
                         aria-label="Menu"
                     >
                         {isGeneratingPuzzle ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 dark:border-blue-400"></div>
                         ) : (
                             <HamburgerMenuIcon />
                         )}
@@ -83,65 +83,65 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     align="end"
                     side="bottom"
                     sideOffset={8}
-                    className="w-48 p-1 bg-white border border-neutral-200 rounded-lg shadow-lg z-50"
+                    className="w-48 p-1 bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 rounded-lg shadow-lg z-50"
                 >
                     {/* Back to Game - only when not on game page and has active game */}
                     {currentPage !== 'game' && (isPlaying || isPaused) && onShowGame && (
                         <>
                             <DropdownMenu.Item
-                                className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-blue-50 focus:bg-blue-50 outline-none border-0"
+                                className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-blue-50 dark:hover:bg-blue-950/30 focus:bg-blue-50 dark:focus:bg-blue-950/30 outline-none border-0"
                                 onClick={onShowGame}
                             >
                                 <div className="flex items-center gap-2">
-                                    <PlayIcon className="w-4 h-4 text-blue-600" />
-                                    <span className="font-medium text-sm text-blue-600">Back to Game</span>
+                                    <PlayIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                                    <span className="font-medium text-sm text-blue-600 dark:text-blue-400">Back to Game</span>
                                 </div>
                             </DropdownMenu.Item>
-                            <DropdownMenu.Separator className="my-1" />
+                            <DropdownMenu.Separator className="my-1 bg-neutral-200 dark:bg-gray-700" />
                         </>
                     )}
 
                     {/* Navigation */}
                     {currentPage !== 'analytics' && (
                         <DropdownMenu.Item
-                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
+                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
                             onClick={onShowAnalytics}
                         >
                             <div className="flex items-center gap-2">
-                                <BarChartIcon className="w-4 h-4 text-neutral-600" />
-                                <span className="font-medium text-sm">Analytics</span>
+                                <BarChartIcon className="w-4 h-4 text-neutral-600 dark:text-gray-400" />
+                                <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">Analytics</span>
                             </div>
                         </DropdownMenu.Item>
                     )}
 
                     {currentPage !== 'learning' && (
                         <DropdownMenu.Item
-                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
+                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
                             onClick={onShowLearning}
                         >
                             <div className="flex items-center gap-2">
-                                <ReaderIcon className="w-4 h-4 text-neutral-600" />
-                                <span className="font-medium text-sm">Learning Center</span>
+                                <ReaderIcon className="w-4 h-4 text-neutral-600 dark:text-gray-400" />
+                                <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">Learning Center</span>
                             </div>
                         </DropdownMenu.Item>
                     )}
 
-                    <DropdownMenu.Separator className="my-1" />
+                    <DropdownMenu.Separator className="my-1 bg-neutral-200 dark:bg-gray-700" />
 
                     {/* New Game section */}
-                    <DropdownMenu.Label className="px-3 py-1 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
+                    <DropdownMenu.Label className="px-3 py-1 text-xs font-semibold text-neutral-500 dark:text-gray-400 uppercase tracking-wide">
                         New Game
                     </DropdownMenu.Label>
 
                     {difficultyLevels.map((difficulty) => (
                         <DropdownMenu.Item
                             key={difficulty.level}
-                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0"
+                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
                             onClick={() => onNewGame(difficulty.level)}
                         >
                             <div className="flex items-center gap-2">
-                                <PlusIcon className="w-3 h-3 text-neutral-500" />
-                                <span className="font-medium text-sm">{difficulty.label}</span>
+                                <PlusIcon className="w-3 h-3 text-neutral-500 dark:text-gray-400" />
+                                <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">{difficulty.label}</span>
                             </div>
                         </DropdownMenu.Item>
                     ))}
@@ -149,41 +149,41 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     {/* Current game actions */}
                     {(isPlaying || isPaused) && !isCompleted && (
                         <>
-                            <DropdownMenu.Separator className="my-1" />
+                            <DropdownMenu.Separator className="my-1 bg-neutral-200 dark:bg-gray-700" />
                             <DropdownMenu.Item
-                                className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-red-50 focus:bg-red-50 outline-none border-0"
+                                className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-red-50 dark:hover:bg-red-950/30 focus:bg-red-50 dark:focus:bg-red-950/30 outline-none border-0"
                                 onClick={onRestart}
                             >
                                 <div className="flex items-center gap-2">
-                                    <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
                                     </svg>
-                                    <span className="font-medium text-sm text-red-600">Restart</span>
+                                    <span className="font-medium text-sm text-red-600 dark:text-red-400">Restart</span>
                                 </div>
                             </DropdownMenu.Item>
                         </>
                     )}
 
                     {/* Language Selection */}
-                    <DropdownMenu.Separator className="my-1" />
-                    <DropdownMenu.Label className="px-3 py-1 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <DropdownMenu.Separator className="my-1 bg-neutral-200 dark:bg-gray-700" />
+                    <DropdownMenu.Label className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         {t('settings.language')}
                     </DropdownMenu.Label>
                     {languages.map((language) => (
                         <DropdownMenu.Item
                             key={language.code}
-                            className={`px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 focus:bg-neutral-50 outline-none border-0 ${i18n.language === language.code ? 'bg-blue-50' : ''
+                            className={`px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0 ${i18n.language === language.code ? 'bg-blue-50 dark:bg-blue-950/30' : ''
                                 }`}
                             onClick={() => i18n.changeLanguage(language.code)}
                         >
                             <div className="flex items-center gap-2">
                                 <span className="text-lg">{language.flag}</span>
-                                <span className={`font-medium text-sm ${i18n.language === language.code ? 'text-blue-600' : 'text-gray-700'
+                                <span className={`font-medium text-sm ${i18n.language === language.code ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
                                     }`}>
                                     {t(`languages.${language.code}`)}
                                 </span>
                                 {i18n.language === language.code && (
-                                    <span className="ml-auto text-blue-600 text-sm">✓</span>
+                                    <span className="ml-auto text-blue-600 dark:text-blue-400 text-sm">✓</span>
                                 )}
                             </div>
                         </DropdownMenu.Item>

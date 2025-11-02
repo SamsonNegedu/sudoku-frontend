@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import { useGameAnalytics } from './useGameAnalytics';
-import type { Game } from '../types';
+import type { GameState } from '../types';
 
 interface UseGameInteractionProps {
-  currentGame: Game | null;
+  currentGame: GameState | null;
   selectedCell: { row: number; col: number } | null;
   inputMode: 'pen' | 'pencil';
 }
@@ -249,12 +249,91 @@ export const useGameInteraction = ({
             undoMove();
           }
           break;
+
+        // Arrow key navigation
+        case 'ArrowUp':
+          event.preventDefault();
+          if (selectedCell && selectedCell.row > 0) {
+            selectCell(selectedCell.row - 1, selectedCell.col);
+          }
+          break;
+        case 'ArrowDown':
+          event.preventDefault();
+          if (selectedCell && selectedCell.row < 8) {
+            selectCell(selectedCell.row + 1, selectedCell.col);
+          }
+          break;
+        case 'ArrowLeft':
+          event.preventDefault();
+          if (selectedCell && selectedCell.col > 0) {
+            selectCell(selectedCell.row, selectedCell.col - 1);
+          }
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          if (selectedCell && selectedCell.col < 8) {
+            selectCell(selectedCell.row, selectedCell.col + 1);
+          }
+          break;
+
+        // Number key input (1-9)
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9': {
+          if (selectedCell && currentGame) {
+            event.preventDefault();
+            const number = parseInt(event.key);
+            const cell = currentGame.board[selectedCell.row][selectedCell.col];
+
+            // Don't allow changes to fixed cells
+            if (cell.isFixed) return;
+
+            if (inputMode === 'pen') {
+              setCellValueWithAnalytics(
+                selectedCell.row,
+                selectedCell.col,
+                number
+              );
+            } else {
+              toggleNote(selectedCell.row, selectedCell.col, number);
+            }
+          }
+          break;
+        }
+
+        // Delete/Clear cell
+        case 'Delete':
+        case 'Backspace':
+          if (selectedCell && currentGame) {
+            event.preventDefault();
+            const cell = currentGame.board[selectedCell.row][selectedCell.col];
+            if (!cell.isFixed) {
+              clearCell(selectedCell.row, selectedCell.col);
+            }
+          }
+          break;
       }
     };
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [inputMode, setInputMode, undoMove]);
+  }, [
+    inputMode,
+    setInputMode,
+    undoMove,
+    selectedCell,
+    currentGame,
+    selectCell,
+    setCellValueWithAnalytics,
+    toggleNote,
+    clearCell,
+  ]);
 
   return {
     handleCellKeyDown,

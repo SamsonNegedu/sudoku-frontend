@@ -53,13 +53,6 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
                     </svg>
                     {t('game.resume')}
                 </Button>
-
-                <p className="text-neutral-500 dark:text-gray-400 text-xs flex items-center justify-center gap-1">
-                    {t('pause.orUseButton')}
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M7 14l5-5 5 5z" />
-                    </svg>
-                </p>
             </div>
         </div>
     );

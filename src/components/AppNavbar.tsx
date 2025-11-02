@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavBrand } from './navbar/NavBrand';
 import { GameStatusDisplay } from './navbar/GameStatusDisplay';
-import { GameControlButtons } from './navbar/GameControlButtons';
 import { NewGameDropdown } from './navbar/NewGameDropdown';
 import { NavigationButtons } from './navbar/NavigationButtons';
 import { MobileNavigation } from './navbar/MobileNavigation';
 import { LanguageSelector } from './LanguageSelector';
 import { DarkModeToggle } from './DarkModeToggle';
+import { HelpButton } from './navbar/HelpButton';
 import type { Difficulty } from '../types';
 
 interface AppNavbarProps {
@@ -17,6 +17,7 @@ interface AppNavbarProps {
     onShowGame?: () => void;
     onPause: () => void;
     onResume: () => void;
+    onShowHelp?: () => void;
     currentDifficulty?: Difficulty;
     currentPage?: 'game' | 'analytics' | 'learning';
     isPlaying: boolean;
@@ -40,6 +41,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     onShowGame,
     onPause,
     onResume,
+    onShowHelp,
     currentDifficulty,
     currentPage = 'game',
     isPlaying,
@@ -80,14 +82,6 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                     <div className="flex items-center">
                         {/* Desktop Navigation */}
                         <div className="hidden sm:flex items-center space-x-3">
-                            <GameControlButtons
-                                isPlaying={isPlaying}
-                                isPaused={isPaused}
-                                isCompleted={isCompleted}
-                                onPause={onPause}
-                                onResume={onResume}
-                            />
-
                             <NewGameDropdown
                                 onNewGame={onNewGame}
                                 onRestart={onRestart}
@@ -103,6 +97,8 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                             />
 
                             <LanguageSelector />
+
+                            {onShowHelp && <HelpButton onHelpClick={onShowHelp} />}
 
                             <DarkModeToggle />
                         </div>

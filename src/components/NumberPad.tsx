@@ -14,6 +14,10 @@ interface NumberPadProps {
     maxHints?: number;
     completedNumbers?: number[]; // Array of numbers that have been completed (all 9 placed)
     selectedCell?: { row: number; col: number } | null;
+    isPlaying?: boolean;
+    isPaused?: boolean;
+    onPause?: () => void;
+    onResume?: () => void;
 }
 
 export const NumberPad: React.FC<NumberPadProps> = ({
@@ -29,9 +33,13 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     maxHints = 3,
     completedNumbers = [],
     selectedCell,
+    isPlaying = false,
+    isPaused = false,
+    onPause,
+    onResume,
 }) => {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-sm border border-neutral-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-xl px-1 sm:px-4 py-3 sm:py-4 shadow-sm border border-neutral-200 dark:border-gray-700">
             {/* Mode indicator */}
             <ModeIndicator inputMode={inputMode} />
 
@@ -48,6 +56,10 @@ export const NumberPad: React.FC<NumberPadProps> = ({
                     canUndo={canUndo}
                     hintsUsed={hintsUsed}
                     maxHints={maxHints}
+                    isPlaying={isPlaying}
+                    isPaused={isPaused}
+                    onPause={onPause}
+                    onResume={onResume}
                 />
 
                 {/* Bottom Row: Number buttons */}

@@ -13,7 +13,7 @@ export const MistakesActions: React.FC<MistakesActionsProps> = ({
 }) => {
     const { t } = useTranslation();
     return (
-        <div className="px-6 pb-6 space-y-3">
+        <div className="px-6 pt-6 pb-6 space-y-3">
             <ActionButton
                 onClick={onRestart}
                 size="3"
@@ -41,10 +41,10 @@ export const MistakesActions: React.FC<MistakesActionsProps> = ({
                 {t('mistakes.continueUnlimited')}
             </ActionButton>
 
-            {/* Note */}
-            <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-gray-600">
-                <p className="text-neutral-500 dark:text-gray-400 text-xs">
-                    {t('mistakes.disableNote')}
+            {/* Info box about continue unlimited */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                    ℹ️ {t('mistakes.disableNote')}
                 </p>
             </div>
         </div>

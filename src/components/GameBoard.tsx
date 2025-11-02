@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import { useGameAnalytics } from '../hooks/useGameAnalytics';
 import { useGameInteraction } from '../hooks/useGameInteraction';
@@ -6,9 +6,12 @@ import { LoadingSpinner } from './shared';
 import { GameLoadingView } from './game/GameLoadingView';
 import { GamePauseOverlay } from './game/GamePauseOverlay';
 import { GamePlayView } from './game/GamePlayView';
+import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import type { Difficulty, Hint } from '../types';
 
 export const GameBoard: React.FC = () => {
+    const shortcutsModalRef = useRef<any>(null);
+
     const {
         currentGame,
         selectedCell,
@@ -17,6 +20,7 @@ export const GameBoard: React.FC = () => {
         isHydrated,
         startNewGame,
         resumeGame,
+        pauseGame,
         undoMove,
         getHint,
         clearHintHighlights,
@@ -143,8 +147,11 @@ export const GameBoard: React.FC = () => {
                 onUseHint={handleUseHint}
                 onCloseHint={handleCloseHint}
                 onUndo={undoMove}
+                onPause={pauseGame}
+                onResume={resumeGame}
                 getCompletedNumbers={getCompletedNumbers}
             />
+            <KeyboardShortcutsModal ref={shortcutsModalRef} />
         </>
     );
 };

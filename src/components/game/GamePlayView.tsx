@@ -21,6 +21,8 @@ interface GamePlayViewProps {
     onUseHint: () => void;
     onCloseHint: () => void;
     onUndo: () => void;
+    onPause: () => void;
+    onResume: () => void;
     getCompletedNumbers: () => number[];
 }
 
@@ -38,6 +40,8 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
     onUseHint,
     onCloseHint,
     onUndo,
+    onPause,
+    onResume,
     getCompletedNumbers,
 }) => {
     return (
@@ -85,6 +89,10 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
                                     maxHints={currentGame.maxHints}
                                     completedNumbers={getCompletedNumbers()}
                                     selectedCell={selectedCell}
+                                    isPlaying={!currentGame.isPaused && currentGame.board.some(row => row.some(cell => cell.value !== 0))}
+                                    isPaused={currentGame.isPaused}
+                                    onPause={onPause}
+                                    onResume={onResume}
                                 />
                             </div>
                         </div>

@@ -9,7 +9,7 @@ interface MobileGameHeaderProps {
 export const MobileGameHeader: React.FC<MobileGameHeaderProps> = ({ currentGame }) => {
     return (
         <div className="lg:hidden -mx-4 sm:mx-0">
-            <div className="bg-white rounded-lg px-3 py-1.5 shadow-sm border border-neutral-200">
+            <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-1.5 shadow-sm border border-neutral-200 dark:border-gray-700">
                 <div className="flex items-center justify-between text-xs">
                     <GameTimer
                         startTime={currentGame.startTime}
@@ -21,9 +21,9 @@ export const MobileGameHeader: React.FC<MobileGameHeaderProps> = ({ currentGame 
                         currentTime={currentGame.currentTime}
                     />
                     <div className="flex items-center gap-3">
-                        <span className="font-medium capitalize">{currentGame.difficulty}</span>
-                        <span>H: {currentGame.hintsUsed}/{currentGame.maxHints}</span>
-                        <span className={currentGame.mistakes > 0 ? 'text-red-600' : 'text-neutral-800'}>
+                        <span className="font-medium capitalize text-neutral-800 dark:text-gray-100">{currentGame.difficulty}</span>
+                        <span className="text-neutral-700 dark:text-gray-300">H: {currentGame.hintsUsed}/{currentGame.maxHints}</span>
+                        <span className={currentGame.mistakes > 0 ? 'text-red-600 dark:text-red-400' : 'text-neutral-800 dark:text-gray-100'}>
                             M: {currentGame.mistakes}{currentGame.mistakeLimitDisabled ? '/∞' : `/${currentGame.maxMistakes}`}
                         </span>
                     </div>
