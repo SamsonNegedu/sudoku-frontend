@@ -21,11 +21,13 @@ export const MistakesModal: React.FC<MistakesModalProps> = ({
     if (!isVisible) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full text-center overflow-hidden">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full text-center overflow-hidden border border-gray-100 dark:border-gray-700 animate-bounce-in">
                 <MistakesHeader mistakes={mistakes} maxMistakes={maxMistakes} />
-                <MistakesContent />
-                <MistakesActions onRestart={onRestart} onContinue={onContinue} />
+                <div className="p-6">
+                    <MistakesContent />
+                    <MistakesActions onRestart={onRestart} onContinue={onContinue} />
+                </div>
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActionButton } from '../shared/index';
+import { Button } from '@radix-ui/themes';
+import { ResetIcon, PlayIcon } from '@radix-ui/react-icons';
 
 interface MistakesActionsProps {
     onRestart: () => void;
@@ -13,37 +14,32 @@ export const MistakesActions: React.FC<MistakesActionsProps> = ({
 }) => {
     const { t } = useTranslation();
     return (
-        <div className="px-6 pt-6 pb-6 space-y-3">
-            <ActionButton
-                onClick={onRestart}
-                size="3"
-                color="red"
-                fullWidth
-                aria-label={t('mistakes.startOver')}
-            >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
-                </svg>
-                {t('mistakes.startOver')}
-            </ActionButton>
+        <div className="space-y-4">
+            <div className="flex flex-col gap-3">
+                <Button
+                    onClick={onRestart}
+                    size="3"
+                    className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 dark:from-red-600 dark:to-red-700 dark:hover:from-red-700 dark:hover:to-red-800 text-white font-semibold shadow-lg shadow-red-600/30 dark:shadow-red-900/30 transition-all duration-200 border-0"
+                >
+                    <ResetIcon className="w-4 h-4" />
+                    {t('mistakes.startOver')}
+                </Button>
 
-            <ActionButton
-                onClick={onContinue}
-                size="3"
-                variant="soft"
-                color="gray"
-                fullWidth
-                aria-label={t('mistakes.continueUnlimited')}
-            >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                </svg>
-                {t('mistakes.continueUnlimited')}
-            </ActionButton>
+                <Button
+                    onClick={onContinue}
+                    size="3"
+                    variant="soft"
+                    color="gray"
+                    className="w-full font-semibold transition-all duration-200 hover:bg-gray-200 dark:hover:bg-gray-700 border-0"
+                >
+                    <PlayIcon className="w-4 h-4" />
+                    {t('mistakes.continueUnlimited')}
+                </Button>
+            </div>
 
             {/* Info box about continue unlimited */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                <p className="text-xs text-blue-700 dark:text-blue-300">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-50/50 dark:from-blue-950/20 dark:to-blue-950/10 border border-blue-100 dark:border-blue-900/30 rounded-xl p-3">
+                <p className="text-xs font-medium text-blue-700 dark:text-blue-300">
                     ℹ️ {t('mistakes.disableNote')}
                 </p>
             </div>

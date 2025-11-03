@@ -4,6 +4,7 @@ import { HamburgerMenuIcon, PlusIcon, PlayIcon, BarChartIcon, ReaderIcon, GlobeI
 import { useTranslation } from 'react-i18next';
 import { GameControlButtons } from './GameControlButtons';
 import { DifficultyConfigManager } from '../../config/difficulty';
+import { useThemeStore } from '../../stores/themeStore';
 import type { Difficulty } from '../../types';
 
 interface MobileNavigationProps {
@@ -36,6 +37,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
     isGeneratingPuzzle,
 }) => {
     const { i18n, t } = useTranslation();
+    const { isDarkMode, toggleDarkMode } = useThemeStore();
 
     const languages = [
         { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -188,6 +190,20 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                             </div>
                         </DropdownMenu.Item>
                     ))}
+
+                    {/* Dark Mode Toggle */}
+                    <DropdownMenu.Separator className="my-1 bg-neutral-200 dark:bg-gray-700" />
+                    <DropdownMenu.Item
+                        className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
+                        onClick={toggleDarkMode}
+                    >
+                        <div className="flex items-center gap-2">
+                            <span className="text-lg">{isDarkMode ? '☀️' : '🌙'}</span>
+                            <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">
+                                {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                            </span>
+                        </div>
+                    </DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
         </div>

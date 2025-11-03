@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { SudokuCell } from './SudokuCell';
 import type { SudokuBoard } from '../types';
 import { areCellsRelated } from '../utils';
@@ -29,40 +29,63 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
             return () => clearTimeout(timer);
         }
     }, [currentGame?.isCompleted]);
+
+    // Memoize Sets for O(1) lookup instead of O(n) array.some()
+    const hintTargetSet = useMemo(() => {
+        const set = new Set<string>();
+        hintHighlights.cells.forEach(([r, c]) => set.add(`${r},${c}`));
+        return set;
+    }, [hintHighlights.cells]);
+
+    const hintFilledSet = useMemo(() => {
+        const set = new Set<string>();
+        hintFilledCells.forEach(([r, c]) => set.add(`${r},${c}`));
+        return set;
+    }, [hintFilledCells]);
+
+    // Memoize selected cell value for number matching
+    const selectedCellValue = useMemo(() => {
+        if (!selectedCell) return null;
+        return board[selectedCell.row]?.[selectedCell.col]?.value ?? null;
+    }, [selectedCell, board]);
+
     // Check if a cell should be highlighted (same row, column, or 3x3 box as selected)
-    const isCellHighlighted = (row: number, col: number): boolean => {
+    const isCellHighlighted = useCallback((row: number, col: number): boolean => {
         if (!selectedCell) return false;
         return areCellsRelated(row, col, selectedCell.row, selectedCell.col);
-    };
+    }, [selectedCell]);
 
-    // Check if a cell is a hint target (primary highlight)
-    const isHintTarget = (row: number, col: number): boolean => {
-        return hintHighlights.cells.some(([r, c]) => r === row && c === col);
-    };
+    // Check if a cell is a hint target (primary highlight) - now O(1) with Set
+    const isHintTarget = useCallback((row: number, col: number): boolean => {
+        return hintTargetSet.has(`${row},${col}`);
+    }, [hintTargetSet]);
 
-    // Check if a cell was filled by a hint
-    const isHintFilled = (row: number, col: number): boolean => {
-        return hintFilledCells.some(([r, c]) => r === row && c === col);
-    };
+    // Check if a cell was filled by a hint - now O(1) with Set
+    const isHintFilled = useCallback((row: number, col: number): boolean => {
+        return hintFilledSet.has(`${row},${col}`);
+    }, [hintFilledSet]);
 
     // Check if a cell has the same number as the selected cell
-    const hasSameNumber = (row: number, col: number): boolean => {
-        if (!selectedCell) return false;
-
+    const hasSameNumber = useCallback((row: number, col: number): boolean => {
+        if (!selectedCell || selectedCellValue === null) return false;
         const currentCell = board[row][col];
-        const selectedCellData = board[selectedCell.row][selectedCell.col];
+        return currentCell.value === selectedCellValue;
+    }, [selectedCell, selectedCellValue, board]);
 
-        // Highlight if it has the same number as the selected cell (and both have values)
-        return selectedCellData.value !== null &&
-            currentCell.value !== null &&
-            selectedCellData.value === currentCell.value;
-    };
+    // Memoize event handlers
+    const handleCellClick = useCallback((row: number, col: number) => {
+        onCellClick(row, col);
+    }, [onCellClick]);
+
+    const handleCellKeyDown = useCallback((row: number, col: number, event: React.KeyboardEvent) => {
+        onCellKeyDown(row, col, event);
+    }, [onCellKeyDown]);
 
     return (
         <div className="flex justify-center items-center w-full px-0.5 sm:px-2">
             <div className="max-w-[99vw] sm:max-w-[95vw] w-full">
                 <div
-                    className={`sudoku-grid-container bg-white dark:bg-gray-800 rounded-lg overflow-hidden ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
+                    className={`sudoku-grid-container bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
                     role="grid"
                     aria-label="Sudoku puzzle grid"
                 >
@@ -77,15 +100,13 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
                                     isSameNumber={hasSameNumber(rowIndex, colIndex)}
                                     isHintTarget={isHintTarget(rowIndex, colIndex)}
                                     isHintFilled={isHintFilled(rowIndex, colIndex)}
-                                    onClick={() => onCellClick(rowIndex, colIndex)}
-                                    onKeyDown={(event) => onCellKeyDown(rowIndex, colIndex, event)}
+                                    onClick={() => handleCellClick(rowIndex, colIndex)}
+                                    onKeyDown={(event) => handleCellKeyDown(rowIndex, colIndex, event)}
                                 />
                             ))}
                         </React.Fragment>
                     ))}
                 </div>
-
-
             </div>
         </div>
     );

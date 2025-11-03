@@ -125,7 +125,7 @@
   "mistakes": {
     "tooManyMistakes": "Zu viele Fehler",
     "limitReached": "Du hast das Fehlerlimit für diesen Schwierigkeitsgrad erreicht.",
-    "continueUnlimited": "Mit unbegrenzten Fehlern fortfahren",
+    "continueUnlimited": "Weiter spielen",
     "startOver": "Von vorne beginnen",
     "maximumReached": "Maximale Fehleranzahl erreicht!",
     "youveMade": "Du hast {{mistakes}} von {{maxMistakes}} erlaubten Fehlern gemacht",

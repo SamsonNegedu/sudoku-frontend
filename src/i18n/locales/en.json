@@ -144,7 +144,7 @@
   "mistakes": {
     "tooManyMistakes": "Too Many Mistakes",
     "limitReached": "You've reached the mistake limit for this difficulty level.",
-    "continueUnlimited": "Continue with Unlimited Mistakes",
+    "continueUnlimited": "Play On",
     "startOver": "Start Over",
     "maximumReached": "Maximum Mistakes Reached!",
     "youveMade": "You've made {{mistakes}} out of {{maxMistakes}} allowed mistakes",

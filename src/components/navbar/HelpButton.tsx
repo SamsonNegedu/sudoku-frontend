@@ -20,3 +20,4 @@ export const HelpButton: React.FC<HelpButtonProps> = ({ onHelpClick }) => {
         </Button>
     );
 };
+

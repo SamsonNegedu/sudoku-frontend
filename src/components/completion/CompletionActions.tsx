@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@radix-ui/themes';
+import { Cross2Icon, RocketIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
 interface CompletionActionsProps {
@@ -13,14 +14,14 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
 }) => {
     const { t } = useTranslation();
     return (
-        <div className="space-y-3">
+        <div className="flex gap-3">
             <Button
                 onClick={onStartNewGame}
                 size="3"
-                variant="solid"
-                className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/30 dark:shadow-blue-900/30 transition-all duration-200 border-0"
             >
-                🎯 {t('completion.newPuzzle')}
+                <RocketIcon className="w-4 h-4" />
+                {t('completion.newPuzzle')}
             </Button>
 
             <Button
@@ -28,9 +29,9 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
                 size="3"
                 variant="soft"
                 color="gray"
-                className="w-full font-medium dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
+                className="flex-1 font-medium transition-all duration-200 hover:bg-gray-200 dark:hover:bg-gray-700 border-0"
             >
-                ✨ Admire My Solution
+                <Cross2Icon className="w-4 h-4" />
             </Button>
         </div>
     );

@@ -69,31 +69,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                 <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
             </IconButton>
 
-            {/* Pause/Resume Button */}
-            {(isPlaying || isPaused) && (
-                <>
-                    {isPaused ? (
-                        <IconButton
-                            onClick={onResume || (() => { })}
-                            color="blue"
-                            aria-label={t('game.resume')}
-                            title={t('game.resume')}
-                        >
-                            <PlayIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </IconButton>
-                    ) : (
-                        <IconButton
-                            onClick={onPause || (() => { })}
-                            color="blue"
-                            aria-label={t('game.pause')}
-                            title={t('game.pause')}
-                        >
-                            <PauseIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </IconButton>
-                    )}
-                </>
-            )}
-
+            {/* Pencil/Note Mode Toggle - CENTER POSITION */}
             <div className="relative">
                 <Button
                     onClick={onToggleNote}
@@ -138,6 +114,31 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                     </div>
                 )}
             </div>
+
+            {/* Pause/Resume Button - RIGHT SIDE */}
+            {(isPlaying || isPaused) && (
+                <>
+                    {isPaused ? (
+                        <IconButton
+                            onClick={onResume || (() => { })}
+                            color="blue"
+                            aria-label={t('game.resume')}
+                            title={t('game.resume')}
+                        >
+                            <PlayIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            onClick={onPause || (() => { })}
+                            color="blue"
+                            aria-label={t('game.pause')}
+                            title={t('game.pause')}
+                        >
+                            <PauseIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </IconButton>
+                    )}
+                </>
+            )}
         </div>
     );
 };

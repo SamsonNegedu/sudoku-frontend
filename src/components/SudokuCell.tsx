@@ -53,12 +53,12 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
         {
             // Slightly thicker borders for 3x3 box separations (4 inner borders total)
             // Vertical separators (after columns 2 and 5)
-            'border-r border-r-neutral-400 dark:border-r-gray-600': col === 2 || col === 5,
+            'border-r border-r-neutral-400 dark:border-r-gray-300': col === 2 || col === 5,
             // Horizontal separators (after rows 2 and 5) 
-            'border-b border-b-neutral-400 dark:border-b-gray-600': row === 2 || row === 5,
+            'border-b border-b-neutral-400 dark:border-b-gray-300': row === 2 || row === 5,
             // Grid edges (outer border) - same thickness as separators
-            'border-r border-r-neutral-300 dark:border-r-gray-700': col === 8, // Right edge
-            'border-b border-b-neutral-300 dark:border-b-gray-700': row === 8, // Bottom edge
+            'border-r border-r-neutral-300 dark:border-r-gray-600': col === 8, // Right edge
+            'border-b border-b-neutral-300 dark:border-b-gray-600': row === 8, // Bottom edge
         }
     );
 
