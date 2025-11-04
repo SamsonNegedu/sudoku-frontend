@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { NavBrand } from './navbar/NavBrand';
 import { GameStatusDisplay } from './navbar/GameStatusDisplay';
 import { NewGameDropdown } from './navbar/NewGameDropdown';
@@ -12,14 +13,10 @@ import type { Difficulty } from '../types';
 interface AppNavbarProps {
     onNewGame: (difficulty: Difficulty) => void;
     onRestart: () => void;
-    onShowAnalytics: () => void;
-    onShowLearning: () => void;
-    onShowGame?: () => void;
     onPause: () => void;
     onResume: () => void;
     onShowHelp?: () => void;
     currentDifficulty?: Difficulty;
-    currentPage?: 'game' | 'analytics' | 'learning';
     isPlaying: boolean;
     isPaused: boolean;
     isCompleted: boolean;
@@ -36,14 +33,10 @@ interface AppNavbarProps {
 export const AppNavbar: React.FC<AppNavbarProps> = ({
     onNewGame,
     onRestart,
-    onShowAnalytics,
-    onShowLearning,
-    onShowGame,
     onPause,
     onResume,
     onShowHelp,
     currentDifficulty,
-    currentPage = 'game',
     isPlaying,
     isPaused,
     isCompleted,
@@ -56,12 +49,14 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     hintsUsed,
     maxHints,
 }) => {
+    const navigate = useNavigate();
+
     return (
         <nav className="bg-white dark:bg-gray-800 border-b border-neutral-200 dark:border-gray-700 shadow-sm sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo and Brand */}
-                    <NavBrand onShowGame={onShowGame} />
+                    <NavBrand onShowGame={() => navigate({ to: '/game' })} />
 
                     {/* Center - Game Status & Timer */}
                     <GameStatusDisplay
@@ -91,10 +86,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                 isCompleted={isCompleted}
                             />
 
-                            <NavigationButtons
-                                onShowAnalytics={onShowAnalytics}
-                                onShowLearning={onShowLearning}
-                            />
+                            <NavigationButtons />
 
                             <LanguageSelector />
 
@@ -107,12 +99,8 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                         <MobileNavigation
                             onNewGame={onNewGame}
                             onRestart={onRestart}
-                            onShowAnalytics={onShowAnalytics}
-                            onShowLearning={onShowLearning}
-                            onShowGame={onShowGame}
                             onPause={onPause}
                             onResume={onResume}
-                            currentPage={currentPage}
                             isPlaying={isPlaying}
                             isPaused={isPaused}
                             isCompleted={isCompleted}

@@ -1,6 +1,7 @@
 import React from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Button, DropdownMenu } from '@radix-ui/themes';
-import { HamburgerMenuIcon, PlusIcon, PlayIcon, BarChartIcon, ReaderIcon, GlobeIcon } from '@radix-ui/react-icons';
+import { HamburgerMenuIcon, PlusIcon, BarChartIcon, VideoIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 import { GameControlButtons } from './GameControlButtons';
 import { DifficultyConfigManager } from '../../config/difficulty';
@@ -10,12 +11,8 @@ import type { Difficulty } from '../../types';
 interface MobileNavigationProps {
     onNewGame: (difficulty: Difficulty) => void;
     onRestart: () => void;
-    onShowAnalytics: () => void;
-    onShowLearning: () => void;
-    onShowGame?: () => void;
     onPause: () => void;
     onResume: () => void;
-    currentPage?: 'game' | 'analytics' | 'learning';
     isPlaying: boolean;
     isPaused: boolean;
     isCompleted: boolean;
@@ -25,12 +22,8 @@ interface MobileNavigationProps {
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
     onNewGame,
     onRestart,
-    onShowAnalytics,
-    onShowLearning,
-    onShowGame,
     onPause,
     onResume,
-    currentPage = 'game',
     isPlaying,
     isPaused,
     isCompleted,
@@ -38,6 +31,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 }) => {
     const { i18n, t } = useTranslation();
     const { isDarkMode, toggleDarkMode } = useThemeStore();
+    const navigate = useNavigate();
 
     const languages = [
         { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -87,46 +81,26 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     sideOffset={8}
                     className="w-48 p-1 bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 rounded-lg shadow-lg z-50"
                 >
-                    {/* Back to Game - only when not on game page and has active game */}
-                    {currentPage !== 'game' && (isPlaying || isPaused) && onShowGame && (
-                        <>
-                            <DropdownMenu.Item
-                                className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-blue-50 dark:hover:bg-blue-950/30 focus:bg-blue-50 dark:focus:bg-blue-950/30 outline-none border-0"
-                                onClick={onShowGame}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <PlayIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                                    <span className="font-medium text-sm text-blue-600 dark:text-blue-400">Back to Game</span>
-                                </div>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Separator className="my-1 bg-neutral-200 dark:bg-gray-700" />
-                        </>
-                    )}
+                    {/* Navigation to Analytics */}
+                    <DropdownMenu.Item
+                        className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
+                        onClick={() => navigate({ to: '/analytics' })}
+                    >
+                        <div className="flex items-center gap-2">
+                            <BarChartIcon className="w-4 h-4 text-neutral-600 dark:text-gray-400" />
+                            <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">Analytics</span>
+                        </div>
+                    </DropdownMenu.Item>
 
-                    {/* Navigation */}
-                    {currentPage !== 'analytics' && (
-                        <DropdownMenu.Item
-                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
-                            onClick={onShowAnalytics}
-                        >
-                            <div className="flex items-center gap-2">
-                                <BarChartIcon className="w-4 h-4 text-neutral-600 dark:text-gray-400" />
-                                <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">Analytics</span>
-                            </div>
-                        </DropdownMenu.Item>
-                    )}
-
-                    {currentPage !== 'learning' && (
-                        <DropdownMenu.Item
-                            className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
-                            onClick={onShowLearning}
-                        >
-                            <div className="flex items-center gap-2">
-                                <ReaderIcon className="w-4 h-4 text-neutral-600 dark:text-gray-400" />
-                                <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">Learning Center</span>
-                            </div>
-                        </DropdownMenu.Item>
-                    )}
+                    <DropdownMenu.Item
+                        className="px-3 py-2 rounded-md cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
+                        onClick={() => navigate({ to: '/videos' })}
+                    >
+                        <div className="flex items-center gap-2">
+                            <VideoIcon className="w-4 h-4 text-neutral-600 dark:text-gray-400" />
+                            <span className="font-medium text-sm text-neutral-900 dark:text-gray-100">Video Tutorials</span>
+                        </div>
+                    </DropdownMenu.Item>
 
                     <DropdownMenu.Separator className="my-1 bg-neutral-200 dark:bg-gray-700" />
 

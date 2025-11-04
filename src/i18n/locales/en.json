@@ -227,5 +227,19 @@
     "undoMoves": "to undo moves",
     "clickCells": "Click cells to select and highlight related numbers",
     "numbersAppear": "Numbers appear horizontally below the grid"
+  },
+  "videoTutorials": {
+    "title": "Video Tutorials",
+    "subtitle": "Learn Sudoku techniques from expert creators",
+    "allLevels": "All Levels",
+    "filterByLevel": "Filter by Level",
+    "searchPlaceholder": "Search techniques, creators, or keywords...",
+    "noResults": "No tutorials match your search. Try different keywords.",
+    "videoBy": "Video by",
+    "duration": "Duration",
+    "license": "License",
+    "embeddedNotice": "Embedded from YouTube with proper attribution",
+    "legalNotice": "All videos are curated from educational content creators and embedded with proper attribution. Each video maintains its original creator's rights. We encourage you to support these creators by visiting their channels.",
+    "backToVideos": "Back to Videos"
   }
 }
