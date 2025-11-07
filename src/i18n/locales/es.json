@@ -108,6 +108,25 @@
       "x_wing": "X-Wing",
       "xy_wing": "XY-Wing",
       "swordfish": "Swordfish"
+    },
+    "messages": {
+      "incorrectValue": "Esta celda contiene un valor incorrecto. La respuesta correcta es {{correctValue}}.",
+      "autoFilled": "{{value}} completado automáticamente en la celda seleccionada. Ese fue el único número válido.",
+      "candidateSuggestion": "Esta celda puede ser {{candidates}}. Intenta añadir estos como notas para ayudarte a resolver el puzzle.",
+      "placeValue": "Colocar {{value}} en fila {{row}}, columna {{col}}",
+      "incorrectCellValue": "El valor {{value}} en fila {{row}}, columna {{col}} es incorrecto. Intenta vaciar esta celda y buscar el número correcto.",
+      "eliminateNotes": "En fila {{row}}, columna {{col}}, puedes eliminar la nota{{plural}} {{notes}} porque {{reason}} con otros números en la misma fila, columna o caja.",
+      "eliminateFromUnit": "Eliminar {{numbers}} de otras celdas en {{unitType}} {{unitIndex}}",
+      "eliminateFromRow": "Eliminar {{number}} de fila {{row}} fuera de la caja",
+      "eliminateFromColumn": "Eliminar {{number}} de columna {{col}} fuera de la caja",
+      "xWingRows": "Patrón X-Wing encontrado para {{number}}: forma un rectángulo en filas {{row1}} y {{row2}}, columnas {{col1}} y {{col2}}. Esto elimina {{number}} de otras celdas en estas columnas.",
+      "xWingCols": "Patrón X-Wing encontrado para {{number}}: forma un rectángulo en columnas {{col1}} y {{col2}}, filas {{row1}} y {{row2}}. Esto elimina {{number}} de otras celdas en estas filas.",
+      "xyWingPattern": "Patrón XY-Wing encontrado: pivote en ({{pivotRow}},{{pivotCol}}) con pinzas en ({{pincer1Row}},{{pincer1Col}}) y ({{pincer2Row}},{{pincer2Col}}). Esto elimina {{candidate}} de celdas que pueden ver ambas pinzas.",
+      "swordfishPattern": "Patrón Swordfish encontrado para {{number}} en filas {{rows}}. Esto elimina {{number}} de otras celdas en columnas {{columns}}.",
+      "boxLineReductionRow": "Reducción de Línea de Caja: {{number}} en fila {{row}} está confinado a caja {{box}}. Esto elimina {{number}} de otras celdas en esta caja fuera de fila {{row}}.",
+      "boxLineReductionCol": "Reducción de Línea de Caja: {{number}} en columna {{col}} está confinado a caja {{box}}. Esto elimina {{number}} de otras celdas en esta caja fuera de columna {{col}}.",
+      "noteConflictSingle": "está en conflicto",
+      "noteConflictPlural": "están en conflicto"
     }
   },
   "completion": {
@@ -170,7 +189,9 @@
     "beginner": "Principiante",
     "intermediate": "Intermedio",
     "advanced": "Avanzado",
-    "backToCenter": "Volver al Centro de Aprendizaje"
+    "backToCenter": "Volver al Centro de Aprendizaje",
+    "centerTitle": "Centro de Aprendizaje de Sudoku",
+    "centerSubtitle": "Domina cada técnica de resolución con guías y ejemplos interactivos. Guías experimentales generadas por IA."
   },
   "settings": {
     "language": "Idioma",
@@ -206,5 +227,19 @@
     "undoMoves": "para deshacer movimientos",
     "clickCells": "Haz clic en las celdas para seleccionar y resaltar números relacionados",
     "numbersAppear": "Los números aparecen horizontalmente debajo de la cuadrícula"
+  },
+  "videoTutorials": {
+    "title": "Tutoriales en Video",
+    "subtitle": "Aprende técnicas de Sudoku de creadores expertos",
+    "allLevels": "Todos los Niveles",
+    "filterByLevel": "Filtrar por Nivel",
+    "searchPlaceholder": "Buscar técnicas, creadores o palabras clave...",
+    "noResults": "Ningún tutorial coincide con tu búsqueda. Intenta otras palabras clave.",
+    "videoBy": "Video por",
+    "duration": "Duración",
+    "license": "Licencia",
+    "embeddedNotice": "Incrustado desde YouTube con atribución correcta",
+    "legalNotice": "Todos los videos están curados por creadores educativos e incrustados con atribución correcta. Cada video mantiene los derechos de su creador original. Te animamos a apoyar a estos creadores visitando sus canales.",
+    "backToVideos": "Volver a Videos"
   }
 }

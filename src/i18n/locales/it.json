@@ -108,6 +108,25 @@
       "x_wing": "X-Wing",
       "xy_wing": "XY-Wing",
       "swordfish": "Swordfish"
+    },
+    "messages": {
+      "incorrectValue": "Questa cella contiene un valore errato. La risposta corretta è {{correctValue}}.",
+      "autoFilled": "{{value}} compilato automaticamente nella cella selezionata. Quello era l'unico numero valido.",
+      "candidateSuggestion": "Questa cella può essere {{candidates}}. Prova ad aggiungere questi come note per aiutarti a risolvere il puzzle.",
+      "placeValue": "Posiziona {{value}} in riga {{row}}, colonna {{col}}",
+      "incorrectCellValue": "Il valore {{value}} in riga {{row}}, colonna {{col}} è errato. Prova a svuotare questa cella e cercare il numero corretto.",
+      "eliminateNotes": "In riga {{row}}, colonna {{col}}, puoi eliminare la nota{{plural}} {{notes}} perché {{reason}} con altri numeri nella stessa riga, colonna o riquadro.",
+      "eliminateFromUnit": "Elimina {{numbers}} da altre celle in {{unitType}} {{unitIndex}}",
+      "eliminateFromRow": "Elimina {{number}} dalla riga {{row}} al di fuori del riquadro",
+      "eliminateFromColumn": "Elimina {{number}} dalla colonna {{col}} al di fuori del riquadro",
+      "xWingRows": "Pattern X-Wing trovato per {{number}}: forma un rettangolo nelle righe {{row1}} e {{row2}}, colonne {{col1}} e {{col2}}. Questo elimina {{number}} da altre celle in queste colonne.",
+      "xWingCols": "Pattern X-Wing trovato per {{number}}: forma un rettangolo nelle colonne {{col1}} e {{col2}}, righe {{row1}} e {{row2}}. Questo elimina {{number}} da altre celle in queste righe.",
+      "xyWingPattern": "Pattern XY-Wing trovato: perno in ({{pivotRow}},{{pivotCol}}) con pinze in ({{pincer1Row}},{{pincer1Col}}) e ({{pincer2Row}},{{pincer2Col}}). Questo elimina {{candidate}} dalle celle che possono vedere entrambe le pinze.",
+      "swordfishPattern": "Pattern Swordfish trovato per {{number}} nelle righe {{rows}}. Questo elimina {{number}} da altre celle nelle colonne {{columns}}.",
+      "boxLineReductionRow": "Riduzione Linea-Riquadro: {{number}} nella riga {{row}} è confinato al riquadro {{box}}. Questo elimina {{number}} da altre celle in questo riquadro al di fuori della riga {{row}}.",
+      "boxLineReductionCol": "Riduzione Linea-Riquadro: {{number}} nella colonna {{col}} è confinato al riquadro {{box}}. Questo elimina {{number}} da altre celle in questo riquadro al di fuori della colonna {{col}}.",
+      "noteConflictSingle": "è in conflitto",
+      "noteConflictPlural": "sono in conflitto"
     }
   },
   "completion": {
@@ -170,7 +189,9 @@
     "beginner": "Principiante",
     "intermediate": "Intermedio",
     "advanced": "Avanzato",
-    "backToCenter": "Torna al Centro di Apprendimento"
+    "backToCenter": "Torna al Centro di Apprendimento",
+    "centerTitle": "Centro di Apprendimento Sudoku",
+    "centerSubtitle": "Padroneggia ogni tecnica di risoluzione con guide ed esempi interattivi. Guide sperimentali generate da IA."
   },
   "settings": {
     "language": "Lingua",
@@ -206,5 +227,19 @@
     "undoMoves": "per annullare le mosse",
     "clickCells": "Clicca sulle celle per selezionare ed evidenziare numeri correlati",
     "numbersAppear": "I numeri appaiono orizzontalmente sotto la griglia"
+  },
+  "videoTutorials": {
+    "title": "Tutorial Video",
+    "subtitle": "Impara le tecniche del Sudoku da creatori esperti",
+    "allLevels": "Tutti i Livelli",
+    "filterByLevel": "Filtra per Livello",
+    "searchPlaceholder": "Cerca tecniche, creatori o parole chiave...",
+    "noResults": "Nessun tutorial corrisponde alla tua ricerca. Prova altre parole chiave.",
+    "videoBy": "Video di",
+    "duration": "Durata",
+    "license": "Licenza",
+    "embeddedNotice": "Incorporato da YouTube con corretta attribuzione",
+    "legalNotice": "Tutti i video sono curati da creatori educativi e incorporati con corretta attribuzione. Ogni video mantiene i diritti del suo creatore originale. Ti incoraggiamo a supportare questi creatori visitando i loro canali.",
+    "backToVideos": "Torna ai Video"
   }
 }

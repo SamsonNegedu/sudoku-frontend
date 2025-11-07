@@ -189,7 +189,9 @@
     "beginner": "Débutant",
     "intermediate": "Intermédiaire",
     "advanced": "Avancé",
-    "backToCenter": "Retour au Centre d'Apprentissage"
+    "backToCenter": "Retour au Centre d'Apprentissage",
+    "centerTitle": "Centre d'Apprentissage Sudoku",
+    "centerSubtitle": "Maîtrise chaque technique de résolution avec des guides et des exemples interactifs. Guides expérimentaux générés par IA."
   },
   "settings": {
     "language": "Langue",
@@ -225,5 +227,19 @@
     "undoMoves": "pour annuler les coups",
     "clickCells": "Cliquez sur les cellules pour sélectionner et surligner les chiffres liés",
     "numbersAppear": "Les chiffres apparaissent horizontalement sous la grille"
+  },
+  "videoTutorials": {
+    "title": "Tutoriels Vidéo",
+    "subtitle": "Apprends les techniques de Sudoku auprès de créateurs experts",
+    "allLevels": "Tous les Niveaux",
+    "filterByLevel": "Filtrer par Niveau",
+    "searchPlaceholder": "Rechercher des techniques, créateurs ou mots-clés...",
+    "noResults": "Aucun tutoriel ne correspond à votre recherche. Essayez d'autres mots-clés.",
+    "videoBy": "Vidéo par",
+    "duration": "Durée",
+    "license": "Licence",
+    "embeddedNotice": "Intégré depuis YouTube avec attribution correcte",
+    "legalNotice": "Toutes les vidéos sont sélectionnées par des créateurs éducatifs et intégrées avec attribution correcte. Chaque vidéo conserve les droits de son créateur original. Nous vous encourageons à soutenir ces créateurs en visitant leurs chaînes.",
+    "backToVideos": "Retour aux Vidéos"
   }
 }

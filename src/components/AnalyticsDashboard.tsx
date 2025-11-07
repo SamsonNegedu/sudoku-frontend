@@ -34,6 +34,11 @@ export const AnalyticsDashboard: React.FC = () => {
   const userInsights = getUserInsights();
   const recentGames = userAnalytics.gamesPlayed.slice(-5);
 
+  // Get the most recent completed game for pattern analysis
+  const latestCompletedGame = userAnalytics.gamesPlayed
+    .filter(game => game.completed)
+    .sort((a, b) => new Date(b.endTime || b.startTime).getTime() - new Date(a.endTime || a.startTime).getTime())[0];
+
   return (
     <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-6 sm:space-y-8">
       {/* Overview Stats */}
@@ -41,6 +46,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
       {/* Insights */}
       <InsightsSection insights={userInsights} />
+
 
       {/* Difficulty Progress */}
       <DifficultyProgress

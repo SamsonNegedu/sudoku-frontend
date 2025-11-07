@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Outlet, useRouterState } from '@tanstack/react-router'
+import { Outlet, useRouterState, useNavigate } from '@tanstack/react-router'
 import { Theme } from '@radix-ui/themes'
 import { ThemeProvider } from './components/ThemeProvider'
 import { AppNavbar } from './components/AppNavbar'
@@ -12,6 +12,7 @@ import './index.css'
 
 export default function Root() {
   const routerState = useRouterState()
+  const navigate = useNavigate()
   const {
     currentGame,
     isGeneratingPuzzle,
@@ -79,6 +80,8 @@ export default function Root() {
   const isPaused = currentGame && !currentGame.isCompleted && currentGame.isPaused
 
   const handleNewGame = (difficulty: Difficulty) => {
+    // Navigate to game page first, then start new game
+    navigate({ to: '/game' })
     startNewGame(difficulty)
   }
 

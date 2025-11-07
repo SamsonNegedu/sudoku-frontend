@@ -16,6 +16,20 @@ export function GamePage() {
     startNewGame,
   } = useGameStore()
 
+  const formatCompletionTime = () => {
+    if (!currentGame?.startTime || !currentGame?.currentTime) return '00:00'
+
+    const totalElapsedMs = new Date(currentGame.currentTime).getTime() -
+      new Date(currentGame.startTime).getTime() -
+      (currentGame.totalPausedTime || 0)
+
+    const totalElapsedSeconds = Math.floor(totalElapsedMs / 1000)
+    const minutes = Math.floor(totalElapsedSeconds / 60)
+    const seconds = totalElapsedSeconds % 60
+
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  }
+
   // Show welcome/loading screen if no active game
   if (!currentGame) {
     return (
@@ -36,10 +50,11 @@ export function GamePage() {
           isVisible={showCompletionAnimation}
           onAnimationComplete={() => hideCompletionAnimation()}
           onStartNewGame={() => {
-            // Will be handled by navbar navigation
+            // Start a new game with the same difficulty
+            startNewGame(currentGame.difficulty);
           }}
           difficulty={currentGame.difficulty}
-          completionTime="00:00"
+          completionTime={formatCompletionTime()}
           mistakes={currentGame.mistakes || 0}
         />
       )}

@@ -108,6 +108,25 @@
       "x_wing": "X-Wing",
       "xy_wing": "XY-Wing",
       "swordfish": "Swordfish"
+    },
+    "messages": {
+      "incorrectValue": "Diese Zelle enthält einen falschen Wert. Die richtige Antwort ist {{correctValue}}.",
+      "autoFilled": "{{value}} automatisch in der ausgewählten Zelle ausgefüllt. Das war die einzige gültige Zahl.",
+      "candidateSuggestion": "Diese Zelle kann {{candidates}} sein. Versuche, diese als Notizen hinzuzufügen, um dir beim Lösen des Rätsels zu helfen.",
+      "placeValue": "{{value}} in Zeile {{row}}, Spalte {{col}} platzieren",
+      "incorrectCellValue": "Der Wert {{value}} in Zeile {{row}}, Spalte {{col}} ist falsch. Versuche, diese Zelle zu leeren und nach der richtigen Zahl zu suchen.",
+      "eliminateNotes": "In Zeile {{row}}, Spalte {{col}}, kannst du die Notiz{{plural}} {{notes}} eliminieren, weil {{reason}} mit anderen Zahlen in derselben Zeile, Spalte oder Box.",
+      "eliminateFromUnit": "{{numbers}} aus anderen Zellen in {{unitType}} {{unitIndex}} eliminieren",
+      "eliminateFromRow": "{{number}} aus Zeile {{row}} außerhalb der Box eliminieren",
+      "eliminateFromColumn": "{{number}} aus Spalte {{col}} außerhalb der Box eliminieren",
+      "xWingRows": "X-Wing-Muster für {{number}} gefunden: bildet ein Rechteck in Zeilen {{row1}} und {{row2}}, Spalten {{col1}} und {{col2}}. Dies eliminiert {{number}} aus anderen Zellen in diesen Spalten.",
+      "xWingCols": "X-Wing-Muster für {{number}} gefunden: bildet ein Rechteck in Spalten {{col1}} und {{col2}}, Zeilen {{row1}} und {{row2}}. Dies eliminiert {{number}} aus anderen Zellen in diesen Zeilen.",
+      "xyWingPattern": "XY-Wing-Muster gefunden: Drehpunkt bei ({{pivotRow}},{{pivotCol}}) mit Zangen bei ({{pincer1Row}},{{pincer1Col}}) und ({{pincer2Row}},{{pincer2Col}}). Dies eliminiert {{candidate}} aus Zellen, die beide Zangen sehen können.",
+      "swordfishPattern": "Swordfish-Muster für {{number}} in Zeilen {{rows}} gefunden. Dies eliminiert {{number}} aus anderen Zellen in Spalten {{columns}}.",
+      "boxLineReductionRow": "Box-Zeilen-Reduktion: {{number}} in Zeile {{row}} ist auf Box {{box}} beschränkt. Dies eliminiert {{number}} aus anderen Zellen dieser Box außerhalb von Zeile {{row}}.",
+      "boxLineReductionCol": "Box-Zeilen-Reduktion: {{number}} in Spalte {{col}} ist auf Box {{box}} beschränkt. Dies eliminiert {{number}} aus anderen Zellen dieser Box außerhalb von Spalte {{col}}.",
+      "noteConflictSingle": "es ist im Konflikt",
+      "noteConflictPlural": "sie sind im Konflikt"
     }
   },
   "completion": {
@@ -170,7 +189,9 @@
     "beginner": "Anfänger",
     "intermediate": "Fortgeschritten",
     "advanced": "Erfahren",
-    "backToCenter": "Zurück zum Lernzentrum"
+    "backToCenter": "Zurück zum Lernzentrum",
+    "centerTitle": "Sudoku-Lernzentrum",
+    "centerSubtitle": "Meistere jede Lösungstechnik mit interaktiven Anleitungen und Beispielen. Experimentelle KI-generierte Anleitungen."
   },
   "settings": {
     "language": "Sprache",
@@ -206,5 +227,19 @@
     "undoMoves": "um Züge rückgängig zu machen",
     "clickCells": "Klicke Zellen an, um verwandte Zahlen auszuwählen und hervorzuheben",
     "numbersAppear": "Zahlen erscheinen horizontal unter dem Raster"
+  },
+  "videoTutorials": {
+    "title": "Video-Tutorials",
+    "subtitle": "Lerne Sudoku-Techniken von erfahrenen Erstellern",
+    "allLevels": "Alle Stufen",
+    "filterByLevel": "Nach Stufe filtern",
+    "searchPlaceholder": "Suche nach Techniken, Erstellern oder Schlüsselwörtern...",
+    "noResults": "Keine Tutorials entsprechen deiner Suche. Versuche andere Schlüsselwörter.",
+    "videoBy": "Video von",
+    "duration": "Dauer",
+    "license": "Lizenz",
+    "embeddedNotice": "Eingebettet von YouTube mit korrekter Zuordnung",
+    "legalNotice": "Alle Videos sind von Bildungserstellern kuratiert und mit korrekter Zuordnung eingebettet. Jedes Video behält die Rechte seines ursprünglichen Erstellers. Wir ermutigen dich, diese Ersteller zu unterstützen, indem du ihre Kanäle besuchst.",
+    "backToVideos": "Zurück zu Videos"
   }
 }
