@@ -31,19 +31,26 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({ insights }) =>
                 {t('analytics.insightsRecommendations')}
             </h2>
             <div className="space-y-3">
-                {insights.map((insight, index) => (
-                    <div
-                        key={index}
-                        className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)} dark:bg-opacity-20`}
-                    >
-                        <div className="text-sm sm:text-base font-medium text-neutral-900 dark:text-gray-100">
-                            {insight.title}
+                {insights.map((insight, index) => {
+                    const title = insight.titleKey ? t(insight.titleKey) : insight.title;
+                    const description = insight.descriptionKey 
+                        ? t(insight.descriptionKey, insight.descriptionParams || {})
+                        : insight.description;
+
+                    return (
+                        <div
+                            key={index}
+                            className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)} dark:bg-opacity-20`}
+                        >
+                            <div className="text-sm sm:text-base font-medium text-neutral-900 dark:text-gray-100">
+                                {title}
+                            </div>
+                            <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-400">
+                                {description}
+                            </div>
                         </div>
-                        <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-400">
-                            {insight.description}
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

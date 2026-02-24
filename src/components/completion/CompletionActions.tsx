@@ -18,7 +18,7 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
             <Button
                 onClick={onStartNewGame}
                 size="3"
-                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/30 dark:shadow-blue-900/30 transition-all duration-200 border-0"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold shadow-md transition-all duration-200 border-0"
             >
                 <RocketIcon className="w-4 h-4" />
                 {t('completion.newPuzzle')}
@@ -29,7 +29,7 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
                 size="3"
                 variant="soft"
                 color="gray"
-                className="flex-1 font-medium transition-all duration-200 hover:bg-gray-200 dark:hover:bg-gray-700 border-0"
+                className="flex-1 font-medium transition-all duration-200 hover:bg-neutral-200 dark:hover:bg-gray-700 border-0"
             >
                 <Cross2Icon className="w-4 h-4" />
             </Button>

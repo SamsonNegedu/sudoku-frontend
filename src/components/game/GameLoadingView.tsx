@@ -18,51 +18,49 @@ export const GameLoadingView: React.FC<GameLoadingViewProps> = ({
     return (
         <PageLayout
             centered={true}
-            className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950 p-4"
+            className="bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-4"
         >
-            <div className="max-w-lg w-full px-2 sm:px-0">
+            <div className="max-w-2xl w-full px-2 sm:px-0">
                 {isGeneratingPuzzle ? (
                     <div className="text-center">
-                        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/20 p-8">
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-neutral-200 dark:border-gray-700 p-8 sm:p-12">
                             <LoadingSpinner size="medium" className="mx-auto mb-6" />
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">{t('loading.generatingPuzzle')}</h3>
-                            <p className="text-slate-600 dark:text-slate-400 text-sm">{t('loading.creatingChallenge')}</p>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('loading.generatingPuzzle')}</h3>
+                            <p className="text-gray-600 dark:text-gray-400">{t('loading.creatingChallenge')}</p>
                         </div>
                     </div>
                 ) : (
                     <>
-                        <div className="text-center mb-8 sm:mb-12">
-                            <h1 className="text-2xl sm:text-4xl font-light text-slate-900 dark:text-slate-100 mb-2 sm:mb-4 tracking-tight">
+                        <div className="text-center mb-10 sm:mb-14">
+                            <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
                                 {t('loading.chooseChallenge')}
                             </h1>
-                            <p className="text-sm sm:text-lg text-slate-500 dark:text-slate-400 font-light">{t('loading.selectToStart')}</p>
+                            <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400">{t('loading.selectToStart')}</p>
                         </div>
 
-                        {/* Desktop: Vertical List */}
-                        <div className="hidden sm:block space-y-8">
-                            {DifficultyConfigManager.getDifficultyOptions().map(({ value, color }, index) => (
+                        {/* Desktop: Modern Card Grid */}
+                        <div className="hidden sm:grid grid-cols-2 gap-5">
+                            {DifficultyConfigManager.getDifficultyOptions().map(({ value }, index) => (
                                 <button
                                     key={value}
                                     onClick={() => onNewGame(value)}
                                     disabled={isGeneratingPuzzle}
-                                    className={`group relative overflow-hidden p-6 rounded-2xl transition-all duration-300 text-left w-full ${isGeneratingPuzzle
-                                        ? 'bg-slate-100 dark:bg-gray-700 cursor-not-allowed opacity-40'
-                                        : 'bg-white/40 dark:bg-gray-800/40 hover:bg-white/80 dark:hover:bg-gray-700/80 backdrop-blur-sm hover:shadow-xl hover:-translate-y-1'
+                                    className={`group relative overflow-hidden p-8 rounded-2xl transition-all duration-300 text-center ${isGeneratingPuzzle
+                                        ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed opacity-40'
+                                        : 'bg-white dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-gray-100 dark:border-gray-700/50 hover:border-blue-200 dark:hover:border-blue-500/50 hover:scale-[1.02] active:scale-[0.98]'
                                         }`}
-                                    style={{ animationDelay: `${index * 100}ms` }}
+                                    style={{ animationDelay: `${index * 50}ms` }}
                                 >
-                                    {/* Subtle gradient overlay on hover */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-50/0 to-blue-100/20 dark:from-blue-950/0 dark:to-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                                    <div className="relative flex items-center gap-5">
-                                        <div className={`w-4 h-4 rounded-full ${color} ring-2 ring-white dark:ring-gray-800 shadow-sm`} />
-                                        <div className="flex-1">
-                                            <div className="text-xl font-light text-slate-900 dark:text-slate-100 mb-1 tracking-wide">{t(`difficulty.${value}`)}</div>
-                                            <div className="text-sm text-slate-500 dark:text-slate-400 font-light leading-relaxed min-h-[1.25rem]">{t(`difficulty.descriptions.${value}`)}</div>
+                                    <div className="relative flex flex-col items-center gap-4">
+                                        <div className="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                                            {t(`difficulty.${value}`)}
                                         </div>
-                                        <div className="text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[200px]">
+                                            {t(`difficulty.descriptions.${value}`)}
+                                        </div>
+                                        <div className="mt-1 text-gray-300 dark:text-gray-600 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300">
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                             </svg>
                                         </div>
                                     </div>
@@ -70,71 +68,37 @@ export const GameLoadingView: React.FC<GameLoadingViewProps> = ({
                             ))}
                         </div>
 
-                        {/* Mobile: Clean 2x2 Grid */}
+                        {/* Mobile: Clean Grid */}
                         <div className="block sm:hidden grid grid-cols-2 gap-4">
-                            {DifficultyConfigManager.getDifficultyOptions().slice(0, 4).map(({ value, color }, index) => (
+                            {DifficultyConfigManager.getDifficultyOptions().map(({ value }, index) => (
                                 <button
                                     key={value}
                                     onClick={() => onNewGame(value)}
                                     disabled={isGeneratingPuzzle}
-                                    className={`group relative overflow-hidden p-4 rounded-xl transition-all duration-300 text-center aspect-square flex flex-col justify-center ${isGeneratingPuzzle
-                                        ? 'bg-slate-100 dark:bg-gray-700 cursor-not-allowed opacity-40'
-                                        : 'bg-white/40 dark:bg-gray-800/40 hover:bg-white/80 dark:hover:bg-gray-700/80 backdrop-blur-sm hover:shadow-lg hover:scale-105'
+                                    className={`group relative overflow-hidden p-6 rounded-2xl transition-all duration-300 text-center aspect-square flex flex-col justify-center ${isGeneratingPuzzle
+                                        ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed opacity-40'
+                                        : 'bg-white dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-gray-100 dark:border-gray-700/50 hover:border-blue-200 dark:hover:border-blue-500/50 active:scale-95'
                                         }`}
                                     style={{ animationDelay: `${index * 50}ms` }}
                                 >
-                                    {/* Subtle gradient overlay on hover */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-blue-100/30 dark:from-blue-950/0 dark:to-blue-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                                    <div className="relative flex flex-col items-center gap-3">
-                                        <div className={`w-4 h-4 rounded-full ${color} ring-2 ring-white dark:ring-gray-800 shadow-sm`} />
-                                        <div className="text-center">
-                                            <div className="text-base font-medium text-slate-900 dark:text-slate-100 mb-1">{t(`difficulty.${value}`)}</div>
-                                            <div className="text-xs text-slate-500 dark:text-slate-400 font-light leading-tight">{t(`difficulty.descriptions.${value}`)}</div>
+                                    <div className="relative flex flex-col items-center gap-2">
+                                        <div className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                                            {t(`difficulty.${value}`)}
+                                        </div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
+                                            {t(`difficulty.descriptions.${value}`)}
                                         </div>
                                     </div>
                                 </button>
                             ))}
                         </div>
 
-                        {/* Mobile: Advanced Difficulties (Optional Row) */}
-                        <div className="block sm:hidden mt-4">
-                            <div className="text-center mb-3">
-                                <p className="text-xs text-slate-500 dark:text-slate-400 font-light">{t('loading.advancedChallenges')}</p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                {DifficultyConfigManager.getDifficultyOptions().slice(4).map(({ value, color }, index) => (
-                                    <button
-                                        key={value}
-                                        onClick={() => onNewGame(value)}
-                                        disabled={isGeneratingPuzzle}
-                                        className={`group relative overflow-hidden p-3 rounded-lg transition-all duration-300 text-center aspect-[4/3] flex flex-col justify-center ${isGeneratingPuzzle
-                                            ? 'bg-slate-100 dark:bg-gray-700 cursor-not-allowed opacity-40'
-                                            : 'bg-white/30 dark:bg-gray-800/30 hover:bg-white/70 dark:hover:bg-gray-700/70 backdrop-blur-sm hover:shadow-md hover:scale-105 border border-slate-200/50 dark:border-gray-700/50'
-                                            }`}
-                                        style={{ animationDelay: `${(index + 4) * 50}ms` }}
-                                    >
-                                        {/* Subtle gradient overlay on hover */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/0 to-purple-100/20 dark:from-purple-950/0 dark:to-purple-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                                        <div className="relative flex flex-col items-center gap-2">
-                                            <div className={`w-3 h-3 rounded-full ${color} ring-1 ring-white dark:ring-gray-800 shadow-sm`} />
-                                            <div className="text-center">
-                                                <div className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-0.5">{t(`difficulty.${value}`)}</div>
-                                                <div className="text-xs text-slate-500 dark:text-slate-400 font-light leading-tight">{t(`difficulty.descriptions.${value}`)}</div>
-                                            </div>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
                         {/* Modern Loading Overlay */}
                         {isGeneratingPuzzle && (
-                            <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center">
-                                <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 p-6 sm:p-8 max-w-sm w-full mx-4 text-center">
-                                    <LoadingSpinner size="medium" className="mx-auto mb-4" />
-                                    <p className="text-slate-800 dark:text-slate-100 font-medium text-sm sm:text-base">{t('loading.generatingPuzzle')}</p>
+                            <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center">
+                                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-gray-100 dark:border-gray-700 p-10 sm:p-12 max-w-sm w-full mx-4 text-center">
+                                    <LoadingSpinner size="medium" className="mx-auto mb-6" />
+                                    <p className="text-gray-900 dark:text-white font-bold text-lg">{t('loading.generatingPuzzle')}</p>
                                 </div>
                             </div>
                         )}

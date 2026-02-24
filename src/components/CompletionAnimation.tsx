@@ -32,13 +32,13 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
       {/* Confetti particles - show during confetti stage and briefly into stats */}
       <ConfettiEffect isVisible={stage === 'confetti'} />
 
       {/* Main content - only show during stats stage */}
       {stage === 'stats' && (
-        <div className="completion-modal bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full text-center overflow-hidden border border-gray-100 dark:border-gray-700 animate-bounce-in">
+        <div className="completion-modal bg-white dark:bg-gray-800 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full text-center overflow-hidden border border-gray-100 dark:border-gray-700 animate-bounce-in">
           {/* Header with success icon */}
           <CelebrationHeader
             difficulty={difficulty}

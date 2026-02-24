@@ -60,14 +60,14 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
     const categories = ['Navigation', 'Input', 'Game Control'] as const;
 
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div ref={modalRef} className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-100 dark:border-gray-700 animate-bounce-in">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+            <div ref={modalRef} className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-100 dark:border-gray-700 animate-bounce-in">
                 {/* Header */}
-                <div className="sticky top-0 flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
+                <div className="sticky top-0 flex items-center justify-between px-6 py-5 border-b border-neutral-200 dark:border-gray-700 bg-neutral-50 dark:bg-gray-700/50">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Keyboard Shortcuts</h2>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                        className="p-2 hover:bg-neutral-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
                         aria-label="Close"
                     >
                         <Cross2Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -78,16 +78,16 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                 <div className="p-6 space-y-6">
                     {categories.map(category => (
                         <div key={category}>
-                            <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4 flex items-center gap-2">
-                                <div className="w-1 h-6 bg-gradient-to-b from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-600 rounded-full"></div>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <div className="w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
                                 {category}
                             </h3>
                             <div className="space-y-3">
                                 {shortcuts
                                     .filter(s => s.category === category)
                                     .map((shortcut, idx) => (
-                                        <div key={idx} className="group flex items-start justify-between gap-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors">
-                                            <kbd className="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md font-mono text-sm font-semibold min-w-fit shadow-sm border border-gray-200 dark:border-gray-600 group-hover:border-blue-300 dark:group-hover:border-blue-600 transition-colors">
+                                        <div key={idx} className="group flex items-start justify-between gap-4 p-3 hover:bg-neutral-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors">
+                                            <kbd className="px-3 py-2 bg-neutral-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md font-mono text-sm font-semibold min-w-fit shadow-sm border border-neutral-200 dark:border-gray-600 group-hover:border-blue-400 dark:group-hover:border-blue-500 transition-colors">
                                                 {shortcut.key}
                                             </kbd>
                                             <p className="text-gray-700 dark:text-gray-300 text-sm flex-1 pt-2">
@@ -101,14 +101,14 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                 </div>
 
                 {/* Footer */}
-                <div className="sticky bottom-0 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-6 py-4 flex items-center justify-between">
+                <div className="sticky bottom-0 border-t border-neutral-200 dark:border-gray-700 bg-neutral-50 dark:bg-gray-700/50 px-6 py-4 flex items-center justify-between">
                     <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                        Press <kbd className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-semibold ml-1">Esc</kbd> to close
+                        Press <kbd className="px-2 py-1 bg-neutral-200 dark:bg-gray-700 rounded text-xs font-semibold ml-1">Esc</kbd> to close
                     </p>
                     <Button
                         onClick={() => setIsOpen(false)}
                         size="3"
-                        className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/30 dark:shadow-blue-900/30 transition-all duration-200 border-0"
+                        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold shadow-md transition-all duration-200 border-0"
                     >
                         Close
                     </Button>

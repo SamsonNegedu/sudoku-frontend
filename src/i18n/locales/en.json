@@ -7,8 +7,11 @@
     "game": "Game",
     "analytics": "Analytics",
     "learning": "Learning Center",
+    "videos": "Videos",
     "newGame": "New Game",
     "settings": "Settings",
+    "menu": "Menu",
+    "help": "Keyboard Shortcuts",
     "backToGame": "Back to Game",
     "cancel": "Cancel"
   },
@@ -180,7 +183,21 @@
     "insightsRecommendations": "Insights & Recommendations",
     "confirmDelete": "Are you sure you want to delete all analytics data? This cannot be undone.",
     "permanentWarning": "These actions are permanent and cannot be undone.",
-    "clearAllData": "Clear All Data"
+    "clearAllData": "Clear All Data",
+    "insightTitles": {
+      "excellentAccuracy": "Excellent Accuracy",
+      "accuracyNeedsWork": "Accuracy Needs Work",
+      "fastSolver": "Fast Solver",
+      "dedicatedPlayer": "Dedicated Player",
+      "highCompletionRate": "High Completion Rate"
+    },
+    "insightDescriptions": {
+      "excellentAccuracy": "You achieved {{accuracy}}% accuracy in this game!",
+      "accuracyNeedsWork": "Consider taking more time to analyze before placing numbers. Your accuracy was {{accuracy}}%.",
+      "fastSolver": "You solve very quickly! Average time per move was under 5 seconds.",
+      "dedicatedPlayer": "You've completed {{count}} games! Keep up the great work.",
+      "highCompletionRate": "You complete {{rate}}% of your games!"
+    }
   },
   "learning": {
     "title": "Learning Center",
@@ -196,6 +213,8 @@
   "settings": {
     "language": "Language",
     "theme": "Theme",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
     "sounds": "Sounds",
     "notifications": "Notifications"
   },
@@ -235,11 +254,22 @@
     "filterByLevel": "Filter by Level",
     "searchPlaceholder": "Search techniques, creators, or keywords...",
     "noResults": "No tutorials match your search. Try different keywords.",
-    "videoBy": "Video by",
+    "noTutorialsForLevel": "No tutorials available for this level.",
+    "tutorial": "Tutorial",
+    "tutorials": "Tutorials",
+    "videoBy": "by",
+    "min": "min",
     "duration": "Duration",
     "license": "License",
     "embeddedNotice": "Embedded from YouTube with proper attribution",
+    "legalNoticeTitle": "Legal Notice:",
     "legalNotice": "All videos are curated from educational content creators and embedded with proper attribution. Each video maintains its original creator's rights. We encourage you to support these creators by visiting their channels.",
-    "backToVideos": "Back to Videos"
+    "backToVideos": "Back to Videos",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "expert": "Expert"
+    }
   }
 }

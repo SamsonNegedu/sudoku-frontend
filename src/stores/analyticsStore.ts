@@ -831,15 +831,17 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         if (game.accuracy > 90) {
           insights.push({
             type: 'strength',
-            title: 'Excellent Accuracy',
-            description: `You achieved ${game.accuracy.toFixed(1)}% accuracy in this game!`,
+            titleKey: 'analytics.insightTitles.excellentAccuracy',
+            descriptionKey: 'analytics.insightDescriptions.excellentAccuracy',
+            descriptionParams: { accuracy: game.accuracy.toFixed(1) },
             priority: 'high',
           });
         } else if (game.accuracy < 70) {
           insights.push({
             type: 'weakness',
-            title: 'Accuracy Needs Work',
-            description: `Consider taking more time to analyze before placing numbers. Your accuracy was ${game.accuracy.toFixed(1)}%.`,
+            titleKey: 'analytics.insightTitles.accuracyNeedsWork',
+            descriptionKey: 'analytics.insightDescriptions.accuracyNeedsWork',
+            descriptionParams: { accuracy: game.accuracy.toFixed(1) },
             priority: 'high',
             actionable: true,
           });
@@ -850,9 +852,8 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
           // Under 5 seconds per move
           insights.push({
             type: 'strength',
-            title: 'Fast Solver',
-            description:
-              'You solve very quickly! Average time per move was under 5 seconds.',
+            titleKey: 'analytics.insightTitles.fastSolver',
+            descriptionKey: 'analytics.insightDescriptions.fastSolver',
             priority: 'medium',
           });
         }
@@ -875,8 +876,9 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         if (stats.totalGames > 10) {
           insights.push({
             type: 'achievement',
-            title: 'Dedicated Player',
-            description: `You've completed ${stats.totalGames} games! Keep up the great work.`,
+            titleKey: 'analytics.insightTitles.dedicatedPlayer',
+            descriptionKey: 'analytics.insightDescriptions.dedicatedPlayer',
+            descriptionParams: { count: stats.totalGames },
             priority: 'low',
           });
         }
@@ -886,8 +888,9 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         if (completionRate > 80) {
           insights.push({
             type: 'strength',
-            title: 'High Completion Rate',
-            description: `You complete ${completionRate.toFixed(0)}% of your games!`,
+            titleKey: 'analytics.insightTitles.highCompletionRate',
+            descriptionKey: 'analytics.insightDescriptions.highCompletionRate',
+            descriptionParams: { rate: completionRate.toFixed(0) },
             priority: 'medium',
           });
         }

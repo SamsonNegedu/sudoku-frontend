@@ -7,8 +7,11 @@
     "game": "Gioco",
     "analytics": "Statistiche",
     "learning": "Centro di Apprendimento",
+    "videos": "Video",
     "newGame": "Nuovo Gioco",
     "settings": "Impostazioni",
+    "menu": "Menu",
+    "help": "Scorciatoie da Tastiera",
     "backToGame": "Torna al Gioco",
     "cancel": "Annulla"
   },
@@ -180,7 +183,21 @@
     "insightsRecommendations": "Approfondimenti e Raccomandazioni",
     "confirmDelete": "Sei sicuro di voler eliminare tutti i dati di analisi? Questo non può essere annullato.",
     "permanentWarning": "Queste azioni sono permanenti e non possono essere annullate.",
-    "clearAllData": "Cancella Tutti i Dati"
+    "clearAllData": "Cancella Tutti i Dati",
+    "insightTitles": {
+      "excellentAccuracy": "Precisione Eccellente",
+      "accuracyNeedsWork": "La Precisione Richiede Lavoro",
+      "fastSolver": "Risolutore Veloce",
+      "dedicatedPlayer": "Giocatore Dedicato",
+      "highCompletionRate": "Alto Tasso di Completamento"
+    },
+    "insightDescriptions": {
+      "excellentAccuracy": "Hai raggiunto {{accuracy}}% di precisione in questo gioco!",
+      "accuracyNeedsWork": "Prenditi più tempo per analizzare prima di posizionare i numeri. La tua precisione era {{accuracy}}%.",
+      "fastSolver": "Risolvi molto velocemente! Il tempo medio per mossa era inferiore a 5 secondi.",
+      "dedicatedPlayer": "Hai completato {{count}} giochi! Continua così.",
+      "highCompletionRate": "Completi il {{rate}}% dei tuoi giochi!"
+    }
   },
   "learning": {
     "title": "Centro di Apprendimento",
@@ -196,6 +213,8 @@
   "settings": {
     "language": "Lingua",
     "theme": "Tema",
+    "lightMode": "Modalità Chiara",
+    "darkMode": "Modalità Scura",
     "sounds": "Suoni",
     "notifications": "Notifiche"
   },
@@ -235,11 +254,22 @@
     "filterByLevel": "Filtra per Livello",
     "searchPlaceholder": "Cerca tecniche, creatori o parole chiave...",
     "noResults": "Nessun tutorial corrisponde alla tua ricerca. Prova altre parole chiave.",
-    "videoBy": "Video di",
+    "noTutorialsForLevel": "Nessun tutorial disponibile per questo livello.",
+    "tutorial": "Tutorial",
+    "tutorials": "Tutorial",
+    "videoBy": "di",
+    "min": "min",
     "duration": "Durata",
     "license": "Licenza",
     "embeddedNotice": "Incorporato da YouTube con corretta attribuzione",
+    "legalNoticeTitle": "Avviso Legale:",
     "legalNotice": "Tutti i video sono curati da creatori educativi e incorporati con corretta attribuzione. Ogni video mantiene i diritti del suo creatore originale. Ti incoraggiamo a supportare questi creatori visitando i loro canali.",
-    "backToVideos": "Torna ai Video"
+    "backToVideos": "Torna ai Video",
+    "levels": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzato",
+      "expert": "Esperto"
+    }
   }
 }

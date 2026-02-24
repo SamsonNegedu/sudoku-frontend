@@ -19,7 +19,7 @@ export const MistakesActions: React.FC<MistakesActionsProps> = ({
                 <Button
                     onClick={onRestart}
                     size="3"
-                    className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 dark:from-red-600 dark:to-red-700 dark:hover:from-red-700 dark:hover:to-red-800 text-white font-semibold shadow-lg shadow-red-600/30 dark:shadow-red-900/30 transition-all duration-200 border-0"
+                    className="w-full bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-semibold shadow-md transition-all duration-200 border-0"
                 >
                     <ResetIcon className="w-4 h-4" />
                     {t('mistakes.startOver')}
@@ -30,7 +30,7 @@ export const MistakesActions: React.FC<MistakesActionsProps> = ({
                     size="3"
                     variant="soft"
                     color="gray"
-                    className="w-full font-semibold transition-all duration-200 hover:bg-gray-200 dark:hover:bg-gray-700 border-0"
+                    className="w-full font-semibold transition-all duration-200 hover:bg-neutral-200 dark:hover:bg-gray-700 border-0"
                 >
                     <PlayIcon className="w-4 h-4" />
                     {t('mistakes.continueUnlimited')}
@@ -38,7 +38,7 @@ export const MistakesActions: React.FC<MistakesActionsProps> = ({
             </div>
 
             {/* Info box about continue unlimited */}
-            <div className="bg-gradient-to-br from-blue-50 to-blue-50/50 dark:from-blue-950/20 dark:to-blue-950/10 border border-blue-100 dark:border-blue-900/30 rounded-xl p-3">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
                 <p className="text-xs font-medium text-blue-700 dark:text-blue-300">
                     ℹ️ {t('mistakes.disableNote')}
                 </p>

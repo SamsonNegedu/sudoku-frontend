@@ -336,10 +336,9 @@
       margin: 0 auto;
     }
 
-    /* Match NumberPad width to grid on mobile */
+    /* Ensure NumberPad doesn't exceed viewport on mobile */
     .number-pad-container {
       max-width: 99vw;
-      margin: 0 auto;
     }
   }
 

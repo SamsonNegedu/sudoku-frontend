@@ -62,7 +62,7 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
                     {/* Grid and Sidebar Container - Same Level */}
                     <div className="flex flex-col lg:flex-row gap-3 sm:gap-6 lg:gap-8">
                         {/* Sudoku Grid + NumberPad Column */}
-                        <div className="flex-1 flex flex-col items-center gap-2 sm:gap-4 max-w-full overflow-hidden">
+                        <div className="flex-1 flex flex-col items-center gap-3 sm:gap-4 lg:gap-5 max-w-full overflow-hidden">
                             <div className="w-full flex justify-center">
                                 <div className="max-w-full">
                                     <SudokuGrid
@@ -74,26 +74,28 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
                                 </div>
                             </div>
 
-                            {/* Number Pad - Directly below grid */}
-                            <div className="w-full number-pad-container">
-                                <NumberPad
-                                    onNumberClick={onNumberClick}
-                                    onClear={onClearCell}
-                                    onToggleNote={onToggleNote}
-                                    onHint={onUseHint}
-                                    onUndo={onUndo}
-                                    inputMode={inputMode}
-                                    disabled={currentGame.isPaused}
-                                    canUndo={currentGame.moves.length > 0}
-                                    hintsUsed={currentGame.hintsUsed}
-                                    maxHints={currentGame.maxHints}
-                                    completedNumbers={getCompletedNumbers()}
-                                    selectedCell={selectedCell}
-                                    isPlaying={!currentGame.isPaused && currentGame.board.some(row => row.some(cell => cell.value !== 0))}
-                                    isPaused={currentGame.isPaused}
-                                    onPause={onPause}
-                                    onResume={onResume}
-                                />
+                            {/* Number Pad - Directly below grid, matched width */}
+                            <div className="w-full flex justify-center">
+                                <div className="w-full max-w-[46rem]">
+                                    <NumberPad
+                                        onNumberClick={onNumberClick}
+                                        onClear={onClearCell}
+                                        onToggleNote={onToggleNote}
+                                        onHint={onUseHint}
+                                        onUndo={onUndo}
+                                        inputMode={inputMode}
+                                        disabled={currentGame.isPaused}
+                                        canUndo={currentGame.moves.length > 0}
+                                        hintsUsed={currentGame.hintsUsed}
+                                        maxHints={currentGame.maxHints}
+                                        completedNumbers={getCompletedNumbers()}
+                                        selectedCell={selectedCell}
+                                        isPlaying={!currentGame.isPaused && currentGame.board.some(row => row.some(cell => cell.value !== 0))}
+                                        isPaused={currentGame.isPaused}
+                                        onPause={onPause}
+                                        onResume={onResume}
+                                    />
+                                </div>
                             </div>
                         </div>
 

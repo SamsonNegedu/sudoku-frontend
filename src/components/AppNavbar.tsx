@@ -1,13 +1,11 @@
 import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { NavBrand } from './navbar/NavBrand';
-import { GameStatusDisplay } from './navbar/GameStatusDisplay';
+import { GameTimer } from './GameTimer';
 import { NewGameDropdown } from './navbar/NewGameDropdown';
-import { NavigationButtons } from './navbar/NavigationButtons';
+import { DesktopNavigationLinks } from './navbar/DesktopNavigationLinks';
+import { UnifiedSettingsDropdown } from './navbar/UnifiedSettingsDropdown';
 import { MobileNavigation } from './navbar/MobileNavigation';
-import { LanguageSelector } from './LanguageSelector';
-import { DarkModeToggle } from './DarkModeToggle';
-import { HelpButton } from './navbar/HelpButton';
 import type { Difficulty } from '../types';
 
 interface AppNavbarProps {
@@ -36,7 +34,6 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     onPause,
     onResume,
     onShowHelp,
-    currentDifficulty,
     isPlaying,
     isPaused,
     isCompleted,
@@ -46,8 +43,6 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     totalPausedTime,
     pausedElapsedTime,
     currentTime,
-    hintsUsed,
-    maxHints,
 }) => {
     const navigate = useNavigate();
 
@@ -55,28 +50,29 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
         <nav className="bg-white dark:bg-gray-800 border-b border-neutral-200 dark:border-gray-700 shadow-sm sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    {/* Logo and Brand */}
+                    {/* Left - Logo and Brand */}
                     <NavBrand onShowGame={() => navigate({ to: '/game' })} />
 
-                    {/* Center - Game Status & Timer */}
-                    <GameStatusDisplay
-                        isPlaying={isPlaying}
-                        isPaused={isPaused}
-                        startTime={startTime}
-                        isCompleted={isCompleted}
-                        pauseStartTime={pauseStartTime}
-                        totalPausedTime={totalPausedTime}
-                        pausedElapsedTime={pausedElapsedTime}
-                        currentTime={currentTime}
-                        currentDifficulty={currentDifficulty}
-                        hintsUsed={hintsUsed}
-                        maxHints={maxHints}
-                    />
+                    {/* Center - Timer (only when playing, hidden on mobile) */}
+                    {isPlaying && !isCompleted && (
+                        <div className="hidden lg:flex items-center">
+                            <GameTimer
+                                startTime={startTime}
+                                isPaused={isPaused}
+                                isCompleted={isCompleted}
+                                pauseStartTime={pauseStartTime}
+                                totalPausedTime={totalPausedTime}
+                                pausedElapsedTime={pausedElapsedTime}
+                                currentTime={currentTime}
+                            />
+                        </div>
+                    )}
 
-                    {/* Right - Navigation Actions */}
+                    {/* Right - Minimal Actions */}
                     <div className="flex items-center">
-                        {/* Desktop Navigation */}
-                        <div className="hidden sm:flex items-center space-x-3">
+                        {/* Desktop Navigation - Clean & Minimal */}
+                        <div className="hidden sm:flex items-center gap-6">
+                            {/* New Game Dropdown */}
                             <NewGameDropdown
                                 onNewGame={onNewGame}
                                 onRestart={onRestart}
@@ -86,13 +82,17 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                                 isCompleted={isCompleted}
                             />
 
-                            <NavigationButtons />
+                            {/* Divider */}
+                            <div className="h-6 w-px bg-neutral-300 dark:bg-gray-600" />
 
-                            <LanguageSelector />
+                            {/* Direct Navigation Links - No hamburger on desktop */}
+                            <DesktopNavigationLinks />
 
-                            {onShowHelp && <HelpButton onHelpClick={onShowHelp} />}
+                            {/* Divider */}
+                            <div className="h-6 w-px bg-neutral-300 dark:bg-gray-600" />
 
-                            <DarkModeToggle />
+                            {/* Settings Dropdown */}
+                            <UnifiedSettingsDropdown onShowHelp={onShowHelp} />
                         </div>
 
                         {/* Mobile Navigation */}

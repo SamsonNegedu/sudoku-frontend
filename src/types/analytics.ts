@@ -164,8 +164,11 @@ export interface UserAnalytics {
 
 export interface AnalyticsInsight {
   type: 'strength' | 'weakness' | 'suggestion' | 'achievement';
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
+  titleKey?: string;
+  descriptionKey?: string;
+  descriptionParams?: Record<string, string | number>;
   data?: Record<string, unknown>;
   actionable?: boolean;
   priority: 'low' | 'medium' | 'high';
