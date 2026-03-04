@@ -1,8 +1,17 @@
 import React from 'react';
-import { DropdownMenu, Button } from '@radix-ui/themes';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import { GearIcon, QuestionMarkCircledIcon, GlobeIcon, MoonIcon, SunIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '../../stores/themeStore';
+import { cn } from '@/utils/index';
 
 interface UnifiedSettingsDropdownProps {
     onShowHelp?: () => void;
@@ -25,51 +34,53 @@ export const UnifiedSettingsDropdown: React.FC<UnifiedSettingsDropdownProps> = (
     };
 
     return (
-        <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
-                    size="2"
+                    size="icon"
                     className="text-gray-700 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-gray-700"
                     aria-label={t('navigation.settings')}
                 >
                     <GearIcon className="w-5 h-5" />
                 </Button>
-            </DropdownMenu.Trigger>
+            </DropdownMenuTrigger>
 
-            <DropdownMenu.Content className="min-w-[200px]">
+            <DropdownMenuContent className="min-w-[200px]" align="end">
                 {/* Language Section */}
-                <DropdownMenu.Label className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-2 py-1">
+                <DropdownMenuLabel className="text-xs font-semibold text-gray-500 dark:text-gray-400">
                     <div className="flex items-center gap-2">
                         <GlobeIcon className="w-3.5 h-3.5" />
                         {t('settings.language')}
                     </div>
-                </DropdownMenu.Label>
-                
+                </DropdownMenuLabel>
+
                 {languages.map((language) => (
-                    <DropdownMenu.Item
+                    <DropdownMenuItem
                         key={language.code}
                         onClick={() => changeLanguage(language.code)}
-                        className={i18n.language === language.code ? 'bg-blue-50 dark:bg-blue-950/30' : ''}
+                        className={cn(
+                            i18n.language === language.code && 'bg-primary-50 dark:bg-primary-950/30'
+                        )}
                     >
                         <span className="flex items-center justify-between w-full gap-2">
                             <span className="flex items-center gap-2">
                                 <span>{language.flag}</span>
                                 <span>{t(`languages.${language.code}`)}</span>
                             </span>
-                            {i18n.language === language.code && <span className="text-blue-600 dark:text-blue-400">✓</span>}
+                            {i18n.language === language.code && <span className="text-primary-600 dark:text-primary-500">✓</span>}
                         </span>
-                    </DropdownMenu.Item>
+                    </DropdownMenuItem>
                 ))}
 
-                <DropdownMenu.Separator />
+                <DropdownMenuSeparator />
 
                 {/* Theme Section */}
-                <DropdownMenu.Label className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-2 py-1">
+                <DropdownMenuLabel className="text-xs font-semibold text-gray-500 dark:text-gray-400">
                     {t('settings.theme')}
-                </DropdownMenu.Label>
-                
-                <DropdownMenu.Item onClick={toggleDarkMode}>
+                </DropdownMenuLabel>
+
+                <DropdownMenuItem onClick={toggleDarkMode}>
                     <div className="flex items-center gap-2">
                         {isDarkMode ? (
                             <>
@@ -83,22 +94,22 @@ export const UnifiedSettingsDropdown: React.FC<UnifiedSettingsDropdownProps> = (
                             </>
                         )}
                     </div>
-                </DropdownMenu.Item>
+                </DropdownMenuItem>
 
                 {onShowHelp && (
                     <>
-                        <DropdownMenu.Separator />
-                        
+                        <DropdownMenuSeparator />
+
                         {/* Help Section */}
-                        <DropdownMenu.Item onClick={onShowHelp}>
+                        <DropdownMenuItem onClick={onShowHelp}>
                             <div className="flex items-center gap-2">
                                 <QuestionMarkCircledIcon className="w-4 h-4" />
                                 {t('navigation.help')}
                             </div>
-                        </DropdownMenu.Item>
+                        </DropdownMenuItem>
                     </>
                 )}
-            </DropdownMenu.Content>
-        </DropdownMenu.Root>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };

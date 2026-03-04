@@ -4,6 +4,7 @@ import { ConfettiEffect } from './completion/ConfettiEffect';
 import { CelebrationHeader } from './completion/CelebrationHeader';
 import { CompletionStats } from './completion/CompletionStats';
 import { CompletionActions } from './completion/CompletionActions';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface CompletionAnimationProps {
   isVisible: boolean;
@@ -29,23 +30,19 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
     onStartNewGame(); // Start a new game
   };
 
-  if (!isVisible) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
-      {/* Confetti particles - show during confetti stage and briefly into stats */}
-      <ConfettiEffect isVisible={stage === 'confetti'} />
-
-      {/* Main content - only show during stats stage */}
-      {stage === 'stats' && (
-        <div className="completion-modal bg-white dark:bg-gray-800 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-md w-full text-center overflow-hidden border border-gray-100 dark:border-gray-700 animate-bounce-in">
+    <>
+      {/* Confetti particles - show during confetti stage */}
+      {stage === 'confetti' && <ConfettiEffect isVisible={true} />}
+      
+      {/* Dialog - show during stats stage */}
+      <Dialog open={isVisible && stage === 'stats'}>
+        <DialogContent className="completion-modal max-w-md text-center sm:rounded-2xl">
           {/* Header with success icon */}
-          <CelebrationHeader
-            difficulty={difficulty}
-          />
+          <CelebrationHeader difficulty={difficulty} />
 
           {/* Content */}
-          <div className="p-6 space-y-6">
+          <div className="space-y-6">
             {/* Stats grid */}
             <CompletionStats
               completionTime={completionTime}
@@ -58,8 +55,8 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
               onClose={onAnimationComplete}
             />
           </div>
-        </div>
-      )}
-    </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

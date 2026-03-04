@@ -14,8 +14,8 @@ interface SudokuCellProps {
 
 const CELL_TYPE_STYLES: Record<CellType, string> = {
     normal: 'bg-white dark:bg-gray-800 text-neutral-900 dark:text-gray-100',
-    highlight: 'bg-blue-200 dark:bg-blue-900/50 text-blue-900 dark:text-blue-200',
-    elimination: 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300',
+    highlight: 'bg-primary-200 dark:bg-primary-900/50 text-primary-900 dark:text-primary-200',
+    elimination: 'bg-error-100 dark:bg-error-900/50 text-error-700 dark:text-error-300',
 };
 
 export const SudokuCell: React.FC<SudokuCellProps> = ({

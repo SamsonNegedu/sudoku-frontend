@@ -1,10 +1,11 @@
 import React from 'react';
-import { MistakesHeader, MistakesContent, MistakesActions } from './mistakes/index';
-import type { Difficulty } from '../types';
+import { useTranslation } from 'react-i18next';
+import { AlertDialog, AlertDialogContent } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { ExclamationTriangleIcon, ResetIcon, PlayIcon } from '@radix-ui/react-icons';
 
 interface MistakesModalProps {
     isVisible: boolean;
-    difficulty: Difficulty;
     mistakes: number;
     maxMistakes: number;
     onRestart: () => void;
@@ -18,17 +19,47 @@ export const MistakesModal: React.FC<MistakesModalProps> = ({
     onRestart,
     onContinue,
 }) => {
-    if (!isVisible) return null;
+    const { t } = useTranslation();
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-sm w-full text-center overflow-hidden border border-gray-100 dark:border-gray-700 animate-bounce-in">
-                <MistakesHeader mistakes={mistakes} maxMistakes={maxMistakes} />
-                <div className="p-6">
-                    <MistakesContent />
-                    <MistakesActions onRestart={onRestart} onContinue={onContinue} />
+        <AlertDialog open={isVisible}>
+            <AlertDialogContent className="max-w-sm">
+                {/* Compact Header */}
+                <div className="text-center space-y-3">
+                    <div className="flex justify-center">
+                        <ExclamationTriangleIcon className="w-8 h-8 text-error-600 dark:text-error-400" />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold mb-1">
+                            {t('mistakes.maximumReached')}
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                            {mistakes}/{maxMistakes} {t('game.mistakes').toLowerCase()}
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 mt-4">
+                    <Button
+                        onClick={onRestart}
+                        variant="destructive"
+                        className="flex-1"
+                    >
+                        <ResetIcon className="w-4 h-4" />
+                        {t('mistakes.startOver')}
+                    </Button>
+
+                    <Button
+                        onClick={onContinue}
+                        variant="secondary"
+                        className="flex-1"
+                    >
+                        <PlayIcon className="w-4 h-4" />
+                        {t('mistakes.continueUnlimited')}
+                    </Button>
+                </div>
+            </AlertDialogContent>
+        </AlertDialog>
     );
 };

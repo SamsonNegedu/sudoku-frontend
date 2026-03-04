@@ -34,11 +34,11 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     return (
         <div className={`relative ${sizeClass} ${className}`}>
             {/* Background ring */}
-            <div className={`absolute inset-0 ${borderWidthClass} border-blue-100 rounded-full`}></div>
+            <div className={`absolute inset-0 ${borderWidthClass} border-primary-100 dark:border-primary-900 rounded-full`}></div>
             {/* Spinning ring */}
-            <div className={`absolute inset-0 ${borderWidthClass} border-blue-600 rounded-full border-t-transparent animate-spin`}></div>
+            <div className={`absolute inset-0 ${borderWidthClass} border-primary-600 dark:border-primary-500 rounded-full border-t-transparent animate-spin`}></div>
             {/* Inner pulse dot */}
-            <div className={`absolute ${innerSizeClass} bg-blue-600 rounded-full animate-pulse opacity-80`}></div>
+            <div className={`absolute ${innerSizeClass} bg-primary-600 dark:bg-primary-500 rounded-full animate-pulse opacity-80`}></div>
         </div>
     );
 };

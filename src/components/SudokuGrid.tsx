@@ -85,7 +85,7 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
         <div className="flex justify-center items-center w-full px-0.5 sm:px-2">
             <div className="max-w-[99vw] sm:max-w-[95vw] w-full">
                 <div
-                    className={`sudoku-grid-container bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
+                    className={`sudoku-grid-container bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md ${showCompletionGlow ? 'animate-completion-glow' : ''}`}
                     role="grid"
                     aria-label="Sudoku puzzle grid"
                 >
@@ -102,6 +102,7 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
                                     isHintFilled={isHintFilled(rowIndex, colIndex)}
                                     onClick={() => handleCellClick(rowIndex, colIndex)}
                                     onKeyDown={(event) => handleCellKeyDown(rowIndex, colIndex, event)}
+                                    board={board}
                                 />
                             ))}
                         </React.Fragment>

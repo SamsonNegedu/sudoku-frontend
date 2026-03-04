@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { ChevronDownIcon, GlobeIcon } from '@radix-ui/react-icons';
+import { cn } from '@/utils/index';
 
 const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -51,20 +52,23 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ className })
                     <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-20">
                         <div className="py-2">
                             {languages.map((language) => (
-                                <button
+                                <Button
                                     key={language.code}
                                     onClick={() => handleLanguageChange(language.code)}
-                                    className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors ${i18n.language === language.code
-                                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
-                                        : 'text-gray-700 dark:text-gray-300'
-                                        }`}
+                                    variant="ghost"
+                                    className={cn(
+                                        "w-full justify-start px-4 py-2 text-sm gap-3 h-auto",
+                                        i18n.language === language.code
+                                            ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-500 font-medium'
+                                            : 'text-gray-700 dark:text-gray-300'
+                                    )}
                                 >
                                     <span className="text-lg">{language.flag}</span>
                                     <span>{t(`languages.${language.code}`)}</span>
                                     {i18n.language === language.code && (
-                                        <span className="ml-auto text-blue-600 dark:text-blue-400">✓</span>
+                                        <span className="ml-auto text-primary-600 dark:text-primary-500">✓</span>
                                     )}
-                                </button>
+                                </Button>
                             ))}
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import type { TechniqueGuide } from '../../types/learning';
 import { useLearning } from '../../contexts/LearningContext';
 import { ExampleBoard } from '../learning/ExampleBoard';
@@ -14,10 +14,10 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
 
     const getLevelColor = (level: string) => {
         switch (level) {
-            case 'basic': return 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300';
+            case 'basic': return 'bg-success-100 dark:bg-success-900/50 text-success-800 dark:text-success-300';
             case 'intermediate': return 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300';
-            case 'advanced': return 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300';
-            case 'expert': return 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300';
+            case 'advanced': return 'bg-warning-100 dark:bg-warning-900/50 text-warning-800 dark:text-warning-300';
+            case 'expert': return 'bg-error-100 dark:bg-error-900/50 text-error-800 dark:text-error-300';
             default: return 'bg-neutral-100 dark:bg-gray-700 text-neutral-800 dark:text-gray-100';
         }
     };
@@ -36,7 +36,7 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
                 <Button
                     onClick={onBack}
                     variant="ghost"
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                    className="text-primary-600 dark:text-primary-500 hover:text-primary-800 dark:hover:text-primary-300"
                 >
                     ← Back to Techniques
                 </Button>
@@ -49,9 +49,9 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
             </div>
 
             {/* Description */}
-            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-300 mb-3">What is {technique.name}?</h2>
-                <p className="text-blue-800 dark:text-blue-200 text-lg">{technique.description}</p>
+            <div className="bg-primary-50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800 rounded-lg p-6">
+                <h2 className="text-xl font-semibold text-primary-900 dark:text-primary-300 mb-3">What is {technique.name}?</h2>
+                <p className="text-primary-800 dark:text-primary-200 text-lg">{technique.description}</p>
             </div>
 
             {/* When to Use */}
@@ -90,13 +90,13 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
                                     <div className="flex flex-wrap gap-4 text-sm">
                                         {example.highlightCells && example.highlightCells.length > 0 && (
                                             <div className="flex items-center space-x-2">
-                                                <div className="w-4 h-4 bg-blue-200 border border-blue-400 rounded"></div>
+                                                <div className="w-4 h-4 bg-primary-200 dark:bg-primary-800 border border-primary-400 dark:border-primary-600 rounded"></div>
                                                 <span>Key cells for this technique</span>
                                             </div>
                                         )}
                                         {example.eliminationCells && example.eliminationCells.length > 0 && (
                                             <div className="flex items-center space-x-2">
-                                                <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+                                                <div className="w-4 h-4 bg-error-100 dark:bg-error-900/50 border border-error-300 dark:border-error-700 rounded"></div>
                                                 <span>Cells where numbers are eliminated</span>
                                             </div>
                                         )}
@@ -106,7 +106,7 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
                                                     <div className="w-6 h-6 border border-neutral-300 bg-white flex items-center justify-center">
                                                         <div className="grid grid-cols-3 gap-0 w-full h-full p-0.5">
                                                             <div className="flex items-center justify-center text-[0.35rem] leading-none font-semibold">
-                                                                <span className="text-blue-700">1</span>
+                                                                <span className="text-primary-700 dark:text-primary-500">1</span>
                                                             </div>
                                                             <div className="flex items-center justify-center text-[0.35rem] leading-none font-semibold">
                                                                 <span className="opacity-0">·</span>
@@ -115,7 +115,7 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
                                                                 <span className="opacity-0">·</span>
                                                             </div>
                                                             <div className="flex items-center justify-center text-[0.35rem] leading-none font-semibold">
-                                                                <span className="text-blue-700">4</span>
+                                                                <span className="text-primary-700 dark:text-primary-500">4</span>
                                                             </div>
                                                             <div className="flex items-center justify-center text-[0.35rem] leading-none font-semibold">
                                                                 <span className="opacity-0">·</span>
@@ -130,7 +130,7 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
                                                                 <span className="opacity-0">·</span>
                                                             </div>
                                                             <div className="flex items-center justify-center text-[0.35rem] leading-none font-semibold">
-                                                                <span className="text-blue-700">9</span>
+                                                                <span className="text-primary-700 dark:text-primary-500">9</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -150,7 +150,7 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
 
                                     <div>
                                         <h4 className="font-medium text-neutral-900 mb-2">Solution:</h4>
-                                        <p className="text-green-700 font-medium text-sm">{example.solution}</p>
+                                        <p className="text-success-700 dark:text-success-400 font-medium text-sm">{example.solution}</p>
                                     </div>
 
                                     {example.beforeAfter && (
@@ -180,7 +180,7 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
                 <ol className="space-y-3">
                     {technique.steps.map((step, index) => (
                         <li key={index} className="flex items-start space-x-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                            <span className="flex-shrink-0 w-6 h-6 bg-primary-600 dark:bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
                                 {index + 1}
                             </span>
                             <span className="text-neutral-700 dark:text-gray-300">{step}</span>
@@ -203,13 +203,13 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
             </div>
 
             {/* Common Mistakes */}
-            <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-red-900 dark:text-red-300 mb-4">⚠️ Common Mistakes</h2>
+            <div className="bg-error-50 dark:bg-error-950/30 border border-error-200 dark:border-error-800 rounded-lg p-6">
+                <h2 className="text-xl font-semibold text-error-900 dark:text-error-300 mb-4">⚠️ Common Mistakes</h2>
                 <ul className="space-y-2">
                     {technique.commonMistakes.map((mistake, index) => (
                         <li key={index} className="flex items-start space-x-2">
-                            <span className="text-red-600 dark:text-red-400 mt-1">•</span>
-                            <span className="text-red-800 dark:text-red-200">{mistake}</span>
+                            <span className="text-error-600 dark:text-error-400 mt-1">•</span>
+                            <span className="text-error-800 dark:text-error-200">{mistake}</span>
                         </li>
                     ))}
                 </ul>
@@ -217,10 +217,10 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
 
             {/* Related Techniques */}
             {technique.relatedTechniques && technique.relatedTechniques.length > 0 && (
-                <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-                    <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-300 mb-4">🔗 Related Techniques</h2>
+                <div className="bg-primary-50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800 rounded-lg p-6">
+                    <h2 className="text-xl font-semibold text-primary-900 dark:text-primary-300 mb-4">🔗 Related Techniques</h2>
                     <div className="space-y-2">
-                        <p className="text-blue-800 dark:text-blue-200 text-sm mb-3">Learn these techniques next:</p>
+                        <p className="text-primary-800 dark:text-primary-200 text-sm mb-3">Learn these techniques next:</p>
                         <div className="flex flex-wrap gap-2">
                             {technique.relatedTechniques.map(relatedId => {
                                 const relatedTechnique = findTechniqueById(relatedId);
@@ -230,7 +230,7 @@ export const TechniqueDetail: React.FC<TechniqueDetailProps> = ({ technique, onB
                                         onClick={() => handleRelatedTechniqueClick(relatedId)}
                                         variant="outline"
                                         size="1"
-                                        className="text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900"
+                                        className="text-primary-700 dark:text-primary-300 border-primary-300 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900"
                                     >
                                         {relatedTechnique.name}
                                     </Button>

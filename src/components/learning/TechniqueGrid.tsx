@@ -13,10 +13,10 @@ export const TechniqueGrid: React.FC<TechniqueGridProps> = ({
 }) => {
     const getLevelColor = (level: string) => {
         switch (level) {
-            case 'basic': return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300';
-            case 'intermediate': return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300';
-            case 'advanced': return 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300';
-            case 'expert': return 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300';
+            case 'basic': return 'bg-success-100 dark:bg-success-900/30 text-success-800 dark:text-success-300';
+            case 'intermediate': return 'bg-warning-100 dark:bg-warning-900/30 text-warning-800 dark:text-warning-300';
+            case 'advanced': return 'bg-warning-100 dark:bg-warning-900/30 text-warning-800 dark:text-warning-300';
+            case 'expert': return 'bg-error-100 dark:bg-error-900/30 text-error-800 dark:text-error-300';
             default: return 'bg-neutral-100 dark:bg-gray-700 text-neutral-800 dark:text-gray-200';
         }
     };

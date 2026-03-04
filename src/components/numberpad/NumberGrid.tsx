@@ -1,5 +1,6 @@
 import React from 'react';
 import { NumberButton } from '../shared/index';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface NumberGridProps {
     onNumberClick: (number: number) => void;
@@ -19,22 +20,35 @@ export const NumberGrid: React.FC<NumberGridProps> = ({
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     return (
-        <div className="flex justify-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
-            {numbers.map((number) => {
-                const isCompleted = completedNumbers.includes(number);
+        <TooltipProvider delayDuration={300}>
+            <div className="flex justify-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+                {numbers.map((number) => {
+                    const isCompleted = completedNumbers.includes(number);
+                    const tooltipText = isCompleted 
+                        ? `Number ${number} completed (9/9 placed)` 
+                        : `Press ${number} to ${inputMode === 'pen' ? 'place' : 'add note'}`;
 
-                return (
-                    <NumberButton
-                        key={number}
-                        number={number}
-                        onClick={onNumberClick}
-                        disabled={disabled}
-                        isCompleted={isCompleted}
-                        inputMode={inputMode}
-                        selectedCell={selectedCell}
-                    />
-                );
-            })}
-        </div>
+                    return (
+                        <Tooltip key={number}>
+                            <TooltipTrigger asChild>
+                                <div>
+                                    <NumberButton
+                                        number={number}
+                                        onClick={onNumberClick}
+                                        disabled={disabled}
+                                        isCompleted={isCompleted}
+                                        inputMode={inputMode}
+                                        selectedCell={selectedCell}
+                                    />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>{tooltipText}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    );
+                })}
+            </div>
+        </TooltipProvider>
     );
 };

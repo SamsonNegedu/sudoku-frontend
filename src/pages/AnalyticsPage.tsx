@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { Button } from '@radix-ui/themes'
+import { Button } from '@/components/ui/button'
 import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
 import { AnalyticsDashboard } from '../components/AnalyticsDashboard'
@@ -17,9 +17,8 @@ export function AnalyticsPage() {
       >
         <Button
           onClick={() => navigate({ to: '/game' })}
-          size="2"
-          variant="solid"
-          className="text-sm sm:text-base w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+          variant="default"
+          className="text-sm sm:text-base w-full sm:w-auto font-semibold shadow-md"
         >
           ← {t('navigation.backToGame')}
         </Button>

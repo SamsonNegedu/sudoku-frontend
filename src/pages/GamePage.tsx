@@ -62,7 +62,6 @@ export function GamePage() {
       {currentGame && (
         <MistakesModal
           isVisible={showMistakesModal}
-          difficulty={currentGame.difficulty}
           mistakes={currentGame.mistakes}
           maxMistakes={currentGame.maxMistakes}
           onRestart={() => restartCurrentGame()}

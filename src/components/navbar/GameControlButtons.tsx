@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { PlayIcon, PauseIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/utils/index';
 
 interface GameControlButtonsProps {
     isPlaying: boolean;
@@ -27,12 +28,10 @@ export const GameControlButtons: React.FC<GameControlButtonsProps> = ({
         return (
             <Button
                 onClick={onResume}
-                size="2"
-                variant="solid"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-600 dark:hover:bg-primary-700"
                 aria-label={isMobile ? t('game.resume') : undefined}
             >
-                <PlayIcon className={isMobile ? "" : "mr-2"} />
+                <PlayIcon className={cn(!isMobile && "mr-2")} />
                 {!isMobile && t('game.resume')}
             </Button>
         );
@@ -41,12 +40,10 @@ export const GameControlButtons: React.FC<GameControlButtonsProps> = ({
     return (
         <Button
             onClick={onPause}
-            size="2"
-            variant="solid"
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-600 dark:hover:bg-primary-700"
             aria-label={isMobile ? t('game.pause') : undefined}
         >
-            <PauseIcon className={isMobile ? "" : "mr-2"} />
+            <PauseIcon className={cn(!isMobile && "mr-2")} />
             {!isMobile && t('game.pause')}
         </Button>
     );

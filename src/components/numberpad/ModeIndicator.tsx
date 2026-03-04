@@ -11,8 +11,8 @@ export const ModeIndicator: React.FC<ModeIndicatorProps> = ({ inputMode }) => {
     return (
         <div className="flex flex-col items-center mb-3 space-y-1">
             <div className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-2 shadow-sm ${inputMode === 'pen'
-                ? 'bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 text-blue-700 dark:text-blue-300 border-2 border-blue-300 dark:border-blue-700'
-                : 'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700'
+                ? 'bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-950 dark:to-primary-900 text-primary-700 dark:text-primary-300 border-2 border-primary-300 dark:border-primary-700'
+                : 'bg-gradient-to-r from-success-50 to-success-100 dark:from-success-950 dark:to-success-900 text-success-700 dark:text-success-300 border-2 border-success-300 dark:border-success-700'
                 }`}>
                 {inputMode === 'pen' ? (
                     <>

@@ -6,64 +6,43 @@ import { NewGameDropdown } from './navbar/NewGameDropdown';
 import { DesktopNavigationLinks } from './navbar/DesktopNavigationLinks';
 import { UnifiedSettingsDropdown } from './navbar/UnifiedSettingsDropdown';
 import { MobileNavigation } from './navbar/MobileNavigation';
-import type { Difficulty } from '../types';
+import { useGameContext } from '../contexts';
 
-interface AppNavbarProps {
-    onNewGame: (difficulty: Difficulty) => void;
-    onRestart: () => void;
-    onPause: () => void;
-    onResume: () => void;
-    onShowHelp?: () => void;
-    currentDifficulty?: Difficulty;
-    isPlaying: boolean;
-    isPaused: boolean;
-    isCompleted: boolean;
-    isGeneratingPuzzle: boolean;
-    startTime?: Date;
-    pauseStartTime?: Date;
-    totalPausedTime: number;
-    pausedElapsedTime?: number;
-    currentTime?: Date;
-    hintsUsed: number;
-    maxHints: number;
-}
-
-export const AppNavbar: React.FC<AppNavbarProps> = ({
-    onNewGame,
-    onRestart,
-    onPause,
-    onResume,
-    onShowHelp,
-    isPlaying,
-    isPaused,
-    isCompleted,
-    isGeneratingPuzzle,
-    startTime,
-    pauseStartTime,
-    totalPausedTime,
-    pausedElapsedTime,
-    currentTime,
-}) => {
+export const AppNavbar: React.FC = () => {
+    const {
+        currentGame,
+        isPlaying,
+        isPaused,
+        isCompleted,
+        isGeneratingPuzzle,
+        completionPercentage,
+        onNewGame,
+        onRestart,
+        onPause,
+        onResume,
+        onShowHelp,
+    } = useGameContext();
     const navigate = useNavigate();
 
     return (
-        <nav className="bg-white dark:bg-gray-800 border-b border-neutral-200 dark:border-gray-700 shadow-sm sticky top-0 z-50">
+        <nav className="bg-white dark:bg-gray-800 border-b border-neutral-200 dark:border-gray-700 shadow-sm lg:sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Left - Logo and Brand */}
                     <NavBrand onShowGame={() => navigate({ to: '/game' })} />
 
                     {/* Center - Timer (only when playing, hidden on mobile) */}
-                    {isPlaying && !isCompleted && (
+                    {isPlaying && !isCompleted && currentGame && (
                         <div className="hidden lg:flex items-center">
                             <GameTimer
-                                startTime={startTime}
-                                isPaused={isPaused}
-                                isCompleted={isCompleted}
-                                pauseStartTime={pauseStartTime}
-                                totalPausedTime={totalPausedTime}
-                                pausedElapsedTime={pausedElapsedTime}
-                                currentTime={currentTime}
+                                startTime={currentGame.startTime}
+                                isPaused={currentGame.isPaused}
+                                isCompleted={currentGame.isCompleted}
+                                pauseStartTime={currentGame.pauseStartTime}
+                                totalPausedTime={currentGame.totalPausedTime}
+                                pausedElapsedTime={currentGame.pausedElapsedTime}
+                                currentTime={currentGame.currentTime}
+                                completionPercentage={completionPercentage}
                             />
                         </div>
                     )}

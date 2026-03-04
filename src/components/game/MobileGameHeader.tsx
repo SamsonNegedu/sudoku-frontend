@@ -1,6 +1,7 @@
 import React from 'react';
 import { GameTimer } from '../GameTimer';
-import { ClockIcon, LightningBoltIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { LightningBoltIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { Badge } from '@/components/ui/badge';
 import type { GameState } from '../../types';
 
 interface MobileGameHeaderProps {
@@ -8,13 +9,29 @@ interface MobileGameHeaderProps {
 }
 
 export const MobileGameHeader: React.FC<MobileGameHeaderProps> = ({ currentGame }) => {
+    // Calculate completion percentage based on filled cells
+    const calculateCompletionPercentage = () => {
+        const totalCells = 81; // 9x9 grid
+        let filledCells = 0;
+        
+        currentGame.board.forEach(row => {
+            row.forEach(cell => {
+                if (cell.value !== null) {
+                    filledCells++;
+                }
+            });
+        });
+        
+        return Math.round((filledCells / totalCells) * 100);
+    };
+
+    const completionPercentage = calculateCompletionPercentage();
+
     return (
-        <div className="lg:hidden -mx-4 sm:mx-0">
-            <div className="bg-gradient-to-r from-white to-neutral-50 dark:from-gray-800 dark:to-gray-900 rounded-xl px-3 py-2.5 shadow-md border-2 border-neutral-200 dark:border-gray-700">
+        <div className="lg:hidden -mx-1 sm:mx-0 sticky top-0 z-50 bg-neutral-50 dark:bg-neutral-900 pb-2 pt-2">
+            <div className="bg-white dark:bg-gray-800 rounded-xl px-3 py-2.5 shadow-md border-2 border-neutral-200 dark:border-gray-700">
                 <div className="flex items-center justify-between gap-2">
-                    {/* Timer with icon */}
-                    <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-2.5 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <ClockIcon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                    <div className="flex items-center gap-1.5 bg-primary-50 dark:bg-primary-950/30 px-2 py-1 rounded-lg border border-primary-200 dark:border-primary-800">
                         <GameTimer
                             startTime={currentGame.startTime}
                             isPaused={currentGame.isPaused}
@@ -23,40 +40,49 @@ export const MobileGameHeader: React.FC<MobileGameHeaderProps> = ({ currentGame 
                             totalPausedTime={currentGame.totalPausedTime}
                             pausedElapsedTime={currentGame.pausedElapsedTime}
                             currentTime={currentGame.currentTime}
+                            completionPercentage={completionPercentage}
                         />
                     </div>
 
                     {/* Stats with improved visual hierarchy */}
                     <div className="flex items-center gap-2 sm:gap-3">
                         {/* Difficulty badge */}
-                        <span className="font-semibold text-xs capitalize px-2 py-1 rounded-md bg-gradient-to-r from-purple-100 to-purple-50 dark:from-purple-950/30 dark:to-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                        <Badge 
+                            className="capitalize bg-primary-600 dark:bg-primary-600 
+                                text-white dark:text-white 
+                                border-primary-700 dark:border-primary-500 
+                                font-bold shadow-sm"
+                        >
                             {currentGame.difficulty}
-                        </span>
+                        </Badge>
 
                         {/* Hints indicator */}
-                        <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+                        <Badge variant="outline" className="gap-1 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800">
                             <LightningBoltIcon className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-                            <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                            <span className="text-amber-700 dark:text-amber-300">
                                 {currentGame.hintsUsed}/{currentGame.maxHints}
                             </span>
-                        </div>
+                        </Badge>
 
                         {/* Mistakes indicator */}
-                        <div className={`flex items-center gap-1 px-2 py-1 rounded-md border ${currentGame.mistakes > 0
-                                ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800'
-                                : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800'
-                            }`}>
+                        <Badge 
+                            variant={currentGame.mistakes > 0 ? "destructive" : "outline"}
+                            className={`gap-1 ${currentGame.mistakes > 0
+                                ? 'bg-error-50 dark:bg-error-950/30 border-error-200 dark:border-error-800'
+                                : 'bg-success-50 dark:bg-success-950/30 border-success-200 dark:border-success-800'
+                            }`}
+                        >
                             <ExclamationTriangleIcon className={`w-3 h-3 ${currentGame.mistakes > 0
-                                    ? 'text-red-600 dark:text-red-400'
-                                    : 'text-green-600 dark:text-green-400'
-                                }`} />
-                            <span className={`text-xs font-semibold ${currentGame.mistakes > 0
-                                    ? 'text-red-700 dark:text-red-300'
-                                    : 'text-green-700 dark:text-green-300'
-                                }`}>
+                                ? 'text-error-600 dark:text-error-400'
+                                : 'text-success-600 dark:text-success-400'
+                            }`} />
+                            <span className={currentGame.mistakes > 0
+                                ? 'text-error-700 dark:text-error-300'
+                                : 'text-success-700 dark:text-success-300'
+                            }>
                                 {currentGame.mistakes}{currentGame.mistakeLimitDisabled ? '/∞' : `/${currentGame.maxMistakes}`}
                             </span>
-                        </div>
+                        </Badge>
                     </div>
                 </div>
             </div>

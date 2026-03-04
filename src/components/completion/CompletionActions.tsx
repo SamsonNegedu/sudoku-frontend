@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { Cross2Icon, RocketIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
@@ -17,8 +17,8 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
         <div className="flex gap-3">
             <Button
                 onClick={onStartNewGame}
-                size="3"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold shadow-md transition-all duration-200 border-0"
+                size="lg"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-semibold shadow-md transition-all duration-200"
             >
                 <RocketIcon className="w-4 h-4" />
                 {t('completion.newPuzzle')}
@@ -26,10 +26,9 @@ export const CompletionActions: React.FC<CompletionActionsProps> = ({
 
             <Button
                 onClick={onClose}
-                size="3"
-                variant="soft"
-                color="gray"
-                className="flex-1 font-medium transition-all duration-200 hover:bg-neutral-200 dark:hover:bg-gray-700 border-0"
+                size="lg"
+                variant="secondary"
+                className="flex-1 font-medium transition-all duration-200 hover:bg-neutral-200 dark:hover:bg-gray-700"
             >
                 <Cross2Icon className="w-4 h-4" />
             </Button>

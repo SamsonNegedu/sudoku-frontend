@@ -4,6 +4,129 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* ===== LIGHT THEME ===== */
+    
+    /* Base colors */
+    --background: 0 0% 100%;                    /* Pure white */
+    --foreground: 222 47% 11%;                  /* Dark slate text */
+    
+    /* Card colors */
+    --card: 0 0% 100%;                          /* White cards */
+    --card-foreground: 222 47% 11%;             /* Dark text on cards */
+    
+    /* Popover colors */
+    --popover: 0 0% 100%;                       /* White popovers */
+    --popover-foreground: 222 47% 11%;          /* Dark text in popovers */
+    
+    /* Primary brand colors (Blue) - all using the same base color for consistency */
+    --primary: 217 91% 60%;                     /* Main brand color */
+    --primary-foreground: 0 0% 100%;            /* White text on primary */
+    --primary-50: 217 91% 95%;
+    --primary-100: 217 91% 85%;
+    --primary-200: 217 91% 75%;
+    --primary-300: 217 91% 70%;
+    --primary-400: 217 91% 65%;
+    --primary-500: 217 91% 60%;                 /* Same as --primary */
+    --primary-600: 217 91% 60%;                 /* Same as --primary for consistency */
+    --primary-700: 217 91% 60%;                 /* Same as --primary for consistency */
+    --primary-800: 217 91% 45%;
+    --primary-900: 217 91% 35%;
+    --primary-950: 217 91% 25%;
+    
+    /* Secondary colors */
+    --secondary: 214 32% 91%;                   /* Light blue-gray */
+    --secondary-foreground: 222 47% 11%;        /* Dark text on secondary */
+    
+    /* Muted colors */
+    --muted: 210 40% 96%;                       /* Very light gray */
+    --muted-foreground: 215 16% 47%;            /* Medium gray text */
+    
+    /* Accent colors */
+    --accent: 210 40% 96%;                      /* Light accent */
+    --accent-foreground: 222 47% 11%;           /* Dark text on accent */
+    
+    /* Destructive/Error colors */
+    --destructive: 0 84% 60%;                   /* Red-500 (#ef4444) */
+    --destructive-foreground: 0 0% 100%;        /* White text on error */
+    
+    /* Border and input colors */
+    --border: 214 32% 91%;                      /* Light border */
+    --input: 214 32% 91%;                       /* Input border */
+    --ring: 217 91% 60%;                        /* Focus ring (blue) */
+    
+    /* Border radius */
+    --radius: 0.5rem;
+    
+    /* Game-specific colors */
+    --cell-bg: 0 0% 100%;                       /* White cell background */
+    --cell-fixed: 210 40% 98%;                  /* Very light gray for fixed cells */
+    --cell-selected: 217 91% 60%;               /* Blue for selected cell */
+    --cell-highlighted: 214 100% 97%;           /* Very light blue for highlighted */
+    --cell-error: 0 86% 97%;                    /* Very light red for errors */
+    --cell-hint: 48 96% 89%;                    /* Light amber for hints */
+  }
+
+  .dark {
+    /* ===== DARK THEME ===== */
+    
+    /* Base colors */
+    --background: 222 47% 11%;                  /* Dark slate background */
+    --foreground: 210 40% 98%;                  /* Light text */
+    
+    /* Card colors */
+    --card: 217 33% 17%;                        /* Dark card background */
+    --card-foreground: 210 40% 98%;             /* Light text on cards */
+    
+    /* Popover colors */
+    --popover: 217 33% 17%;                     /* Dark popover */
+    --popover-foreground: 210 40% 98%;          /* Light text in popovers */
+    
+    /* Primary brand colors (Blue) - all using the same base color for consistency */
+    --primary: 217 91% 60%;                     /* Main brand color */
+    --primary-foreground: 0 0% 100%;            /* White text on primary */
+    --primary-50: 217 91% 95%;
+    --primary-100: 217 91% 85%;
+    --primary-200: 217 91% 75%;
+    --primary-300: 217 91% 70%;
+    --primary-400: 217 91% 65%;
+    --primary-500: 217 91% 60%;                 /* Same as --primary */
+    --primary-600: 217 91% 60%;                 /* Same as --primary for consistency */
+    --primary-700: 217 91% 60%;                 /* Same as --primary for consistency */
+    --primary-800: 217 91% 45%;
+    --primary-900: 217 91% 35%;
+    --primary-950: 217 91% 25%;
+    
+    /* Secondary colors */
+    --secondary: 217 33% 17%;                   /* Dark secondary */
+    --secondary-foreground: 210 40% 98%;        /* Light text on secondary */
+    
+    /* Muted colors */
+    --muted: 223 47% 11%;                       /* Dark muted */
+    --muted-foreground: 215 20% 65%;            /* Medium light gray text */
+    
+    /* Accent colors */
+    --accent: 217 33% 17%;                      /* Dark accent */
+    --accent-foreground: 210 40% 98%;           /* Light text on accent */
+    
+    /* Destructive/Error colors */
+    --destructive: 0 63% 31%;                   /* Dark red */
+    --destructive-foreground: 210 40% 98%;      /* Light text on error */
+    
+    /* Border and input colors */
+    --border: 217 33% 17%;                      /* Dark border */
+    --input: 217 33% 17%;                       /* Input border */
+    --ring: 217 91% 60%;                        /* Focus ring (blue) */
+    
+    /* Game-specific colors */
+    --cell-bg: 217 33% 17%;                     /* Dark cell background */
+    --cell-fixed: 215 28% 25%;                  /* Slightly lighter for fixed cells */
+    --cell-selected: 217 91% 60%;               /* Blue for selected cell */
+    --cell-highlighted: 221 83% 27%;            /* Dark blue for highlighted */
+    --cell-error: 0 63% 31%;                    /* Dark red for errors */
+    --cell-hint: 32 95% 44%;                    /* Amber for hints */
+  }
+
   html {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
@@ -11,9 +134,13 @@
   }
   
   body {
-    @apply bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50;
+    @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    @apply border-border;
   }
 }
 
@@ -26,13 +153,11 @@
     position: relative;
     transition: background-color 0.04s ease, border-color 0.04s ease, transform 0.06s ease, box-shadow 0.06s ease;
     cursor: pointer !important;
-    /* Let the grid container control the size */
     width: 100%;
     height: 100%;
-    /* Remove flex centering to prevent jumping */
-    display: block;
-    /* Ensure content isn't clipped by any border radius */
-    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Smooth hover effect */

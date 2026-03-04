@@ -4,17 +4,19 @@ import { TextField } from '@radix-ui/themes';
 import { MagnifyingGlassIcon, PlayIcon } from '@radix-ui/react-icons';
 import { TechniqueVideo } from './learning/TechniqueVideo';
 import { videoTutorials, type VideoTutorial } from '../data/videoTutorials';
+import { Button } from '@/components/ui/button';
 
 const VideoDetail: React.FC<{ video: VideoTutorial; onBack: () => void }> = ({ video, onBack }) => {
     const { t } = useTranslation();
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <button
+            <Button
                 onClick={onBack}
-                className="mb-6 inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                variant="ghost"
+                className="mb-6 gap-2"
             >
                 ← {t('videoTutorials.backToVideos')}
-            </button>
+            </Button>
 
             <TechniqueVideo
                 youtubeId={video.youtubeId}
@@ -34,7 +36,7 @@ const VideoGrid: React.FC<{
     onSelectVideo: (video: VideoTutorial) => void;
 }> = ({ filteredVideos, onSelectVideo }) => {
     const { t } = useTranslation();
-    
+
     const getLevelTranslation = (level: string) => {
         const levelMap: Record<string, string> = {
             'basic': 'beginner',
@@ -46,42 +48,63 @@ const VideoGrid: React.FC<{
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVideos.map(video => (
                 <button
                     key={video.id}
                     onClick={() => onSelectVideo(video)}
-                    className="group text-left bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-all overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400"
+                    className="group text-left bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:-translate-y-1 flex flex-col h-full"
                 >
-                    <div className="relative bg-neutral-100 dark:bg-gray-700 h-32 flex items-center justify-center group-hover:bg-neutral-200 dark:group-hover:bg-gray-600 transition-colors">
-                        <PlayIcon className="w-12 h-12 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
-                        <div className="absolute top-2 right-2 bg-neutral-800 dark:bg-gray-900 px-2 py-1 rounded text-white text-xs font-semibold">
-                            {video.duration} {t('videoTutorials.min')}
+                    {/* Thumbnail with gradient overlay */}
+                    <div className="relative bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-700 dark:to-gray-600 aspect-video w-full flex items-center justify-center overflow-hidden">
+                        {/* Animated background pattern */}
+                        <div className="absolute inset-0 opacity-10 dark:opacity-5">
+                            <div className="absolute inset-0 bg-primary-500/10" style={{
+                                backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+                                backgroundSize: '20px 20px'
+                            }}></div>
                         </div>
-                        <div className="absolute bottom-2 left-2 bg-neutral-700 dark:bg-gray-800 px-2 py-1 rounded text-white text-xs font-medium">
+
+                        {/* Play button with animation */}
+                        <div className="relative z-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 group-hover:bg-primary-600 dark:group-hover:bg-primary-500 transition-all duration-300 shadow-lg">
+                            <PlayIcon className="w-8 h-8 text-primary-600 dark:text-primary-500 group-hover:text-white transition-colors" />
+                        </div>
+
+                        {/* Duration badge */}
+                        <div className="absolute top-3 right-3 bg-black/75 backdrop-blur-sm px-2.5 py-1 rounded-md text-white text-xs font-semibold">
+                            {video.duration} min
+                        </div>
+
+                        {/* Level badge */}
+                        <div className="absolute bottom-3 left-3 bg-primary-600 dark:bg-primary-500 px-2.5 py-1 rounded-md text-white text-xs font-semibold uppercase tracking-wide">
                             {getLevelTranslation(video.level)}
                         </div>
                     </div>
 
-                <div className="p-4 space-y-3">
-                    <div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
-                            {video.title}
-                        </h4>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mt-1">
-                            {video.techniqueName}
-                        </p>
-                    </div>
+                    {/* Content */}
+                    <div className="p-5 space-y-3 flex flex-col flex-1">
+                        <div>
+                            <h4 className="font-bold text-base text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-colors line-clamp-2 leading-snug">
+                                {video.title}
+                            </h4>
+                            <p className="text-xs text-primary-600 dark:text-primary-500 font-semibold mt-1.5 uppercase tracking-wide">
+                                {video.techniqueName}
+                            </p>
+                        </div>
 
-                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                        {video.description}
-                    </p>
-
-                    <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {t('videoTutorials.videoBy')} <span className="font-semibold text-gray-700 dark:text-gray-300">{video.creator}</span>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed flex-1">
+                            {video.description}
                         </p>
-                    </div>
+
+                        {/* Creator info */}
+                        <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700">
+                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">
+                                {video.creator.charAt(0)}
+                            </div>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                                <span className="font-semibold text-gray-800 dark:text-gray-200">{video.creator}</span>
+                            </p>
+                        </div>
                     </div>
                 </button>
             ))}
@@ -123,7 +146,7 @@ export const VideoTutorials: React.FC = () => {
     return (
         <div className="max-w-6xl mx-auto space-y-8">
             <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                 <TextField.Root
                     placeholder={t('videoTutorials.searchPlaceholder')}
                     value={searchQuery}
@@ -138,27 +161,22 @@ export const VideoTutorials: React.FC = () => {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                     {levels.map(level => (
-                        <button
+                        <Button
                             key={level.id}
                             onClick={() => setSelectedLevel(level.id)}
-                            className={`px-4 py-2 rounded-lg font-medium transition-all border ${selectedLevel === level.id
-                                    ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                    : 'bg-neutral-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 border-neutral-200 dark:border-gray-600 hover:bg-neutral-100 dark:hover:bg-gray-700 hover:border-neutral-300 dark:hover:border-gray-500'
-                                }`}
+                            variant={selectedLevel === level.id ? "default" : "outline"}
+                            className={selectedLevel === level.id
+                                ? 'bg-primary-600 hover:bg-primary-700 text-white border-primary-600 shadow-md'
+                                : 'bg-neutral-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 border-neutral-200 dark:border-gray-600 hover:bg-neutral-100 dark:hover:bg-gray-700 hover:border-neutral-300 dark:hover:border-gray-500'
+                            }
                         >
                             {level.name}
-                        </button>
+                        </Button>
                     ))}
                 </div>
             </div>
 
             <div>
-                <div className="mb-4">
-                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        {filteredVideos.length} {filteredVideos.length === 1 ? t('videoTutorials.tutorial') : t('videoTutorials.tutorials')}
-                    </h3>
-                </div>
-
                 {filteredVideos.length === 0 ? (
                     <div className="text-center py-12 bg-neutral-50 dark:bg-gray-700/50 rounded-lg border border-neutral-200 dark:border-gray-600">
                         <PlayIcon className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />

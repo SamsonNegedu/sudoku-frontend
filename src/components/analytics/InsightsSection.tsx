@@ -13,15 +13,15 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({ insights }) =>
     const getInsightStyles = (type: AnalyticsInsight['type']) => {
         switch (type) {
             case 'strength':
-                return 'border-green-500 bg-green-50';
+                return 'border-success-500 dark:border-success-600 bg-success-50 dark:bg-success-950/30';
             case 'weakness':
-                return 'border-red-500 bg-red-50';
+                return 'border-error-500 dark:border-error-600 bg-error-50 dark:bg-error-950/30';
             case 'suggestion':
-                return 'border-blue-600 bg-blue-50';
+                return 'border-primary-600 dark:border-primary-500 bg-primary-50 dark:bg-primary-950/30';
             case 'achievement':
-                return 'border-purple-500 bg-purple-50';
+                return 'border-primary-500 dark:border-primary-600 bg-primary-50 dark:bg-primary-950/30';
             default:
-                return 'border-gray-500 bg-gray-50';
+                return 'border-gray-500 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50';
         }
     };
 

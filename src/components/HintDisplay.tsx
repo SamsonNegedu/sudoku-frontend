@@ -1,9 +1,8 @@
 import React from 'react';
-import { useHintPositioning } from '../hooks/useHintPositioning';
-import { useHintModal } from '../hooks/useHintModal';
 import { HintHeader } from './hints/HintHeader';
 import { HintContent } from './hints/HintContent';
 import { getHintColor } from '../utils/hintUtils';
+import { Card } from '@/components/ui/card';
 import type { Hint } from '../types';
 
 interface HintDisplayProps {
@@ -17,27 +16,20 @@ export const HintDisplay: React.FC<HintDisplayProps> = ({
   onClose,
   isVisible,
 }) => {
-  const position = useHintPositioning(isVisible);
-  const { fadeOut, modalRef, handleClose } = useHintModal(isVisible, onClose);
-
   if (!hint || !isVisible) return null;
 
   return (
-    <div
-      className={`fixed z-40 ${fadeOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
-      style={{
-        top: typeof position.top === 'number' ? `${position.top}px` : position.top,
-        left: typeof position.left === 'number' ? `${position.left}px` : position.left,
-        transform: position.transform,
-      }}
+    <div 
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)] lg:w-full pointer-events-auto animate-in slide-in-from-top-4 fade-in duration-300"
+      role="alert"
+      aria-live="polite"
     >
-      <div
-        ref={modalRef}
-        className={`max-w-md mx-auto p-4 rounded-xl shadow-lg border-2 ${getHintColor(hint)}`}
-      >
-        <HintHeader hint={hint} onClose={handleClose} />
-        <HintContent hint={hint} onClose={handleClose} />
-      </div>
+      <Card className={`${getHintColor(hint)} border-2 shadow-2xl`}>
+        <div className="p-4">
+          <HintHeader hint={hint} onClose={onClose} />
+          <HintContent hint={hint} onClose={onClose} />
+        </div>
+      </Card>
     </div>
   );
 };

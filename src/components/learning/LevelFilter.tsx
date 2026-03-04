@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import type { IconProps } from '@radix-ui/react-icons/dist/types';
+import { cn } from '@/utils/index';
 
 interface LevelItem {
     readonly id: string;
@@ -27,8 +28,12 @@ export const LevelFilter: React.FC<LevelFilterProps> = ({
                     <Button
                         key={level.id}
                         onClick={() => onLevelChange(level.id)}
-                        variant={selectedLevel === level.id ? "solid" : "outline"}
-                        className={selectedLevel === level.id ? "bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-600" : "dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"}
+                        variant={selectedLevel === level.id ? "default" : "outline"}
+                        className={cn(
+                            selectedLevel === level.id 
+                                ? "bg-primary-600 dark:bg-primary-700 text-white hover:bg-primary-700 dark:hover:bg-primary-600" 
+                                : "dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"
+                        )}
                     >
                         <Icon className="w-4 h-4 mr-2" />
                         {level.name}

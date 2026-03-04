@@ -59,7 +59,7 @@ export const TechniqueVideo: React.FC<TechniqueVideoProps> = ({
                                 href={creatorChannel}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:underline font-medium inline-flex items-center gap-1"
+                                className="text-primary-600 dark:text-primary-500 hover:underline font-medium inline-flex items-center gap-1"
                             >
                                 {creator}
                                 <ExternalLinkIcon className="w-3 h-3" />
@@ -77,8 +77,8 @@ export const TechniqueVideo: React.FC<TechniqueVideoProps> = ({
                 </div>
 
                 {/* License Information */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-2">
-                    <p className="text-xs text-blue-700 dark:text-blue-300">
+                <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded p-2">
+                    <p className="text-xs text-primary-700 dark:text-primary-300">
                         <span className="font-semibold">License:</span> {licenseType}
                         {' • '}
                         Embedded from YouTube with proper attribution

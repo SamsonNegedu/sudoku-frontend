@@ -13,26 +13,26 @@ export const TechniqueAnalysis: React.FC<TechniqueAnalysisProps> = ({ insights }
     const getInsightStyles = (type: TechniqueInsight['type']) => {
         switch (type) {
             case 'strength':
-                return 'bg-green-50 border-green-400';
+                return 'bg-success-50 dark:bg-success-950/30 border-success-400 dark:border-success-600';
             case 'weakness':
-                return 'bg-red-50 border-red-400';
+                return 'bg-error-50 dark:bg-error-950/30 border-error-400 dark:border-error-600';
             case 'improvement':
-                return 'bg-yellow-50 border-yellow-400';
+                return 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-400 dark:border-yellow-600';
             default:
-                return 'bg-blue-50 border-blue-400';
+                return 'bg-primary-50 dark:bg-primary-950/30 border-primary-400 dark:border-primary-600';
         }
     };
 
     const getInsightBadgeStyles = (type: TechniqueInsight['type']) => {
         switch (type) {
             case 'strength':
-                return 'bg-green-100 text-green-800';
+                return 'bg-success-100 dark:bg-success-900/50 text-success-800 dark:text-success-300';
             case 'weakness':
-                return 'bg-red-100 text-red-800';
+                return 'bg-error-100 dark:bg-error-900/50 text-error-800 dark:text-error-300';
             case 'improvement':
-                return 'bg-yellow-100 text-yellow-800';
+                return 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300';
             default:
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-primary-100 dark:bg-primary-900/50 text-primary-800 dark:text-primary-300';
         }
     };
 

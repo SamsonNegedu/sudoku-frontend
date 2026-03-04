@@ -1,5 +1,13 @@
 import React from 'react';
-import { Button, DropdownMenu } from '@radix-ui/themes';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import { PlusIcon, ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 import { DifficultyConfigManager } from '../../config/difficulty';
@@ -32,12 +40,11 @@ export const NewGameDropdown: React.FC<NewGameDropdownProps> = ({
     if (!isPlaying && !isPaused && !isCompleted) return null;
 
     return (
-        <DropdownMenu.Root>
-            <DropdownMenu.Trigger disabled={isGeneratingPuzzle}>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild disabled={isGeneratingPuzzle}>
                 <Button
-                    size="2"
-                    variant="soft"
-                    className="hidden sm:inline-flex bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/50 dark:hover:bg-blue-800 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
+                    variant="secondary"
+                    className="hidden sm:inline-flex bg-primary-100 hover:bg-primary-200 dark:bg-primary-900/50 dark:hover:bg-primary-800 text-primary-600 dark:text-primary-300 border border-primary-200 dark:border-primary-700"
                     disabled={isGeneratingPuzzle}
                 >
                     {isGeneratingPuzzle ? (
@@ -53,59 +60,40 @@ export const NewGameDropdown: React.FC<NewGameDropdownProps> = ({
                         </>
                     )}
                 </Button>
-            </DropdownMenu.Trigger>
+            </DropdownMenuTrigger>
 
-            <DropdownMenu.Content
+            <DropdownMenuContent
                 align="end"
                 sideOffset={8}
-                className="w-56 max-w-56 p-2 bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 rounded-xl shadow-lg"
+                className="w-48 p-1.5"
             >
                 {/* Restart Current Puzzle Option */}
-                <DropdownMenu.Item
-                    onSelect={onRestart}
-                    className="px-3 py-3 rounded-lg cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
+                <DropdownMenuItem
+                    onClick={onRestart}
+                    className="px-3 py-2 rounded cursor-pointer text-sm"
                 >
-                    <div className="flex items-center gap-3">
-                        <svg className="w-4 h-4 text-neutral-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
-                        </svg>
-                        <div className="flex flex-col gap-1">
-                            <div className="font-semibold text-neutral-900 dark:text-gray-100 text-sm">
-                                {t('game.restart')}
-                            </div>
-                            <div className="text-xs text-neutral-500 dark:text-gray-400 leading-normal">
-                                Reset to starting state
-                            </div>
-                        </div>
-                    </div>
-                </DropdownMenu.Item>
+                    <svg className="w-4 h-4 mr-2 text-neutral-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                    </svg>
+                    {t('game.restart')}
+                </DropdownMenuItem>
 
-                <DropdownMenu.Separator className="my-2" />
+                <DropdownMenuSeparator className="my-1" />
 
-                <DropdownMenu.Label className="px-2 py-1.5 text-xs font-semibold text-neutral-600 dark:text-gray-400 uppercase tracking-wide">
+                <DropdownMenuLabel className="px-2 py-1 text-xs font-semibold text-neutral-600 dark:text-gray-400 uppercase tracking-wide">
                     New Puzzle
-                </DropdownMenu.Label>
-                <DropdownMenu.Separator className="my-2" />
+                </DropdownMenuLabel>
 
-                {difficultyLevels.map((difficulty, index) => (
-                    <div key={difficulty.level}>
-                        {index > 0 && <div className="h-4"></div>}
-                        <DropdownMenu.Item
-                            onSelect={() => onNewGame(difficulty.level)}
-                            className="px-3 py-3 rounded-lg cursor-pointer transition-colors hover:bg-neutral-50 dark:hover:bg-gray-700 focus:bg-neutral-50 dark:focus:bg-gray-700 outline-none border-0"
-                        >
-                            <div className="flex flex-col gap-1">
-                                <div className="font-semibold text-neutral-900 dark:text-gray-100 text-sm">
-                                    {difficulty.label}
-                                </div>
-                                <div className="text-xs text-neutral-500 dark:text-gray-400 leading-normal break-words">
-                                    {difficulty.description}
-                                </div>
-                            </div>
-                        </DropdownMenu.Item>
-                    </div>
+                {difficultyLevels.map((difficulty) => (
+                    <DropdownMenuItem
+                        key={difficulty.level}
+                        onClick={() => onNewGame(difficulty.level)}
+                        className="px-3 py-2 rounded cursor-pointer text-sm capitalize"
+                    >
+                        {difficulty.label}
+                    </DropdownMenuItem>
                 ))}
-            </DropdownMenu.Content>
-        </DropdownMenu.Root>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };

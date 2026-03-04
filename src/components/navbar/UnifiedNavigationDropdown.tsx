@@ -1,6 +1,12 @@
 import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { DropdownMenu, Button } from '@radix-ui/themes';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import { HamburgerMenuIcon, BarChartIcon, VideoIcon, BookmarkIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
@@ -9,40 +15,34 @@ export const UnifiedNavigationDropdown: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
-                    size="2"
+                    size="icon"
                     className="text-gray-700 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-gray-700"
                     aria-label={t('navigation.menu')}
                 >
                     <HamburgerMenuIcon className="w-5 h-5" />
                 </Button>
-            </DropdownMenu.Trigger>
+            </DropdownMenuTrigger>
 
-            <DropdownMenu.Content className="min-w-[180px]">
-                <DropdownMenu.Item onClick={() => navigate({ to: '/game' })}>
-                    <div className="flex items-center gap-2">
-                        <BookmarkIcon className="w-4 h-4" />
-                        {t('navigation.game')}
-                    </div>
-                </DropdownMenu.Item>
+            <DropdownMenuContent className="min-w-[180px]" align="end">
+                <DropdownMenuItem onClick={() => navigate({ to: '/game' })}>
+                    <BookmarkIcon className="w-4 h-4" />
+                    {t('navigation.game')}
+                </DropdownMenuItem>
 
-                <DropdownMenu.Item onClick={() => navigate({ to: '/analytics' })}>
-                    <div className="flex items-center gap-2">
-                        <BarChartIcon className="w-4 h-4" />
-                        {t('navigation.analytics')}
-                    </div>
-                </DropdownMenu.Item>
+                <DropdownMenuItem onClick={() => navigate({ to: '/analytics' })}>
+                    <BarChartIcon className="w-4 h-4" />
+                    {t('navigation.analytics')}
+                </DropdownMenuItem>
 
-                <DropdownMenu.Item onClick={() => navigate({ to: '/videos' })}>
-                    <div className="flex items-center gap-2">
-                        <VideoIcon className="w-4 h-4" />
-                        {t('navigation.videos')}
-                    </div>
-                </DropdownMenu.Item>
-            </DropdownMenu.Content>
-        </DropdownMenu.Root>
+                <DropdownMenuItem onClick={() => navigate({ to: '/videos' })}>
+                    <VideoIcon className="w-4 h-4" />
+                    {t('navigation.videos')}
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };

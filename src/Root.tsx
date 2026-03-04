@@ -1,9 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, useRouterState, useNavigate } from '@tanstack/react-router'
 import { Theme } from '@radix-ui/themes'
 import { ThemeProvider } from './components/ThemeProvider'
 import { AppNavbar } from './components/AppNavbar'
 import { AnalyticsProvider } from './components/AnalyticsProvider'
+import { GameProvider } from './contexts'
+import { Toaster } from '@/components/ui/toaster'
+import { CommandPalette } from './components/CommandPalette'
 import { useGameStore } from './stores/gameStore'
 import { storageManager } from './utils/storageManager'
 import { gameEngineService } from './services/gameEngineService'
@@ -24,6 +27,9 @@ export default function Root() {
 
   // Track if we auto-paused the game due to tab visibility
   const autoTabVisibilityPauseRef = useRef(false)
+  
+  // Command palette state
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
 
   // Initialize storage manager and game engine on app start
   useEffect(() => {
@@ -75,6 +81,21 @@ export default function Root() {
     }
   }, [currentGame, pauseGame, resumeGame])
 
+  // Command palette keyboard shortcut (Cmd+K / Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setCommandPaletteOpen(true)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   // Derive isPlaying from currentGame state
   const isPlaying = currentGame && !currentGame.isCompleted && !currentGame.isPaused
   const isPaused = currentGame && !currentGame.isCompleted && currentGame.isPaused
@@ -85,31 +106,50 @@ export default function Root() {
     startNewGame(difficulty)
   }
 
+  // Calculate completion percentage based on filled cells
+  const calculateCompletionPercentage = () => {
+    if (!currentGame) return 0;
+    
+    const totalCells = 81; // 9x9 grid
+    let filledCells = 0;
+    
+    currentGame.board.forEach(row => {
+      row.forEach(cell => {
+        if (cell.value !== null) {
+          filledCells++;
+        }
+      });
+    });
+    
+    return Math.round((filledCells / totalCells) * 100);
+  };
+
+  const gameContextValue = {
+    currentGame,
+    isPlaying: !!isPlaying,
+    isPaused: !!isPaused,
+    isCompleted: currentGame?.isCompleted || false,
+    isGeneratingPuzzle,
+    completionPercentage: calculateCompletionPercentage(),
+    onNewGame: handleNewGame,
+    onRestart: restartCurrentGame,
+    onPause: pauseGame,
+    onResume: resumeGame,
+    onShowHelp: undefined,
+  };
+
   return (
     <ThemeProvider>
       <Theme>
         <AnalyticsProvider>
-          <div className="App relative">
-            <AppNavbar
-              onNewGame={handleNewGame}
-              onRestart={restartCurrentGame}
-              onPause={pauseGame}
-              onResume={resumeGame}
-              currentDifficulty={currentGame?.difficulty}
-              isPlaying={!!isPlaying}
-              isPaused={!!isPaused}
-              isCompleted={currentGame?.isCompleted || false}
-              isGeneratingPuzzle={isGeneratingPuzzle}
-              startTime={currentGame?.startTime}
-              pauseStartTime={currentGame?.pauseStartTime}
-              totalPausedTime={currentGame?.totalPausedTime || 0}
-              pausedElapsedTime={currentGame?.pausedElapsedTime}
-              currentTime={currentGame?.currentTime}
-              hintsUsed={currentGame?.hintsUsed || 0}
-              maxHints={currentGame?.maxHints || 3}
-            />
-            <Outlet />
-          </div>
+          <GameProvider value={gameContextValue}>
+            <div className="App relative">
+              <AppNavbar />
+              <Outlet />
+              <Toaster />
+              <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+            </div>
+          </GameProvider>
         </AnalyticsProvider>
       </Theme>
     </ThemeProvider>

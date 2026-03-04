@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { PlayIcon, PauseIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
@@ -30,17 +30,17 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
             onTouchMove={(e) => e.preventDefault()} // Prevent scroll on touch
             onWheel={(e) => e.preventDefault()} // Prevent scroll on wheel
         >
-            <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 rounded-2xl p-8 mx-4 shadow-2xl max-w-sm w-full text-center border border-blue-100 dark:border-blue-900/50 animate-bounce-in">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl p-8 mx-4 shadow-2xl max-w-sm w-full text-center border border-neutral-200 dark:border-gray-700 animate-bounce-in">
                 {/* Subtle background decoration */}
                 <div className="absolute inset-0 opacity-50 dark:opacity-20 overflow-hidden rounded-2xl">
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-blue-200 dark:bg-blue-600 rounded-full blur-3xl opacity-10"></div>
+                    <div className="absolute top-0 right-0 w-40 h-40 bg-primary-200 dark:bg-primary-600 rounded-full blur-3xl opacity-10"></div>
                 </div>
 
                 <div className="relative space-y-6">
                     {/* Icon */}
                     <div className="flex justify-center">
-                        <div className="p-4 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-blue-100 dark:border-blue-900">
-                            <PauseIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                        <div className="p-4 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-primary-100 dark:border-primary-900">
+                            <PauseIcon className="w-8 h-8 text-primary-600 dark:text-primary-500" />
                         </div>
                     </div>
 
@@ -55,8 +55,8 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
                     {/* Action Button */}
                     <Button
                         onClick={onResume}
-                        size="4"
-                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/30 dark:shadow-blue-900/30 transition-all duration-200 border-0"
+                        size="lg"
+                        className="w-full gap-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-semibold shadow-lg shadow-primary-600/30 dark:shadow-primary-900/30 transition-all duration-200"
                     >
                         <PlayIcon className="w-5 h-5" />
                         {t('game.resume')}

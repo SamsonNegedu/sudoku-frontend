@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/utils/index';
 
 interface IconButtonProps {
     onClick: () => void;
     disabled?: boolean;
-    variant?: 'solid' | 'soft' | 'outline';
+    variant?: 'default' | 'outline' | 'ghost' | 'destructive';
     color?: 'blue' | 'red' | 'green' | 'gray' | 'amber';
     size?: 'sm' | 'md' | 'lg';
     className?: string;
@@ -26,35 +27,34 @@ export const IconButton: React.FC<IconButtonProps> = ({
     title,
     'data-testid': dataTestId,
 }) => {
-    const effectiveColor = disabled ? 'gray' : color;
-
-    // Consistent sizing using CSS variables - minimum 44px touch targets
     const sizeClasses = {
-        sm: 'w-[2.75rem] h-[2.75rem]',  // 44px - minimum touch target
-        md: 'w-12 h-12 sm:w-16 sm:h-16', // 48px mobile, 64px desktop
-        lg: 'w-16 h-16 sm:w-20 sm:h-20', // 64px mobile, 80px desktop
+        sm: 'w-[2.75rem] h-[2.75rem]',
+        md: 'w-12 h-12 sm:w-16 sm:h-16',
+        lg: 'w-16 h-16 sm:w-20 sm:h-20',
     }[size];
-
-    const baseClasses = `${sizeClasses} flex items-center justify-center bg-white dark:bg-gray-800 transition-all duration-200 rounded-lg`;
 
     const colorClasses = disabled
         ? 'opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500'
         : color === 'red'
-            ? 'border-red-500 text-red-600 hover:bg-red-50 hover:border-red-600 hover:scale-105 active:scale-95 dark:hover:bg-red-950/30 dark:text-red-400 dark:border-red-500'
+            ? 'border-error-500 text-error-600 hover:bg-error-50 hover:border-error-600 hover:scale-105 active:scale-95 dark:hover:bg-error-950/30 dark:text-error-400 dark:border-error-500'
             : color === 'green'
-                ? 'border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600 hover:scale-105 active:scale-95 dark:hover:bg-green-950/30 dark:text-green-400 dark:border-green-500'
+                ? 'border-success-500 text-success-600 hover:bg-success-50 hover:border-success-600 hover:scale-105 active:scale-95 dark:hover:bg-success-950/30 dark:text-success-400 dark:border-success-500'
                 : color === 'amber'
-                    ? 'border-amber-500 text-amber-600 hover:bg-amber-50 hover:border-amber-600 hover:scale-105 active:scale-95 dark:hover:bg-amber-950/30 dark:text-amber-400 dark:border-amber-500'
-                    : 'border-blue-600 text-blue-600 hover:bg-blue-50 hover:border-blue-700 hover:scale-105 active:scale-95 dark:hover:bg-blue-950/30 dark:text-blue-400 dark:border-blue-500';
+                    ? 'border-hint-500 text-hint-600 hover:bg-hint-50 hover:border-hint-600 hover:scale-105 active:scale-95 dark:hover:bg-hint-950/30 dark:text-hint-400 dark:border-hint-500'
+                    : 'border-primary-600 text-primary-600 hover:bg-primary-50 hover:border-primary-700 hover:scale-105 active:scale-95 dark:hover:bg-primary-950/30 dark:text-primary-500 dark:border-primary-500';
 
     return (
         <Button
             onClick={onClick}
             disabled={disabled}
-            size="2"
             variant={variant}
-            color={effectiveColor}
-            className={`${baseClasses} ${colorClasses} ${className}`}
+            size="icon"
+            className={cn(
+                sizeClasses,
+                "bg-white dark:bg-gray-800 transition-all duration-200",
+                colorClasses,
+                className
+            )}
             aria-label={ariaLabel}
             title={title}
             data-testid={dataTestId}

@@ -9,7 +9,7 @@ export const getHintColor = (hint: Hint) => {
     case 'cell':
       return 'border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20';
     case 'technique':
-      return 'border-blue-200 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/20';
+      return 'border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/20';
     case 'note':
       return 'border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/20';
     default:

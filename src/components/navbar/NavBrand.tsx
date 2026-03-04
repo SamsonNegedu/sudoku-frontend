@@ -12,7 +12,7 @@ export const NavBrand: React.FC<NavBrandProps> = ({ onShowGame }) => {
             onClick={onShowGame}
             className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
         >
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                 {/* Creative Grid Z - Z shaped like a 3x3 grid section */}
                 <div className="relative w-5 h-5">
                     {/* Grid background */}
@@ -33,7 +33,7 @@ export const NavBrand: React.FC<NavBrandProps> = ({ onShowGame }) => {
                 </div>
             </div>
             <div className="block">
-                <h1 className="text-lg sm:text-xl font-bold text-blue-600">
+                <h1 className="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-500">
                     {t('app.title')}
                 </h1>
             </div>

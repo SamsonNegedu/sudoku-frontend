@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { formatTime } from '../utils';
-import { StopwatchIcon } from '@radix-ui/react-icons';
+import { StopwatchIcon, PauseIcon, CheckCircledIcon } from '@radix-ui/react-icons';
+import { Progress } from '@/components/ui/progress';
 
 interface GameTimerProps {
     startTime: Date | string | undefined;
@@ -11,6 +11,7 @@ interface GameTimerProps {
     totalPausedTime: number;
     pausedElapsedTime?: number;
     currentTime?: Date | string; // For completed games
+    completionPercentage?: number; // Percentage of cells filled (0-100)
 }
 
 export const GameTimer: React.FC<GameTimerProps> = ({
@@ -20,10 +21,9 @@ export const GameTimer: React.FC<GameTimerProps> = ({
     pauseStartTime,
     totalPausedTime,
     pausedElapsedTime,
-
     currentTime,
+    completionPercentage = 0,
 }) => {
-    const { t } = useTranslation();
     const [elapsedTime, setElapsedTime] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -102,19 +102,39 @@ export const GameTimer: React.FC<GameTimerProps> = ({
     }
 
     return (
-        <div className="flex items-center gap-2 p-3 bg-neutral-100 dark:bg-gray-700 rounded-lg">
-            <div className="flex items-center gap-2">
-                <StopwatchIcon className="w-5 h-5 text-neutral-600 dark:text-gray-400" />
-                <span className="text-lg font-mono font-bold text-neutral-800 dark:text-gray-100">
+        <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1.5">
+                <StopwatchIcon className={`w-4 h-4 ${isPaused
+                        ? 'text-amber-600 dark:text-amber-400'
+                        : isCompleted
+                            ? 'text-success-600 dark:text-success-400'
+                            : 'text-primary-500 dark:text-primary-500'
+                    }`} />
+                <span className={`text-sm font-mono font-bold tabular-nums ${isPaused
+                        ? 'text-amber-700 dark:text-amber-300'
+                        : isCompleted
+                            ? 'text-success-700 dark:text-success-300'
+                            : 'text-primary-500 dark:text-primary-500'
+                    }`}>
                     {formatTime(elapsedTime)}
                 </span>
+                {isPaused && !isCompleted && (
+                    <PauseIcon className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                )}
+                {isCompleted && (
+                    <CheckCircledIcon className="w-3.5 h-3.5 text-success-600 dark:text-success-400" />
+                )}
             </div>
-
-            {isCompleted && (
-                <span className="text-sm text-neutral-600 dark:text-gray-300 bg-green-100 dark:bg-green-900 px-2 py-1 rounded">
-                    {t('game.completed')}
-                </span>
-            )}
+            {/* Subtle progress bar - shows completion based on filled cells */}
+            <Progress 
+                value={completionPercentage} 
+                className={`h-1 w-full ${isPaused
+                    ? 'opacity-50'
+                    : isCompleted
+                        ? 'opacity-75'
+                        : 'opacity-60'
+                }`}
+            />
         </div>
     );
 };

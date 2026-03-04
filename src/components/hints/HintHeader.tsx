@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { HintIcon } from './HintIcon';
 import type { Hint } from '../../types';
@@ -40,10 +40,9 @@ export const HintHeader: React.FC<HintHeaderProps> = ({ hint, onClose }) => {
             </div>
             <Button
                 onClick={onClose}
-                size="1"
+                size="sm"
                 variant="ghost"
-                color="gray"
-                className="p-1 hover:bg-neutral-200/50 dark:hover:bg-gray-700/50"
+                className="p-1 h-auto hover:bg-neutral-200/50 dark:hover:bg-gray-700/50"
             >
                 <CrossCircledIcon className="w-4 h-4" />
             </Button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
 interface Shortcut {
@@ -65,13 +65,14 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                 {/* Header */}
                 <div className="sticky top-0 flex items-center justify-between px-6 py-5 border-b border-neutral-200 dark:border-gray-700 bg-neutral-50 dark:bg-gray-700/50">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Keyboard Shortcuts</h2>
-                    <button
+                    <Button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 hover:bg-neutral-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                        variant="ghost"
+                        size="icon"
                         aria-label="Close"
                     >
                         <Cross2Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Content */}
@@ -79,7 +80,7 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                     {categories.map(category => (
                         <div key={category}>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <div className="w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                                <div className="w-1 h-6 bg-primary-600 dark:bg-primary-500 rounded-full"></div>
                                 {category}
                             </h3>
                             <div className="space-y-3">
@@ -87,7 +88,7 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                                     .filter(s => s.category === category)
                                     .map((shortcut, idx) => (
                                         <div key={idx} className="group flex items-start justify-between gap-4 p-3 hover:bg-neutral-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors">
-                                            <kbd className="px-3 py-2 bg-neutral-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md font-mono text-sm font-semibold min-w-fit shadow-sm border border-neutral-200 dark:border-gray-600 group-hover:border-blue-400 dark:group-hover:border-blue-500 transition-colors">
+                                            <kbd className="px-3 py-2 bg-neutral-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md font-mono text-sm font-semibold min-w-fit shadow-sm border border-neutral-200 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-colors">
                                                 {shortcut.key}
                                             </kbd>
                                             <p className="text-gray-700 dark:text-gray-300 text-sm flex-1 pt-2">
@@ -107,8 +108,8 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                     </p>
                     <Button
                         onClick={() => setIsOpen(false)}
-                        size="3"
-                        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold shadow-md transition-all duration-200 border-0"
+                        size="lg"
+                        className="bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-semibold shadow-md transition-all duration-200"
                     >
                         Close
                     </Button>

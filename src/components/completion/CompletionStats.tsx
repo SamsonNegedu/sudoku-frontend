@@ -16,12 +16,12 @@ export const CompletionStats: React.FC<CompletionStatsProps> = ({
     return (
         <div className="grid grid-cols-2 gap-4 mb-6">
             {/* Time Stat */}
-            <div className="group p-4 bg-gradient-to-br from-blue-50 to-blue-50/50 dark:from-blue-950/20 dark:to-blue-950/10 rounded-xl border border-blue-100 dark:border-blue-900/30 hover:border-blue-200 dark:hover:border-blue-800 transition-all">
+            <div className="group p-4 bg-gradient-to-br from-primary-50 to-primary-50/50 dark:from-primary-950/20 dark:to-primary-950/10 rounded-xl border border-primary-100 dark:border-primary-900/30 hover:border-primary-200 dark:hover:border-primary-800 transition-all">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         {t('completion.time')}
                     </span>
-                    <TimerIcon className="w-4 h-4 text-blue-500 dark:text-blue-400 opacity-60 group-hover:opacity-100 transition-opacity" />
+                    <TimerIcon className="w-4 h-4 text-primary-500 dark:text-primary-500 opacity-60 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <p className="text-xl font-bold text-gray-900 dark:text-white tabular-nums">
                     {completionTime}

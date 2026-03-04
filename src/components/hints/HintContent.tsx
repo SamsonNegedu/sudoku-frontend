@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { HintTargetCells } from './HintTargetCells';
 import { HintSuggestedValue } from './HintSuggestedValue';
 import { HintTechniqueDescription } from './HintTechniqueDescription';
@@ -36,9 +36,7 @@ export const HintContent: React.FC<HintContentProps> = ({ hint, onClose }) => {
             <div className="flex justify-end">
                 <Button
                     onClick={onClose}
-                    size="2"
-                    variant="solid"
-                    color="gray"
+                    variant="secondary"
                     className="text-sm"
                 >
                     {t('hints.gotIt')}

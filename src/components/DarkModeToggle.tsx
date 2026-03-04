@@ -1,17 +1,20 @@
 import React from 'react';
+import { Button } from '@/components/ui/button';
 import { useThemeStore } from '../stores/themeStore';
 
 export const DarkModeToggle: React.FC = () => {
     const { isDarkMode, toggleDarkMode } = useThemeStore();
 
     return (
-        <button
+        <Button
             onClick={toggleDarkMode}
-            className="p-2 rounded-lg transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+            variant="ghost"
+            size="icon"
+            className="rounded-lg"
             title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             aria-label="Toggle dark mode"
         >
             {isDarkMode ? '☀️' : '🌙'}
-        </button>
+        </Button>
     );
 };

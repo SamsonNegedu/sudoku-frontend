@@ -1,9 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import type { Difficulty } from '../../types';
 import type { UserAnalytics } from '../../types/analytics';
 import type { DifficultyProgressData } from '../../stores/analyticsStore';
+import { cn } from '@/utils/index';
 
 interface DifficultyProgressProps {
     userAnalytics: UserAnalytics;
@@ -37,12 +38,14 @@ export const DifficultyProgress: React.FC<DifficultyProgressProps> = ({
                     <Button
                         key={difficulty}
                         onClick={() => onDifficultyChange(difficulty)}
-                        variant={selectedDifficulty === difficulty ? "solid" : "outline"}
-                        size="1"
-                        className={`capitalize text-xs sm:text-sm px-2 sm:px-3 ${selectedDifficulty === difficulty
-                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                            : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                            }`}
+                        variant={selectedDifficulty === difficulty ? "default" : "outline"}
+                        size="sm"
+                        className={cn(
+                            "capitalize text-xs sm:text-sm px-2 sm:px-3",
+                            selectedDifficulty === difficulty
+                                ? 'bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-600 dark:hover:bg-primary-700'
+                                : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        )}
                     >
                         {t(`difficulty.${difficulty}`)}
                     </Button>

@@ -1,6 +1,26 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { cn } from '../utils';
-import type { SudokuCell as CellType } from '../types';
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuSeparator,
+    ContextMenuShortcut,
+    ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Pencil1Icon, TrashIcon, LightningBoltIcon } from '@radix-ui/react-icons';
+import type { SudokuCell as CellType, SudokuBoard } from '../types';
+
+// Forward ref wrapper for cell content to work with Radix UI triggers
+const CellContentWrapper = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+    ({ children, ...props }, ref) => (
+        <div ref={ref} {...props}>
+            {children}
+        </div>
+    )
+);
+CellContentWrapper.displayName = 'CellContentWrapper';
 
 interface SudokuCellProps {
     cell: CellType;
@@ -11,6 +31,10 @@ interface SudokuCellProps {
     isHintFilled?: boolean;
     onClick: () => void;
     onKeyDown: (event: React.KeyboardEvent) => void;
+    onToggleNote?: () => void;
+    onClear?: () => void;
+    onHint?: () => void;
+    board?: SudokuBoard;
 }
 
 const SudokuCellComponent: React.FC<SudokuCellProps> = ({
@@ -22,6 +46,9 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
     isHintFilled = false,
     onClick,
     onKeyDown,
+    onToggleNote,
+    onClear,
+    onHint,
 }) => {
     const {
         value,
@@ -59,10 +86,15 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
             // Grid edges (outer border) - same thickness as separators
             'border-r border-r-neutral-300 dark:border-r-gray-600': col === 8, // Right edge
             'border-b border-b-neutral-300 dark:border-b-gray-600': row === 8, // Bottom edge
+            // Rounded corners for corner cells to match grid container
+            'rounded-tl-[0.9rem]': row === 0 && col === 0, // Top-left corner
+            'rounded-tr-[0.9rem]': row === 0 && col === 8, // Top-right corner
+            'rounded-bl-[0.9rem]': row === 8 && col === 0, // Bottom-left corner
+            'rounded-br-[0.9rem]': row === 8 && col === 8, // Bottom-right corner
         }
     );
 
-    return (
+    const cellContent = (
         <div
             className={cn(cellClasses, borderClasses)}
             onClick={onClick}
@@ -97,8 +129,8 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
                             "font-bold text-neutral-800 dark:text-gray-100": isFixed,
                             // User-entered correct numbers - standard weight, slightly muted
                             "font-medium text-neutral-700 dark:text-gray-200": !isFixed && !isIncorrect,
-                            // User-entered incorrect numbers - red with emphasis
-                            "font-semibold text-red-600 dark:text-red-400": isIncorrect,
+                            // User-entered incorrect numbers - error color with emphasis
+                            "font-semibold text-error-600 dark:text-error-400": isIncorrect,
                         }
                     )}>
                         {value}
@@ -138,9 +170,68 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
                     ))}
                 </div>
             )}
-
-
         </div>
+    );
+
+    // Build tooltip content
+    const tooltipContent = isFixed
+        ? `Fixed cell (Row ${row + 1}, Col ${col + 1})`
+        : value
+            ? `Row ${row + 1}, Col ${col + 1} • Press 1-9 to change • Del to clear`
+            : `Row ${row + 1}, Col ${col + 1}`;
+
+    const wrappedContent = (
+        <TooltipProvider delayDuration={500}>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <CellContentWrapper>
+                        {cellContent}
+                    </CellContentWrapper>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="hidden sm:block">
+                    <p className="text-xs">{tooltipContent}</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    );
+
+    // Don't show context menu for fixed cells
+    if (isFixed) {
+        return wrappedContent;
+    }
+
+    return (
+        <ContextMenu>
+            <ContextMenuTrigger asChild>
+                {wrappedContent}
+            </ContextMenuTrigger>
+            <ContextMenuContent className="w-48">
+                {!value && onToggleNote && (
+                    <>
+                        <ContextMenuItem onClick={onToggleNote}>
+                            <Pencil1Icon className="mr-2 h-4 w-4" />
+                            Toggle Note Mode
+                            <ContextMenuShortcut>Space</ContextMenuShortcut>
+                        </ContextMenuItem>
+                        <ContextMenuSeparator />
+                    </>
+                )}
+                {value && !isFixed && onClear && (
+                    <ContextMenuItem onClick={onClear}>
+                        <TrashIcon className="mr-2 h-4 w-4" />
+                        Clear Cell
+                        <ContextMenuShortcut>Del</ContextMenuShortcut>
+                    </ContextMenuItem>
+                )}
+                {onHint && (
+                    <ContextMenuItem onClick={onHint}>
+                        <LightningBoltIcon className="mr-2 h-4 w-4" />
+                        Get Hint
+                        <ContextMenuShortcut>H</ContextMenuShortcut>
+                    </ContextMenuItem>
+                )}
+            </ContextMenuContent>
+        </ContextMenu>
     );
 };
 

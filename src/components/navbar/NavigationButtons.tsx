@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import { BarChartIcon, VideoIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
@@ -12,20 +12,20 @@ export const NavigationButtons: React.FC = () => {
         <>
             <Button
                 onClick={() => navigate({ to: '/analytics' })}
-                size="2"
                 variant="ghost"
+                size="icon"
                 aria-label={t('navigation.analytics')}
-                className="text-blue-600 hover:bg-blue-50"
+                className="text-primary-600 dark:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-950/30"
             >
                 <BarChartIcon />
             </Button>
 
             <Button
                 onClick={() => navigate({ to: '/videos' })}
-                size="2"
                 variant="ghost"
+                size="icon"
                 aria-label="Video Tutorials"
-                className="text-blue-600 hover:bg-blue-50"
+                className="text-primary-600 dark:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-950/30"
             >
                 <VideoIcon />
             </Button>

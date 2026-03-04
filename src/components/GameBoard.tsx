@@ -9,9 +9,13 @@ import { GamePlayView } from './game/GamePlayView';
 import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import type { Difficulty, Hint } from '../types';
 
-export const GameBoard: React.FC = () => {
-    const shortcutsModalRef = useRef<any>(null);
+interface KeyboardShortcutsModalRef {
+    open: () => void;
+    close: () => void;
+}
 
+export const GameBoard: React.FC = () => {
+    const shortcutsModalRef = useRef<KeyboardShortcutsModalRef>(null);
     const {
         currentGame,
         selectedCell,
@@ -86,6 +90,11 @@ export const GameBoard: React.FC = () => {
         startNewGame(difficulty);
     }, [startNewGame]);
 
+    // Handle undo with toast
+    const handleUndo = useCallback(() => {
+        undoMove();
+    }, [undoMove]);
+
     // Prevent body scrolling when game is paused
     useEffect(() => {
         if (currentGame?.isPaused) {
@@ -109,7 +118,7 @@ export const GameBoard: React.FC = () => {
     if (!isHydrated) {
         // Still loading persisted state, show minimal loading
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-primary-50 dark:from-slate-950 dark:to-primary-950">
                 <LoadingSpinner size="medium" />
             </div>
         );
@@ -146,7 +155,7 @@ export const GameBoard: React.FC = () => {
                 onToggleNote={handleToggleNote}
                 onUseHint={handleUseHint}
                 onCloseHint={handleCloseHint}
-                onUndo={undoMove}
+                onUndo={handleUndo}
                 onPause={pauseGame}
                 onResume={resumeGame}
                 getCompletedNumbers={getCompletedNumbers}

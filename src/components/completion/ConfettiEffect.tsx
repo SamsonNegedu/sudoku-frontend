@@ -7,8 +7,15 @@ interface ConfettiEffectProps {
 export const ConfettiEffect: React.FC<ConfettiEffectProps> = ({ isVisible }) => {
     if (!isVisible) return null;
 
-    // Subtle, brand-consistent colors
-    const confettiColors = ['#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#6b7280', '#9ca3af'];
+    // Subtle, brand-consistent colors using semantic palette
+    const confettiColors = [
+        'rgb(59 130 246)',   // primary-500
+        'rgb(96 165 250)',   // primary-400
+        'rgb(147 197 253)',  // primary-300
+        'rgb(219 234 254)',  // primary-100
+        'rgb(107 114 128)',  // neutral-500
+        'rgb(156 163 175)',  // neutral-400
+    ];
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

@@ -228,6 +228,13 @@
   "loading": {
     "generatingPuzzle": "Generating Puzzle",
     "creatingChallenge": "Creating your perfect Sudoku challenge",
+    "appTitle": "Zdoku Master",
+    "appTagline": "Challenge your mind with unlimited puzzles",
+    "smartHints": "Smart Hints",
+    "trackProgress": "Track Progress",
+    "difficultyLevels": "6 Difficulty Levels",
+    "continueGame": "Continue Game",
+    "orStartNew": "Or Start New Game",
     "chooseChallenge": "Choose your challenge level",
     "selectDifficulty": "Select Difficulty",
     "selectToStart": "Select a difficulty to start playing",

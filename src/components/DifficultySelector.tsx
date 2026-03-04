@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button } from '@radix-ui/themes';
+import { Button } from '@/components/ui/button';
 import type { Difficulty } from '../types';
 import { DifficultyConfigManager } from '../config/difficulty';
+import { cn } from '@/utils/index';
 
 export interface DifficultySelectorProps {
     selectedDifficulty: Difficulty;
@@ -24,22 +25,20 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
                         key={value}
                         onClick={() => onDifficultyChange(value)}
                         disabled={disabled}
-                        size="3"
-                        variant={selectedDifficulty === value ? 'solid' : 'soft'}
-                        color={selectedDifficulty === value ? 'indigo' : 'gray'}
-                        className={`
-              flex items-center gap-3 p-3 rounded-lg border-2 transition-all duration-200
-              ${selectedDifficulty === value
+                        size="lg"
+                        variant={selectedDifficulty === value ? 'default' : 'outline'}
+                        className={cn(
+                            "flex items-center gap-3 p-3 h-auto border-2 transition-all duration-200 justify-start",
+                            selectedDifficulty === value
                                 ? 'border-primary-500 bg-primary-50'
-                                : 'border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50'
-                            }
-              ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-            `}
+                                : 'border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50',
+                            disabled && 'opacity-50 cursor-not-allowed'
+                        )}
                         aria-label={`Select ${label} difficulty`}
                         aria-pressed={selectedDifficulty === value}
                     >
                         {/* Difficulty indicator */}
-                        <div className={`w-4 h-4 rounded-full ${color}`} />
+                        <div className={cn("w-4 h-4 rounded-full", color)} />
 
                         {/* Difficulty info */}
                         <div className="flex-1 text-left">

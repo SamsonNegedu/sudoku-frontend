@@ -7,10 +7,10 @@ interface TechniqueBadgeProps {
 }
 
 const LEVEL_STYLES = {
-    basic: 'bg-green-100 text-green-800',
-    intermediate: 'bg-yellow-100 text-yellow-800',
-    advanced: 'bg-orange-100 text-orange-800',
-    expert: 'bg-red-100 text-red-800',
+    basic: 'bg-success-100 dark:bg-success-900/30 text-success-800 dark:text-success-300',
+    intermediate: 'bg-warning-100 dark:bg-warning-900/30 text-warning-800 dark:text-warning-300',
+    advanced: 'bg-warning-100 dark:bg-warning-900/30 text-warning-800 dark:text-warning-300',
+    expert: 'bg-error-100 dark:bg-error-900/30 text-error-800 dark:text-error-300',
 } as const;
 
 export const TechniqueBadge: React.FC<TechniqueBadgeProps> = ({
