@@ -1,9 +1,8 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
-import { PageLayout } from '../components/PageLayout'
-import { PageHeader } from '../components/PageHeader'
-import { VideoTutorials } from '../components/VideoTutorials'
+import { PageLayout, PageHeader } from '../components/layout'
+import { VideoTutorials } from '../components/features/videos'
 
 export function VideosPage() {
     const { t } = useTranslation()

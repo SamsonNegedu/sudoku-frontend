@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import { PageLayout } from '../components/PageLayout'
-import { PageHeader } from '../components/PageHeader'
-import { AnalyticsDashboard } from '../components/AnalyticsDashboard'
+import { PageLayout, PageHeader } from '../components/layout'
+import { AnalyticsDashboard } from '../components/features/analytics'
 
 export function AnalyticsPage() {
   const { t } = useTranslation()

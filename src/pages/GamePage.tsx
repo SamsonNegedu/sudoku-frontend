@@ -1,7 +1,6 @@
-import { GameBoard } from '../components/GameBoard'
-import { CompletionAnimation } from '../components/CompletionAnimation'
-import { MistakesModal } from '../components/MistakesModal'
-import { GameLoadingView } from '../components/game/GameLoadingView'
+import { GameBoard, GameLoadingView } from '../components/features/game'
+import { CompletionAnimation } from '../components/features/completion'
+import { MistakesModal } from '../components/features/mistakes'
 import { useGameStore } from '../stores/gameStore'
 
 export function GamePage() {
