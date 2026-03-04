@@ -19,20 +19,20 @@
     --popover: 0 0% 100%;                       /* White popovers */
     --popover-foreground: 222 47% 11%;          /* Dark text in popovers */
     
-    /* Primary brand colors (Blue) - all using the same base color for consistency */
+    /* Primary brand colors (Blue) - adjusted for better contrast */
     --primary: 217 91% 60%;                     /* Main brand color */
     --primary-foreground: 0 0% 100%;            /* White text on primary */
     --primary-50: 217 91% 95%;
     --primary-100: 217 91% 85%;
     --primary-200: 217 91% 75%;
-    --primary-300: 217 91% 70%;
-    --primary-400: 217 91% 65%;
-    --primary-500: 217 91% 60%;                 /* Same as --primary */
-    --primary-600: 217 91% 60%;                 /* Same as --primary for consistency */
-    --primary-700: 217 91% 60%;                 /* Same as --primary for consistency */
-    --primary-800: 217 91% 45%;
-    --primary-900: 217 91% 35%;
-    --primary-950: 217 91% 25%;
+    --primary-300: 217 91% 65%;                 /* Lighter for dark backgrounds */
+    --primary-400: 217 91% 60%;                 /* Lighter for dark backgrounds */
+    --primary-500: 217 91% 55%;                 /* Slightly darker */
+    --primary-600: 217 91% 50%;                 /* Darker for better contrast */
+    --primary-700: 217 91% 40%;                 /* Much darker for better contrast */
+    --primary-800: 217 91% 30%;                 /* Very dark */
+    --primary-900: 217 91% 20%;                 /* Extremely dark */
+    --primary-950: 217 91% 10%;
     
     /* Secondary colors */
     --secondary: 214 32% 91%;                   /* Light blue-gray */
@@ -40,7 +40,7 @@
     
     /* Muted colors */
     --muted: 210 40% 96%;                       /* Very light gray */
-    --muted-foreground: 215 16% 47%;            /* Medium gray text */
+    --muted-foreground: 215 20% 35%;            /* Darker gray text for better contrast */
     
     /* Accent colors */
     --accent: 210 40% 96%;                      /* Light accent */
@@ -82,20 +82,20 @@
     --popover: 217 33% 17%;                     /* Dark popover */
     --popover-foreground: 210 40% 98%;          /* Light text in popovers */
     
-    /* Primary brand colors (Blue) - all using the same base color for consistency */
+    /* Primary brand colors (Blue) - adjusted for better contrast */
     --primary: 217 91% 60%;                     /* Main brand color */
     --primary-foreground: 0 0% 100%;            /* White text on primary */
     --primary-50: 217 91% 95%;
     --primary-100: 217 91% 85%;
     --primary-200: 217 91% 75%;
-    --primary-300: 217 91% 70%;
-    --primary-400: 217 91% 65%;
-    --primary-500: 217 91% 60%;                 /* Same as --primary */
-    --primary-600: 217 91% 60%;                 /* Same as --primary for consistency */
-    --primary-700: 217 91% 60%;                 /* Same as --primary for consistency */
-    --primary-800: 217 91% 45%;
-    --primary-900: 217 91% 35%;
-    --primary-950: 217 91% 25%;
+    --primary-300: 217 91% 65%;                 /* Lighter for dark backgrounds */
+    --primary-400: 217 91% 60%;                 /* Lighter for dark backgrounds */
+    --primary-500: 217 91% 55%;                 /* Slightly darker */
+    --primary-600: 217 91% 50%;                 /* Darker for better contrast */
+    --primary-700: 217 91% 40%;                 /* Much darker for better contrast */
+    --primary-800: 217 91% 30%;                 /* Very dark */
+    --primary-900: 217 91% 20%;                 /* Extremely dark */
+    --primary-950: 217 91% 10%;
     
     /* Secondary colors */
     --secondary: 217 33% 17%;                   /* Dark secondary */

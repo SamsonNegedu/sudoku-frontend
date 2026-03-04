@@ -111,7 +111,7 @@ export const GameTimer: React.FC<GameTimerProps> = ({
                         : 'text-primary-500 dark:text-primary-500'
                     }`} />
                 <span className={`text-sm font-mono font-bold tabular-nums ${isPaused
-                    ? 'text-amber-700 dark:text-amber-300'
+                    ? 'text-amber-800 dark:text-amber-300'
                     : isCompleted
                         ? 'text-success-700 dark:text-success-300'
                         : 'text-primary-500 dark:text-primary-500'
@@ -128,6 +128,7 @@ export const GameTimer: React.FC<GameTimerProps> = ({
             {/* Subtle progress bar - shows completion based on filled cells */}
             <Progress
                 value={completionPercentage}
+                aria-label="Game completion progress"
                 className={`h-1 w-full ${isPaused
                     ? 'opacity-50'
                     : isCompleted

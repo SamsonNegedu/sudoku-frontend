@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Zdoku</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        .icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .features {
+            margin-top: 3rem;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .features h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .features ul {
+            list-style: none;
+        }
+
+        .features li {
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #4ade80;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .icon {
+                width: 100px;
+                height: 100px;
+            }
+
+            .icon svg {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/>
+                <path d="M5 13l2 2c3.11-3.11 8.89-3.11 12 0l2-2c-4.18-4.18-10.82-4.18-15 0z"/>
+                <path d="M9 17l3 3 3-3c-1.65-1.66-4.34-1.66-6 0z"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+        </div>
+
+        <h1>You're Offline</h1>
+        <p>
+            No internet connection detected. Don't worry - Zdoku works offline! 
+            You can continue playing your saved games.
+        </p>
+
+        <a href="/" class="button">Go to Home</a>
+
+        <div class="features">
+            <h2>Available Offline:</h2>
+            <ul>
+                <li>Continue your current game</li>
+                <li>Start new Sudoku puzzles</li>
+                <li>Access learning materials</li>
+                <li>View your statistics</li>
+                <li>Use all game features</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('online', () => {
+            window.location.href = '/';
+        });
+
+        document.querySelector('.button').addEventListener('click', (e) => {
+            if (!navigator.onLine) {
+                e.preventDefault();
+                alert('Still offline. The app will automatically reload when connection is restored.');
+            }
+        });
+    </script>
+</body>
+</html>

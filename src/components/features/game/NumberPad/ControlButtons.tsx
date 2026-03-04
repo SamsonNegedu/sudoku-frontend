@@ -51,7 +51,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
 
     return (
         <TooltipProvider delayDuration={300}>
-            <div className="flex justify-center items-center gap-2 sm:gap-3">
+            <div className="flex justify-center items-center gap-1.5 sm:gap-3">
                 {/* Undo Button */}
                 <Tooltip>
                     <TooltipTrigger asChild>

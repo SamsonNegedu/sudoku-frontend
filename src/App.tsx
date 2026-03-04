@@ -160,7 +160,7 @@ function App() {
               <AppNavbar />
 
               {/* Game Page */}
-              <>
+              <main>
                 <GameBoard />
 
                 {/* Modern Loading Overlay */}
@@ -227,7 +227,7 @@ function App() {
                     onContinue={handleContinueWithMistakes}
                   />
                 )}
-              </>
+              </main>
             </div>
           </GameProvider>
         </AnalyticsProvider>

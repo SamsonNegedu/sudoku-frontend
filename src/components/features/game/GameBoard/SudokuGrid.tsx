@@ -90,7 +90,7 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
                     aria-label="Sudoku puzzle grid"
                 >
                     {board.map((row, rowIndex) => (
-                        <React.Fragment key={rowIndex}>
+                        <div key={rowIndex} role="row" className="contents">
                             {row.map((cell, colIndex) => (
                                 <SudokuCell
                                     key={`${rowIndex}-${colIndex}`}
@@ -105,7 +105,7 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
                                     board={board}
                                 />
                             ))}
-                        </React.Fragment>
+                        </div>
                     ))}
                 </div>
             </div>

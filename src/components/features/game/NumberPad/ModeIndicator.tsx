@@ -10,18 +10,18 @@ export const ModeIndicator: React.FC<ModeIndicatorProps> = ({ inputMode }) => {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col items-center mb-3 space-y-1">
-            <div className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-2 shadow-sm ${inputMode === 'pen'
-                ? 'bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-950 dark:to-primary-900 text-primary-700 dark:text-primary-300 border-2 border-primary-300 dark:border-primary-700'
-                : 'bg-gradient-to-r from-success-50 to-success-100 dark:from-success-950 dark:to-success-900 text-success-700 dark:text-success-300 border-2 border-success-300 dark:border-success-700'
+            <div className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${inputMode === 'pen'
+                ? 'bg-primary-100/60 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300'
+                : 'bg-success-100/60 dark:bg-success-900/40 text-success-700 dark:text-success-300'
                 }`}>
                 {inputMode === 'pen' ? (
                     <>
-                        <Pencil1Icon className="w-4 h-4" />
+                        <Pencil1Icon className="w-3.5 h-3.5" />
                         <span>{t('controls.penMode')}</span>
                     </>
                 ) : (
                     <>
-                        <Pencil2Icon className="w-4 h-4" />
+                        <Pencil2Icon className="w-3.5 h-3.5" />
                         <span>{t('controls.pencilMode')}</span>
                     </>
                 )}

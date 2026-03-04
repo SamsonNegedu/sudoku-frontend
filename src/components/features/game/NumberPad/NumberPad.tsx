@@ -39,7 +39,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     onResume,
 }) => {
     return (
-        <div className="dark:bg-gray-800 rounded-xl px-1 sm:px-4 py-3 sm:py-4 shadow-sm border border-neutral-200 dark:border-gray-700">
+        <div className="dark:bg-gray-800 rounded-xl px-2 sm:px-4 py-3 sm:py-4 shadow-sm border border-neutral-200 dark:border-gray-700">
             {/* Mode indicator */}
             <ModeIndicator inputMode={inputMode} />
 

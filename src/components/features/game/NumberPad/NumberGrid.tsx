@@ -21,7 +21,7 @@ export const NumberGrid: React.FC<NumberGridProps> = ({
 
     return (
         <TooltipProvider delayDuration={300}>
-            <div className="flex justify-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+            <div className="flex justify-center gap-1.5 sm:gap-3 flex-wrap sm:flex-nowrap">
                 {numbers.map((number) => {
                     const isCompleted = completedNumbers.includes(number);
                     const tooltipText = isCompleted 

@@ -59,7 +59,7 @@ export const MobileGameHeader: React.FC<MobileGameHeaderProps> = ({ currentGame 
                         {/* Hints indicator */}
                         <Badge variant="outline" className="gap-1 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800">
                             <LightningBoltIcon className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-                            <span className="text-amber-700 dark:text-amber-300">
+                            <span className="text-amber-800 dark:text-amber-300">
                                 {currentGame.hintsUsed}/{currentGame.maxHints}
                             </span>
                         </Badge>

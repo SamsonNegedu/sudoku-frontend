@@ -1,0 +1,35 @@
+# Security Headers for Netlify/Vercel deployment
+# These headers improve security and best practices scores
+
+/*
+  # Content Security Policy - Restricts resource loading
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self';
+  
+  # Prevent clickjacking attacks
+  X-Frame-Options: SAMEORIGIN
+  
+  # Prevent MIME type sniffing
+  X-Content-Type-Options: nosniff
+  
+  # Referrer policy
+  Referrer-Policy: strict-origin-when-cross-origin
+  
+  # Permissions policy
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  
+  # HSTS - Force HTTPS (only enable in production with HTTPS)
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  
+  # Cross-Origin policies
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Resource-Policy: same-origin
+
+# Service Worker specific headers
+/sw.js
+  Content-Type: application/javascript; charset=utf-8
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/workbox-*.js
+  Content-Type: application/javascript; charset=utf-8
+  Cache-Control: no-cache, no-store, must-revalidate

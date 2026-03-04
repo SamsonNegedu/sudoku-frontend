@@ -33,7 +33,7 @@ export const NavBrand: React.FC<NavBrandProps> = ({ onShowGame }) => {
                 </div>
             </div>
             <div className="block">
-                <h1 className="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-500">
+                <h1 className="text-lg sm:text-xl font-bold text-primary-700 dark:text-primary-400">
                     {t('app.title')}
                 </h1>
             </div>
