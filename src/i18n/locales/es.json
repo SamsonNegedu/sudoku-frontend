@@ -272,11 +272,56 @@
     "legalNoticeTitle": "Aviso Legal:",
     "legalNotice": "Todos los videos están curados por creadores educativos e incrustados con atribución correcta. Cada video mantiene los derechos de su creador original. Te animamos a apoyar a estos creadores visitando sus canales.",
     "backToVideos": "Volver a Videos",
+    "techniqueInsight": "Perspectiva de la Técnica",
     "levels": {
       "beginner": "Principiante",
       "intermediate": "Intermedio",
       "advanced": "Avanzado",
       "expert": "Experto"
+    },
+    "techniqueNotes": {
+      "naked_single": "Los Singles Desnudos son la base de la resolución de Sudoku. Cuando una celda tiene solo un candidato posible después de eliminar los números que aparecen en su fila, columna y caja, ese candidato debe ser la respuesta. Esta técnica entrena tu ojo para detectar celdas con posibilidades limitadas, una habilidad que se vuelve automática con la práctica.",
+      "hidden_single": "Los Singles Ocultos se revelan a través de la exclusión en lugar de la eliminación. Cuando un dígito solo puede aparecer en una celda dentro de una fila, columna o caja, incluso si esa celda tiene múltiples candidatos, debe ir allí. Esta técnica cambia tu perspectiva de \"¿qué puede ser esta celda?\" a \"¿dónde debe ir este dígito?\" y es crucial para progresar más allá de los rompecabezas para principiantes.",
+      "hidden_pair": "Los Pares Ocultos son sutiles pero poderosos. Cuando dos dígitos solo pueden aparecer en las mismas dos celdas dentro de una unidad, esas celdas forman un par bloqueado, incluso si contienen otros candidatos. La clave: una vez que identificas el par, puedes eliminar todos los demás candidatos de esas dos celdas. Esta técnica requiere paciencia para escanear sistemáticamente, pero desbloquea muchos rompecabezas intermedios.",
+      "naked_pair": "Los Pares Desnudos son más fáciles de detectar que sus contrapartes ocultas. Cuando dos celdas en la misma unidad contienen exactamente los mismos dos candidatos, esos dígitos están bloqueados en esas celdas. Esto crea una poderosa oportunidad de eliminación: elimina estos dos candidatos de todas las demás celdas en la unidad. La belleza de esta técnica radica en su simplicidad: una vez que ves el par, las eliminaciones son inmediatas y seguras.",
+      "pointing_pair": "Los Pares Apuntadores explotan la intersección entre cajas y líneas. Cuando un candidato en una caja está confinado a una sola fila o columna, \"apunta\" hacia afuera, permitiéndote eliminar ese candidato del resto de esa línea fuera de la caja. Esta técnica une la lógica local de la caja con las restricciones globales de fila/columna, haciéndola esencial para la resolución intermedia.",
+      "x_wing": "El X-Wing es tu primer encuentro con los patrones \"pez\", una clase de técnicas avanzadas basadas en restricciones geométricas. Cuando un candidato aparece en exactamente dos posiciones en cada una de dos filas (o columnas), formando un rectángulo, crea un patrón bloqueado. Esto fuerza eliminaciones en las líneas perpendiculares. Dominar el X-Wing abre la puerta a comprender patrones de pez más complejos como Swordfish y Jellyfish.",
+      "swordfish": "Swordfish extiende la lógica del X-Wing a tres dimensiones. Cuando un candidato aparece en exactamente dos o tres posiciones a través de tres filas (o columnas), formando un patrón 3×3, crea una estructura bloqueada compleja. El patrón puede parecer intimidante, pero sigue el mismo principio que el X-Wing: las restricciones geométricas fuerzan eliminaciones. Detectar Swordfish requiere escaneo sistemático, pero encontrar uno se siente como descubrir arquitectura oculta en el rompecabezas.",
+      "xy_wing": "XY-Wing es una técnica basada en cadenas que usa deducción lógica a través de tres celdas bi-valor. El patrón forma una celda \"pivote\" conectada a dos celdas \"ala\", creando una cadena forzada: si el pivote es X, un ala elimina un candidato; si el pivote es Y, la otra ala elimina el mismo candidato. De cualquier manera, la eliminación es segura. Esta técnica marca tu transición del reconocimiento de patrones al razonamiento de cadenas lógicas."
+    },
+    "videos": {
+      "video_naked_single_1": {
+        "title": "Sudoku Básico - Singles Desnudos",
+        "description": "Aprende la técnica fundamental de Singles Desnudos con ejemplos claros paso a paso."
+      },
+      "video_hidden_single_1": {
+        "title": "Encontrando Singles Ocultos en Sudoku",
+        "description": "Domina la técnica de Singles Ocultos, una de las estrategias más importantes del Sudoku."
+      },
+      "video_hidden_pair_1": {
+        "title": "Pares Ocultos en Sudoku - Técnica Intermedia",
+        "description": "Aprende a encontrar y usar Pares Ocultos para eliminar candidatos y resolver puzzles más difíciles."
+      },
+      "video_naked_pair_1": {
+        "title": "Sudoku Intermedio: Estrategia de Pares Desnudos",
+        "description": "Aprende a usar Pares Desnudos para eliminar candidatos y resolver puzzles más difíciles."
+      },
+      "video_pointing_pair_1": {
+        "title": "Pares Apuntadores / Reducción de Línea-Caja",
+        "description": "Comprende cómo los candidatos se alinean entre cajas y filas/columnas."
+      },
+      "video_x_wing_1": {
+        "title": "Consejo de Sudoku - Técnica X-Wing",
+        "description": "Domina el poderoso patrón X-Wing para resolver Sudoku avanzado."
+      },
+      "video_swordfish_1": {
+        "title": "Sudoku Experto: Patrón Swordfish",
+        "description": "Aprende el Swordfish, una extensión del X-Wing para tres filas y columnas."
+      },
+      "video_xy_wing_1": {
+        "title": "Swordfish, XY Wing, Test de Unicidad en UN Puzzle",
+        "description": "Domina la compleja técnica XY-Wing con explicaciones claras."
+      }
     }
   }
 }

@@ -31,10 +31,12 @@ export const HintHeader: React.FC<HintHeaderProps> = ({ hint, onClose }) => {
     };
 
     return (
-        <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-                <HintIcon hint={hint} />
-                <h3 className="font-semibold text-neutral-800 dark:text-gray-100">
+        <div className="flex items-center justify-between mb-1.5 lg:mb-3">
+            <div className="flex items-center gap-1.5 lg:gap-2">
+                <div className="hidden lg:block">
+                    <HintIcon hint={hint} />
+                </div>
+                <h3 className="font-semibold text-xs lg:text-base text-neutral-800 dark:text-gray-100">
                     {getHintTypeLabel()}
                 </h3>
             </div>
@@ -42,9 +44,9 @@ export const HintHeader: React.FC<HintHeaderProps> = ({ hint, onClose }) => {
                 onClick={onClose}
                 size="sm"
                 variant="ghost"
-                className="p-1 h-auto hover:bg-neutral-200/50 dark:hover:bg-gray-700/50"
+                className="p-0.5 lg:p-1 h-auto hover:bg-neutral-200/50 dark:hover:bg-gray-700/50"
             >
-                <CrossCircledIcon className="w-4 h-4" />
+                <CrossCircledIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
             </Button>
         </div>
     );

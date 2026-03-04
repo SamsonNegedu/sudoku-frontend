@@ -17,27 +17,32 @@ export const HintContent: React.FC<HintContentProps> = ({ hint, onClose }) => {
     return (
         <>
             {/* Hint Message */}
-            <div className="mb-3">
-                <p className="text-neutral-700 dark:text-gray-300 text-sm leading-relaxed">
+            <div className="mb-2 lg:mb-3">
+                <p className="text-neutral-700 dark:text-gray-300 text-xs lg:text-sm leading-snug lg:leading-relaxed">
                     {hint.message}
                 </p>
             </div>
 
-            {/* Target Cells Display */}
-            <HintTargetCells hint={hint} />
-
-            {/* Suggested Value */}
+            {/* Suggested Value - Show on mobile, full details on desktop */}
             <HintSuggestedValue hint={hint} />
 
-            {/* Technique Description */}
-            <HintTechniqueDescription hint={hint} />
+            {/* Target Cells Display - Desktop only */}
+            <div className="hidden lg:block">
+                <HintTargetCells hint={hint} />
+            </div>
+
+            {/* Technique Description - Desktop only */}
+            <div className="hidden lg:block">
+                <HintTechniqueDescription hint={hint} />
+            </div>
 
             {/* Action Button */}
             <div className="flex justify-end">
                 <Button
                     onClick={onClose}
                     variant="secondary"
-                    className="text-sm"
+                    size="sm"
+                    className="text-xs lg:text-sm h-7 lg:h-9"
                 >
                     {t('hints.gotIt')}
                 </Button>

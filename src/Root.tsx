@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Outlet, useRouterState, useNavigate } from '@tanstack/react-router'
 import { Theme } from '@radix-ui/themes'
 import { ThemeProvider, AnalyticsProvider } from './components/providers'
 import { AppNavbar } from './components/layout'
 import { GameProvider } from './contexts'
 import { Toaster } from '@/components/ui/toaster'
-import { CommandPalette } from './components/utilities'
 import { useGameStore } from './stores/gameStore'
 import { storageManager } from './utils/storageManager'
 import { gameEngineService } from './services/gameEngineService'
@@ -26,9 +25,6 @@ export default function Root() {
 
   // Track if we auto-paused the game due to tab visibility
   const autoTabVisibilityPauseRef = useRef(false)
-  
-  // Command palette state
-  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
 
   // Initialize storage manager and game engine on app start
   useEffect(() => {
@@ -79,21 +75,6 @@ export default function Root() {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [currentGame, pauseGame, resumeGame])
-
-  // Command palette keyboard shortcut (Cmd+K / Ctrl+K)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault()
-        setCommandPaletteOpen(true)
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
 
   // Derive isPlaying from currentGame state
   const isPlaying = currentGame && !currentGame.isCompleted && !currentGame.isPaused
@@ -146,7 +127,6 @@ export default function Root() {
               <AppNavbar />
               <Outlet />
               <Toaster />
-              <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
             </div>
           </GameProvider>
         </AnalyticsProvider>

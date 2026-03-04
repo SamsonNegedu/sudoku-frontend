@@ -100,11 +100,6 @@ export const useGameInteraction = ({
           clearCell(row, col);
           break;
 
-        case 'Tab':
-          event.preventDefault();
-          // Move to next cell (simplified - could be enhanced)
-          break;
-
         case ' ':
           event.preventDefault();
           setInputMode(inputMode === 'pen' ? 'pencil' : 'pen');
@@ -275,6 +270,37 @@ export const useGameInteraction = ({
             selectCell(selectedCell.row, selectedCell.col + 1);
           }
           break;
+
+        // Tab navigation
+        case 'Tab': {
+          event.preventDefault();
+          if (selectedCell) {
+            // Direction: 1 for Tab (forward), -1 for Shift+Tab (backward)
+            const direction = event.shiftKey ? -1 : 1;
+            let nextRow = selectedCell.row;
+            let nextCol = selectedCell.col + direction;
+            
+            // Handle wrapping to next/previous row
+            if (nextCol > 8) {
+              nextCol = 0;
+              nextRow++;
+            } else if (nextCol < 0) {
+              nextCol = 8;
+              nextRow--;
+            }
+            
+            // Wrap around the entire grid
+            if (nextRow > 8) {
+              nextRow = 0;
+            } else if (nextRow < 0) {
+              nextRow = 8;
+            }
+            
+            // Select the next cell
+            selectCell(nextRow, nextCol);
+          }
+          break;
+        }
 
         // Number key input (1-9)
         case '1':

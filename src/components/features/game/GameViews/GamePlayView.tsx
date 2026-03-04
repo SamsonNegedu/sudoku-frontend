@@ -7,6 +7,11 @@ import { MobileGameHeader } from './MobileGameHeader';
 import { PageLayout } from '../../../layout';
 import type { GameState, Hint } from '../../../../types';
 
+interface KeyboardShortcutsModalRef {
+    open: () => void;
+    close: () => void;
+}
+
 interface GamePlayViewProps {
     currentGame: GameState;
     selectedCell: { row: number; col: number } | null;
@@ -24,6 +29,7 @@ interface GamePlayViewProps {
     onPause: () => void;
     onResume: () => void;
     getCompletedNumbers: () => number[];
+    shortcutsModalRef?: React.RefObject<KeyboardShortcutsModalRef>;
 }
 
 export const GamePlayView: React.FC<GamePlayViewProps> = ({
@@ -43,6 +49,7 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
     onPause,
     onResume,
     getCompletedNumbers,
+    shortcutsModalRef,
 }) => {
     return (
         <PageLayout className="bg-neutral-50 dark:bg-neutral-900">
@@ -107,6 +114,7 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
                             maxHints={currentGame.maxHints}
                             mistakes={currentGame.mistakes}
                             maxMistakes={currentGame.maxMistakes}
+                            shortcutsModalRef={shortcutsModalRef}
                         />
                     </div>
                 </div>

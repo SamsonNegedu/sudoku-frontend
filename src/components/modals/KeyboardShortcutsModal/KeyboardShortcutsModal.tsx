@@ -60,11 +60,23 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
     const categories = ['Navigation', 'Input', 'Game Control'] as const;
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div ref={modalRef} className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-100 dark:border-gray-700 animate-bounce-in">
+        <>
+            {/* Backdrop - click to close */}
+            <div 
+                className="fixed inset-0 bg-black/30 dark:bg-black/50 z-[60] backdrop-blur-sm animate-in fade-in duration-200"
+                onClick={() => setIsOpen(false)}
+            />
+            
+            {/* Slide-out drawer from right */}
+            <div 
+                ref={modalRef}
+                className="fixed right-0 top-0 bottom-0 z-[70] w-full sm:w-[480px] bg-white dark:bg-gray-800 
+                           shadow-2xl overflow-y-auto
+                           animate-in slide-in-from-right-full duration-300"
+            >
                 {/* Header */}
-                <div className="sticky top-0 flex items-center justify-between px-6 py-5 border-b border-neutral-200 dark:border-gray-700 bg-neutral-50 dark:bg-gray-700/50">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Keyboard Shortcuts</h2>
+                <div className="sticky top-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Keyboard Shortcuts</h2>
                     <Button
                         onClick={() => setIsOpen(false)}
                         variant="ghost"
@@ -76,22 +88,22 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                 </div>
 
                 {/* Content */}
-                <div className="p-6 space-y-6">
+                <div className="p-4 sm:p-6 space-y-6">
                     {categories.map(category => (
                         <div key={category}>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <div className="w-1 h-6 bg-primary-600 dark:bg-primary-500 rounded-full"></div>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                <div className="w-1 h-5 bg-primary-600 dark:bg-primary-500 rounded-full"></div>
                                 {category}
                             </h3>
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 {shortcuts
                                     .filter(s => s.category === category)
                                     .map((shortcut, idx) => (
-                                        <div key={idx} className="group flex items-start justify-between gap-4 p-3 hover:bg-neutral-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors">
-                                            <kbd className="px-3 py-2 bg-neutral-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md font-mono text-sm font-semibold min-w-fit shadow-sm border border-neutral-200 dark:border-gray-600 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-colors">
+                                        <div key={idx} className="flex items-start gap-3 p-2 sm:p-3 hover:bg-neutral-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors">
+                                            <kbd className="px-2 sm:px-3 py-1.5 sm:py-2 bg-neutral-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md font-mono text-xs sm:text-sm font-semibold min-w-fit shadow-sm border border-neutral-200 dark:border-gray-600">
                                                 {shortcut.key}
                                             </kbd>
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm flex-1 pt-2">
+                                            <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm flex-1 pt-1.5 sm:pt-2">
                                                 {shortcut.description}
                                             </p>
                                         </div>
@@ -101,21 +113,14 @@ export const KeyboardShortcutsModal = React.forwardRef<KeyboardShortcutsModalRef
                     ))}
                 </div>
 
-                {/* Footer */}
-                <div className="sticky bottom-0 border-t border-neutral-200 dark:border-gray-700 bg-neutral-50 dark:bg-gray-700/50 px-6 py-4 flex items-center justify-between">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                        Press <kbd className="px-2 py-1 bg-neutral-200 dark:bg-gray-700 rounded text-xs font-semibold ml-1">Esc</kbd> to close
+                {/* Footer hint */}
+                <div className="sticky bottom-0 border-t border-neutral-200 dark:border-gray-700 bg-neutral-50 dark:bg-gray-700/50 px-4 sm:px-6 py-3">
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                        Press <kbd className="px-2 py-1 bg-neutral-200 dark:bg-gray-700 rounded text-xs font-semibold">Esc</kbd> or click outside to close
                     </p>
-                    <Button
-                        onClick={() => setIsOpen(false)}
-                        size="lg"
-                        className="bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-semibold shadow-md transition-all duration-200"
-                    >
-                        Close
-                    </Button>
                 </div>
             </div>
-        </div>
+        </>
     );
 });
 

@@ -157,6 +157,7 @@ export const GameBoard: React.FC = () => {
                 onPause={pauseGame}
                 onResume={resumeGame}
                 getCompletedNumbers={getCompletedNumbers}
+                shortcutsModalRef={shortcutsModalRef}
             />
             <KeyboardShortcutsModal ref={shortcutsModalRef} />
         </>

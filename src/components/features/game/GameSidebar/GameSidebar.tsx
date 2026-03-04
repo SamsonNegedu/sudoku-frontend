@@ -1,8 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { GridIcon, LightningBoltIcon, ExclamationTriangleIcon, CursorTextIcon } from '@radix-ui/react-icons';
+import { GridIcon, LightningBoltIcon, ExclamationTriangleIcon, CursorTextIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import type { Difficulty } from '../../../../types/';
+
+interface KeyboardShortcutsModalRef {
+  open: () => void;
+  close: () => void;
+}
 
 interface GameSidebarProps {
   selectedCell: { row: number; col: number } | null;
@@ -11,6 +17,7 @@ interface GameSidebarProps {
   maxHints: number;
   mistakes: number;
   maxMistakes: number;
+  shortcutsModalRef?: React.RefObject<KeyboardShortcutsModalRef>;
 }
 
 export const GameSidebar: React.FC<GameSidebarProps> = ({
@@ -20,6 +27,7 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
   maxHints,
   mistakes,
   maxMistakes,
+  shortcutsModalRef,
 }) => {
   const { t } = useTranslation();
   return (
@@ -123,6 +131,19 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
           <div className="flex items-start gap-2">
             <span className="text-primary-600 dark:text-primary-500 font-bold">•</span>
             <p className="flex-1">Press <kbd className="px-2 py-1 bg-white dark:bg-gray-800 dark:text-gray-100 rounded-md text-xs font-semibold shadow-sm border border-neutral-300 dark:border-gray-600">?</kbd> for help with shortcuts</p>
+          </div>
+          
+          {/* View All Shortcuts Button */}
+          <div className="pt-2">
+            <Button
+              onClick={() => shortcutsModalRef?.current?.open()}
+              variant="outline"
+              size="sm"
+              className="w-full gap-2 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-400 dark:hover:border-primary-600 transition-colors"
+            >
+              <QuestionMarkCircledIcon className="w-4 h-4" />
+              View All Shortcuts
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -272,11 +272,56 @@
     "legalNoticeTitle": "Legal Notice:",
     "legalNotice": "All videos are curated from educational content creators and embedded with proper attribution. Each video maintains its original creator's rights. We encourage you to support these creators by visiting their channels.",
     "backToVideos": "Back to Videos",
+    "techniqueInsight": "Technique Insight",
     "levels": {
       "beginner": "Beginner",
       "intermediate": "Intermediate",
       "advanced": "Advanced",
       "expert": "Expert"
+    },
+    "techniqueNotes": {
+      "naked_single": "Naked Singles are the foundation of Sudoku solving. When a cell has only one possible candidate remaining after eliminating numbers that appear in its row, column, and box, that candidate must be the answer. This technique trains your eye to spot cells with limited possibilities—a skill that becomes automatic with practice.",
+      "hidden_single": "Hidden Singles reveal themselves through exclusion rather than elimination. When a digit can only appear in one cell within a row, column, or box—even if that cell has multiple candidates—it must go there. This technique shifts your perspective from \"what can this cell be?\" to \"where must this digit go?\" and is crucial for progressing beyond beginner puzzles.",
+      "hidden_pair": "Hidden Pairs are subtle but powerful. When two digits can only appear in the same two cells within a unit, those cells form a locked pair—even if they contain other candidates. The key insight: once you identify the pair, you can eliminate all other candidates from those two cells. This technique requires patience to scan systematically, but it unlocks many intermediate puzzles.",
+      "naked_pair": "Naked Pairs are easier to spot than their hidden counterparts. When two cells in the same unit contain exactly the same two candidates, those digits are locked to those cells. This creates a powerful elimination opportunity: remove these two candidates from all other cells in the unit. The beauty of this technique lies in its simplicity—once you see the pair, the eliminations are immediate and certain.",
+      "pointing_pair": "Pointing Pairs exploit the intersection between boxes and lines. When a candidate in a box is confined to a single row or column, it \"points\" outward, allowing you to eliminate that candidate from the rest of that line outside the box. This technique bridges local box logic with global row/column constraints, making it essential for intermediate solving.",
+      "x_wing": "The X-Wing is your first encounter with \"fish\" patterns—a class of advanced techniques based on geometric constraints. When a candidate appears in exactly two positions in each of two rows (or columns), forming a rectangle, it creates a locked pattern. This forces eliminations in the perpendicular lines. Mastering X-Wing opens the door to understanding more complex fish patterns like Swordfish and Jellyfish.",
+      "swordfish": "Swordfish extends X-Wing logic to three dimensions. When a candidate appears in exactly two or three positions across three rows (or columns), forming a 3×3 pattern, it creates a complex locked structure. The pattern might seem intimidating, but it follows the same principle as X-Wing: geometric constraints force eliminations. Spotting Swordfish requires systematic scanning, but finding one feels like discovering hidden architecture in the puzzle.",
+      "xy_wing": "XY-Wing is a chain-based technique that uses logical deduction across three bi-value cells. The pattern forms a \"pivot\" cell connected to two \"wing\" cells, creating a forcing chain: if the pivot is X, one wing eliminates a candidate; if the pivot is Y, the other wing eliminates the same candidate. Either way, the elimination is certain. This technique marks your transition from pattern recognition to logical chain reasoning."
+    },
+    "videos": {
+      "video_naked_single_1": {
+        "title": "Sudoku Basics - Naked Singles",
+        "description": "Learn the fundamental Naked Singles technique with clear step-by-step examples."
+      },
+      "video_hidden_single_1": {
+        "title": "Finding Hidden Singles in Sudoku",
+        "description": "Master the Hidden Singles technique - one of the most important Sudoku strategies."
+      },
+      "video_hidden_pair_1": {
+        "title": "Hidden Pairs in Sudoku - Intermediate Technique",
+        "description": "Learn how to find and use Hidden Pairs to eliminate candidates and solve harder Sudoku puzzles."
+      },
+      "video_naked_pair_1": {
+        "title": "Intermediate Sudoku: Naked Pairs Strategy",
+        "description": "Learn how to use Naked Pairs to eliminate candidates and solve harder puzzles."
+      },
+      "video_pointing_pair_1": {
+        "title": "Pointing Pairs / Box-Line Reduction",
+        "description": "Understand how candidates align between boxes and rows/columns."
+      },
+      "video_x_wing_1": {
+        "title": "Sudoku Solving Tip - X Wing Technique",
+        "description": "Master the powerful X-Wing pattern for advanced Sudoku solving."
+      },
+      "video_swordfish_1": {
+        "title": "Expert Sudoku: Swordfish Pattern",
+        "description": "Learn the Swordfish - an extension of X-Wing for three rows and columns."
+      },
+      "video_xy_wing_1": {
+        "title": "Swordfish, XY Wing, Uniqueness Test in ONE Puzzle",
+        "description": "Master the complex XY-Wing technique with clear explanations."
+      }
     }
   }
 }

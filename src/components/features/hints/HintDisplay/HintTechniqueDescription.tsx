@@ -29,9 +29,9 @@ export const HintTechniqueDescription: React.FC<HintTechniqueDescriptionProps> =
     if (!hint.technique || !description) return null;
 
     return (
-        <div className="mb-3 p-2 bg-white/40 dark:bg-gray-700/30 rounded-lg border border-neutral-200 dark:border-gray-600">
-            <p className="text-xs text-neutral-600 dark:text-gray-400 mb-1">{t('hints.aboutTechnique')}</p>
-            <p className="text-xs text-neutral-700 dark:text-gray-300">
+        <div className="mb-2 lg:mb-3 p-1.5 lg:p-2 bg-white/40 dark:bg-gray-800/80 rounded border border-neutral-200 dark:border-gray-600">
+            <p className="text-[10px] lg:text-xs text-neutral-600 dark:text-gray-300 mb-0.5 lg:mb-1">{t('hints.aboutTechnique')}</p>
+            <p className="text-[10px] lg:text-xs text-neutral-700 dark:text-gray-200 leading-snug">
                 {description}
             </p>
         </div>

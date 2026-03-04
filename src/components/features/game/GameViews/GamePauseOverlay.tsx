@@ -16,53 +16,52 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
     if (!isPaused) return null;
 
     return (
-        <div
-            className="fixed bg-black/40 backdrop-blur-md z-40 flex items-center justify-center animate-fade-in"
-            style={{
-                position: 'fixed',
-                top: '4rem', // Start below navbar (navbar height is h-16 = 4rem)
-                left: 0,
-                right: 0,
-                bottom: 0,
-                overflow: 'hidden',
-                touchAction: 'none' // Prevent touch scrolling
-            }}
-            onTouchMove={(e) => e.preventDefault()} // Prevent scroll on touch
-            onWheel={(e) => e.preventDefault()} // Prevent scroll on wheel
-        >
-            <div className="relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl p-8 mx-4 shadow-2xl max-w-sm w-full text-center border border-neutral-200 dark:border-gray-700 animate-bounce-in">
-                {/* Subtle background decoration */}
-                <div className="absolute inset-0 opacity-50 dark:opacity-20 overflow-hidden rounded-2xl">
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-primary-200 dark:bg-primary-600 rounded-full blur-3xl opacity-10"></div>
-                </div>
+        <>
+            {/* Heavy backdrop to completely hide the grid - prevents cheating */}
+            <div
+                className="fixed inset-0 bg-black/30 backdrop-blur-md z-[50] pointer-events-none
+                           animate-in fade-in duration-300"
+                style={{ top: '4rem' }}
+            />
 
-                <div className="relative space-y-6">
-                    {/* Icon */}
-                    <div className="flex justify-center">
-                        <div className="p-4 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-primary-100 dark:border-primary-900">
-                            <PauseIcon className="w-8 h-8 text-primary-600 dark:text-primary-500" />
+            {/* Compact pause banner */}
+            <div className="fixed top-0 left-0 right-0 z-[65] pointer-events-none">
+                <div className="max-w-4xl mx-auto px-2 sm:px-4 pt-2 sm:pt-4">
+                    <div
+                        className="bg-primary-50 dark:bg-primary-900 border-2 border-primary-400 dark:border-primary-600 
+                                   rounded-lg shadow-2xl pointer-events-auto
+                                   animate-in slide-in-from-top-4 fade-in duration-300"
+                    >
+                        <div className="p-3 sm:p-4">
+                            {/* Header */}
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="p-2 bg-primary-100 dark:bg-primary-800 rounded-full">
+                                    <PauseIcon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600 dark:text-primary-400" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-lg sm:text-xl font-bold text-primary-900 dark:text-primary-100">
+                                        {t('pause.gamePaused')}
+                                    </h2>
+                                    <p className="text-xs sm:text-sm text-primary-700 dark:text-primary-300">
+                                        {t('pause.progressSaved')}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Resume Button */}
+                            <Button
+                                onClick={onResume}
+                                size="lg"
+                                className="w-full gap-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 
+                                           text-white font-semibold shadow-md transition-all duration-200"
+                            >
+                                <PlayIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                                {t('game.resume')}
+                            </Button>
                         </div>
                     </div>
-
-                    {/* Content */}
-                    <div>
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t('pause.gamePaused')}</h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                            {t('pause.progressSaved')}
-                        </p>
-                    </div>
-
-                    {/* Action Button */}
-                    <Button
-                        onClick={onResume}
-                        size="lg"
-                        className="w-full gap-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-semibold shadow-lg shadow-primary-600/30 dark:shadow-primary-900/30 transition-all duration-200"
-                    >
-                        <PlayIcon className="w-5 h-5" />
-                        {t('game.resume')}
-                    </Button>
                 </div>
             </div>
-        </div>
+        </>
     );
 };

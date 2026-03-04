@@ -1,16 +1,16 @@
-import { RootRoute, Route, Router } from '@tanstack/react-router'
+import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
 import Root from './Root'
 import { GamePage } from './pages/GamePage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { VideosPage } from './pages/VideosPage'
 
 // Root route
-const rootRoute = new RootRoute({
+const rootRoute = createRootRoute({
   component: Root,
 })
 
 // Index route - redirect to game
-const indexRoute = new Route({
+const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   beforeLoad: async ({ navigate }) => {
@@ -19,21 +19,21 @@ const indexRoute = new Route({
 })
 
 // Game route (default)
-const gameRoute = new Route({
+const gameRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/game',
   component: GamePage,
 })
 
 // Analytics route
-const analyticsRoute = new Route({
+const analyticsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/analytics',
   component: AnalyticsPage,
 })
 
 // Video Tutorials route
-const videosRoute = new Route({
+const videosRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/videos',
   component: VideosPage,
@@ -48,7 +48,7 @@ const routeTree = rootRoute.addChildren([
 ])
 
 // Create and export router
-export const router = new Router({ routeTree })
+export const router = createRouter({ routeTree })
 
 // Register router for type safety
 declare module '@tanstack/react-router' {

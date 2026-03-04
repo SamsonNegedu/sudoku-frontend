@@ -1,5 +1,6 @@
 import React from 'react';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
+import { useTranslation } from 'react-i18next';
 
 interface TechniqueVideoProps {
     youtubeId: string;
@@ -9,6 +10,7 @@ interface TechniqueVideoProps {
     description: string;
     duration: number;
     licenseType: string;
+    techniqueId?: string;
 }
 
 export const TechniqueVideo: React.FC<TechniqueVideoProps> = ({
@@ -19,7 +21,9 @@ export const TechniqueVideo: React.FC<TechniqueVideoProps> = ({
     description,
     duration,
     licenseType,
+    techniqueId,
 }) => {
+    const { t } = useTranslation();
     // Use youtube-nocookie.com for privacy protection
     const src = `https://www.youtube-nocookie.com/embed/${youtubeId}`;
 
@@ -36,6 +40,18 @@ export const TechniqueVideo: React.FC<TechniqueVideoProps> = ({
                     loading="lazy"
                 />
             </div>
+
+            {/* Technique Insight Note */}
+            {techniqueId && t(`videoTutorials.techniqueNotes.${techniqueId}`, { defaultValue: '' }) && (
+                <div className="bg-primary-50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800 rounded-lg p-5">
+                    <h3 className="text-sm font-semibold text-primary-900 dark:text-primary-300 uppercase tracking-wider mb-2">
+                        💡 {t('videoTutorials.techniqueInsight')}
+                    </h3>
+                    <p className="text-primary-800 dark:text-primary-200 leading-relaxed">
+                        {t(`videoTutorials.techniqueNotes.${techniqueId}`)}
+                    </p>
+                </div>
+            )}
 
             {/* Video Information */}
             <div className="space-y-3 bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">

@@ -272,11 +272,56 @@
     "legalNoticeTitle": "Avis Légal:",
     "legalNotice": "Toutes les vidéos sont sélectionnées par des créateurs éducatifs et intégrées avec attribution correcte. Chaque vidéo conserve les droits de son créateur original. Nous vous encourageons à soutenir ces créateurs en visitant leurs chaînes.",
     "backToVideos": "Retour aux Vidéos",
+    "techniqueInsight": "Aperçu de la Technique",
     "levels": {
       "beginner": "Débutant",
       "intermediate": "Intermédiaire",
       "advanced": "Avancé",
       "expert": "Expert"
+    },
+    "techniqueNotes": {
+      "naked_single": "Les Singles Nus sont la base de la résolution du Sudoku. Lorsqu'une cellule n'a qu'un seul candidat possible après avoir éliminé les nombres qui apparaissent dans sa ligne, colonne et boîte, ce candidat doit être la réponse. Cette technique entraîne votre œil à repérer les cellules avec des possibilités limitées—une compétence qui devient automatique avec la pratique.",
+      "hidden_single": "Les Singles Cachés se révèlent par l'exclusion plutôt que par l'élimination. Lorsqu'un chiffre ne peut apparaître que dans une cellule au sein d'une ligne, colonne ou boîte—même si cette cellule a plusieurs candidats—il doit y aller. Cette technique change votre perspective de \"que peut être cette cellule?\" à \"où ce chiffre doit-il aller?\" et est cruciale pour progresser au-delà des puzzles débutants.",
+      "hidden_pair": "Les Paires Cachées sont subtiles mais puissantes. Lorsque deux chiffres ne peuvent apparaître que dans les deux mêmes cellules au sein d'une unité, ces cellules forment une paire verrouillée—même si elles contiennent d'autres candidats. L'intuition clé: une fois que vous identifiez la paire, vous pouvez éliminer tous les autres candidats de ces deux cellules. Cette technique nécessite de la patience pour scanner systématiquement, mais elle débloque de nombreux puzzles intermédiaires.",
+      "naked_pair": "Les Paires Nues sont plus faciles à repérer que leurs homologues cachées. Lorsque deux cellules dans la même unité contiennent exactement les deux mêmes candidats, ces chiffres sont verrouillés dans ces cellules. Cela crée une puissante opportunité d'élimination: retirez ces deux candidats de toutes les autres cellules de l'unité. La beauté de cette technique réside dans sa simplicité—une fois que vous voyez la paire, les éliminations sont immédiates et certaines.",
+      "pointing_pair": "Les Paires Pointantes exploitent l'intersection entre les boîtes et les lignes. Lorsqu'un candidat dans une boîte est confiné à une seule ligne ou colonne, il \"pointe\" vers l'extérieur, vous permettant d'éliminer ce candidat du reste de cette ligne en dehors de la boîte. Cette technique relie la logique locale de la boîte aux contraintes globales de ligne/colonne, la rendant essentielle pour la résolution intermédiaire.",
+      "x_wing": "Le X-Wing est votre première rencontre avec les motifs \"poisson\"—une classe de techniques avancées basées sur des contraintes géométriques. Lorsqu'un candidat apparaît dans exactement deux positions dans chacune de deux lignes (ou colonnes), formant un rectangle, il crée un motif verrouillé. Cela force des éliminations dans les lignes perpendiculaires. Maîtriser le X-Wing ouvre la porte à la compréhension de motifs de poisson plus complexes comme Swordfish et Jellyfish.",
+      "swordfish": "Swordfish étend la logique du X-Wing à trois dimensions. Lorsqu'un candidat apparaît dans exactement deux ou trois positions à travers trois lignes (ou colonnes), formant un motif 3×3, il crée une structure verrouillée complexe. Le motif peut sembler intimidant, mais il suit le même principe que le X-Wing: les contraintes géométriques forcent les éliminations. Repérer un Swordfish nécessite un balayage systématique, mais en trouver un donne l'impression de découvrir une architecture cachée dans le puzzle.",
+      "xy_wing": "XY-Wing est une technique basée sur les chaînes qui utilise la déduction logique à travers trois cellules bi-valeurs. Le motif forme une cellule \"pivot\" connectée à deux cellules \"aile\", créant une chaîne forcée: si le pivot est X, une aile élimine un candidat; si le pivot est Y, l'autre aile élimine le même candidat. Dans tous les cas, l'élimination est certaine. Cette technique marque votre transition de la reconnaissance de motifs au raisonnement de chaînes logiques."
+    },
+    "videos": {
+      "video_naked_single_1": {
+        "title": "Bases du Sudoku - Singles Nus",
+        "description": "Apprends la technique fondamentale des Singles Nus avec des exemples clairs étape par étape."
+      },
+      "video_hidden_single_1": {
+        "title": "Trouver les Singles Cachés dans le Sudoku",
+        "description": "Maîtrise la technique des Singles Cachés - l'une des stratégies les plus importantes du Sudoku."
+      },
+      "video_hidden_pair_1": {
+        "title": "Paires Cachées dans le Sudoku - Technique Intermédiaire",
+        "description": "Apprends à trouver et utiliser les Paires Cachées pour éliminer les candidats et résoudre des puzzles plus difficiles."
+      },
+      "video_naked_pair_1": {
+        "title": "Sudoku Intermédiaire: Stratégie des Paires Nues",
+        "description": "Apprends à utiliser les Paires Nues pour éliminer les candidats et résoudre des puzzles plus difficiles."
+      },
+      "video_pointing_pair_1": {
+        "title": "Paires Pointantes / Réduction Boîte-Ligne",
+        "description": "Comprends comment les candidats s'alignent entre les boîtes et les lignes/colonnes."
+      },
+      "video_x_wing_1": {
+        "title": "Conseil Sudoku - Technique X-Wing",
+        "description": "Maîtrise le puissant motif X-Wing pour résoudre des Sudoku avancés."
+      },
+      "video_swordfish_1": {
+        "title": "Sudoku Expert: Motif Swordfish",
+        "description": "Apprends le Swordfish - une extension du X-Wing pour trois lignes et colonnes."
+      },
+      "video_xy_wing_1": {
+        "title": "Swordfish, XY Wing, Test d'Unicité dans UN Puzzle",
+        "description": "Maîtrise la technique complexe XY-Wing avec des explications claires."
+      }
     }
   }
 }

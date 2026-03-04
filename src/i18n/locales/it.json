@@ -272,11 +272,56 @@
     "legalNoticeTitle": "Avviso Legale:",
     "legalNotice": "Tutti i video sono curati da creatori educativi e incorporati con corretta attribuzione. Ogni video mantiene i diritti del suo creatore originale. Ti incoraggiamo a supportare questi creatori visitando i loro canali.",
     "backToVideos": "Torna ai Video",
+    "techniqueInsight": "Intuizione della Tecnica",
     "levels": {
       "beginner": "Principiante",
       "intermediate": "Intermedio",
       "advanced": "Avanzato",
       "expert": "Esperto"
+    },
+    "techniqueNotes": {
+      "naked_single": "I Singoli Nudi sono la base della risoluzione del Sudoku. Quando una cella ha solo un candidato possibile rimanente dopo aver eliminato i numeri che appaiono nella sua riga, colonna e box, quel candidato deve essere la risposta. Questa tecnica allena il tuo occhio a individuare celle con possibilità limitate—un'abilità che diventa automatica con la pratica.",
+      "hidden_single": "I Singoli Nascosti si rivelano attraverso l'esclusione piuttosto che l'eliminazione. Quando una cifra può apparire solo in una cella all'interno di una riga, colonna o box—anche se quella cella ha più candidati—deve andare lì. Questa tecnica cambia la tua prospettiva da \"cosa può essere questa cella?\" a \"dove deve andare questa cifra?\" ed è cruciale per progredire oltre i puzzle per principianti.",
+      "hidden_pair": "Le Coppie Nascoste sono sottili ma potenti. Quando due cifre possono apparire solo nelle stesse due celle all'interno di un'unità, quelle celle formano una coppia bloccata—anche se contengono altri candidati. L'intuizione chiave: una volta identificata la coppia, puoi eliminare tutti gli altri candidati da quelle due celle. Questa tecnica richiede pazienza per scansionare sistematicamente, ma sblocca molti puzzle intermedi.",
+      "naked_pair": "Le Coppie Nude sono più facili da individuare rispetto alle loro controparti nascoste. Quando due celle nella stessa unità contengono esattamente gli stessi due candidati, quelle cifre sono bloccate in quelle celle. Questo crea una potente opportunità di eliminazione: rimuovi questi due candidati da tutte le altre celle nell'unità. La bellezza di questa tecnica risiede nella sua semplicità—una volta vista la coppia, le eliminazioni sono immediate e certe.",
+      "pointing_pair": "Le Coppie Puntanti sfruttano l'intersezione tra box e linee. Quando un candidato in un box è confinato a una singola riga o colonna, \"punta\" verso l'esterno, permettendoti di eliminare quel candidato dal resto di quella linea fuori dal box. Questa tecnica collega la logica locale del box con i vincoli globali di riga/colonna, rendendola essenziale per la risoluzione intermedia.",
+      "x_wing": "L'X-Wing è il tuo primo incontro con i pattern \"pesce\"—una classe di tecniche avanzate basate su vincoli geometrici. Quando un candidato appare in esattamente due posizioni in ciascuna di due righe (o colonne), formando un rettangolo, crea un pattern bloccato. Questo forza eliminazioni nelle linee perpendicolari. Padroneggiare l'X-Wing apre la porta alla comprensione di pattern di pesce più complessi come Swordfish e Jellyfish.",
+      "swordfish": "Swordfish estende la logica dell'X-Wing a tre dimensioni. Quando un candidato appare in esattamente due o tre posizioni attraverso tre righe (o colonne), formando un pattern 3×3, crea una struttura bloccata complessa. Il pattern può sembrare intimidatorio, ma segue lo stesso principio dell'X-Wing: i vincoli geometrici forzano le eliminazioni. Individuare un Swordfish richiede una scansione sistematica, ma trovarne uno sembra scoprire un'architettura nascosta nel puzzle.",
+      "xy_wing": "XY-Wing è una tecnica basata su catene che usa la deduzione logica attraverso tre celle bi-valore. Il pattern forma una cella \"pivot\" collegata a due celle \"ala\", creando una catena forzata: se il pivot è X, un'ala elimina un candidato; se il pivot è Y, l'altra ala elimina lo stesso candidato. In entrambi i casi, l'eliminazione è certa. Questa tecnica segna la tua transizione dal riconoscimento di pattern al ragionamento a catena logica."
+    },
+    "videos": {
+      "video_naked_single_1": {
+        "title": "Basi del Sudoku - Singoli Nudi",
+        "description": "Impara la tecnica fondamentale dei Singoli Nudi con esempi chiari passo dopo passo."
+      },
+      "video_hidden_single_1": {
+        "title": "Trovare i Singoli Nascosti nel Sudoku",
+        "description": "Padroneggia la tecnica dei Singoli Nascosti - una delle strategie più importanti del Sudoku."
+      },
+      "video_hidden_pair_1": {
+        "title": "Coppie Nascoste nel Sudoku - Tecnica Intermedia",
+        "description": "Impara a trovare e usare le Coppie Nascoste per eliminare candidati e risolvere puzzle di Sudoku più difficili."
+      },
+      "video_naked_pair_1": {
+        "title": "Sudoku Intermedio: Strategia delle Coppie Nude",
+        "description": "Impara a usare le Coppie Nude per eliminare candidati e risolvere puzzle più difficili."
+      },
+      "video_pointing_pair_1": {
+        "title": "Coppie Puntanti / Riduzione Linea-Box",
+        "description": "Comprendi come i candidati si allineano tra box e righe/colonne."
+      },
+      "video_x_wing_1": {
+        "title": "Consiglio per Risolvere il Sudoku - Tecnica X-Wing",
+        "description": "Padroneggia il potente pattern X-Wing per risolvere Sudoku avanzati."
+      },
+      "video_swordfish_1": {
+        "title": "Sudoku Esperto: Pattern Swordfish",
+        "description": "Impara il Swordfish - un'estensione dell'X-Wing per tre righe e colonne."
+      },
+      "video_xy_wing_1": {
+        "title": "Swordfish, XY Wing, Test di Unicità in UN Puzzle",
+        "description": "Padroneggia la complessa tecnica XY-Wing con spiegazioni chiare."
+      }
     }
   }
 }

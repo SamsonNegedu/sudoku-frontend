@@ -6,8 +6,19 @@ import { TechniqueVideo } from '../../learning/TechniqueDetail';
 import { videoTutorials, type VideoTutorial } from '../../../../data/videoTutorials';
 import { Button } from '@/components/ui/button';
 
+const useTranslatedVideo = (video: VideoTutorial) => {
+    const { t } = useTranslation();
+    return {
+        ...video,
+        title: t(`videoTutorials.videos.${video.id}.title`, { defaultValue: video.title }),
+        description: t(`videoTutorials.videos.${video.id}.description`, { defaultValue: video.description }),
+    };
+};
+
 const VideoDetail: React.FC<{ video: VideoTutorial; onBack: () => void }> = ({ video, onBack }) => {
     const { t } = useTranslation();
+    const translatedVideo = useTranslatedVideo(video);
+    
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <Button
@@ -19,13 +30,14 @@ const VideoDetail: React.FC<{ video: VideoTutorial; onBack: () => void }> = ({ v
             </Button>
 
             <TechniqueVideo
-                youtubeId={video.youtubeId}
-                title={video.title}
-                creator={video.creator}
-                creatorChannel={video.creatorChannel}
-                description={video.description}
-                duration={video.duration}
-                licenseType={video.licenseType}
+                youtubeId={translatedVideo.youtubeId}
+                title={translatedVideo.title}
+                creator={translatedVideo.creator}
+                creatorChannel={translatedVideo.creatorChannel}
+                description={translatedVideo.description}
+                duration={translatedVideo.duration}
+                licenseType={translatedVideo.licenseType}
+                techniqueId={translatedVideo.techniqueId}
             />
         </div>
     );
@@ -49,34 +61,30 @@ const VideoGrid: React.FC<{
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVideos.map(video => (
+            {filteredVideos.map(video => {
+                const translatedTitle = t(`videoTutorials.videos.${video.id}.title`, { defaultValue: video.title });
+                const translatedDescription = t(`videoTutorials.videos.${video.id}.description`, { defaultValue: video.description });
+                
+                return (
                 <button
                     key={video.id}
                     onClick={() => onSelectVideo(video)}
-                    className="group text-left bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:-translate-y-1 flex flex-col h-full"
+                    className="group text-left bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 flex flex-col h-full"
                 >
-                    {/* Thumbnail with gradient overlay */}
-                    <div className="relative bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-700 dark:to-gray-600 aspect-video w-full flex items-center justify-center overflow-hidden">
-                        {/* Animated background pattern */}
-                        <div className="absolute inset-0 opacity-10 dark:opacity-5">
-                            <div className="absolute inset-0 bg-primary-500/10" style={{
-                                backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
-                                backgroundSize: '20px 20px'
-                            }}></div>
-                        </div>
-
-                        {/* Play button with animation */}
-                        <div className="relative z-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 group-hover:bg-primary-600 dark:group-hover:bg-primary-500 transition-all duration-300 shadow-lg">
-                            <PlayIcon className="w-8 h-8 text-primary-600 dark:text-primary-500 group-hover:text-white transition-colors" />
+                    {/* Thumbnail */}
+                    <div className="relative bg-neutral-100 dark:bg-gray-700 aspect-video w-full flex items-center justify-center overflow-hidden">
+                        {/* Play button */}
+                        <div className="relative z-10 bg-white dark:bg-gray-800 rounded-full p-4 group-hover:scale-110 transition-all duration-200 shadow-md">
+                            <PlayIcon className="w-8 h-8 text-gray-700 dark:text-gray-300" />
                         </div>
 
                         {/* Duration badge */}
-                        <div className="absolute top-3 right-3 bg-black/75 backdrop-blur-sm px-2.5 py-1 rounded-md text-white text-xs font-semibold">
+                        <div className="absolute top-3 right-3 bg-black/75 px-2.5 py-1 rounded text-white text-xs font-medium">
                             {video.duration} min
                         </div>
 
                         {/* Level badge */}
-                        <div className="absolute bottom-3 left-3 bg-primary-600 dark:bg-primary-500 px-2.5 py-1 rounded-md text-white text-xs font-semibold uppercase tracking-wide">
+                        <div className="absolute bottom-3 left-3 bg-gray-800 dark:bg-gray-600 px-2.5 py-1 rounded text-white text-xs font-medium">
                             {getLevelTranslation(video.level)}
                         </div>
                     </div>
@@ -84,21 +92,21 @@ const VideoGrid: React.FC<{
                     {/* Content */}
                     <div className="p-5 space-y-3 flex flex-col flex-1">
                         <div>
-                            <h4 className="font-bold text-base text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-colors line-clamp-2 leading-snug">
-                                {video.title}
+                            <h4 className="font-bold text-base text-gray-900 dark:text-white line-clamp-2 leading-snug">
+                                {translatedTitle}
                             </h4>
-                            <p className="text-xs text-primary-600 dark:text-primary-500 font-semibold mt-1.5 uppercase tracking-wide">
+                            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mt-1.5">
                                 {video.techniqueName}
                             </p>
                         </div>
 
                         <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed flex-1">
-                            {video.description}
+                            {translatedDescription}
                         </p>
 
                         {/* Creator info */}
                         <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">
+                            <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-gray-700 dark:text-gray-300 text-xs font-bold">
                                 {video.creator.charAt(0)}
                             </div>
                             <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -107,7 +115,8 @@ const VideoGrid: React.FC<{
                         </div>
                     </div>
                 </button>
-            ))}
+            );
+            })}
         </div>
     );
 };
@@ -129,15 +138,20 @@ export const VideoTutorials: React.FC = () => {
     const filteredVideos = useMemo(() => {
         return videoTutorials.filter(video => {
             const matchesLevel = selectedLevel === 'all' || video.level === selectedLevel;
+            
+            if (searchQuery === '') return matchesLevel;
+            
+            const translatedTitle = t(`videoTutorials.videos.${video.id}.title`, { defaultValue: video.title });
+            const translatedDescription = t(`videoTutorials.videos.${video.id}.description`, { defaultValue: video.description });
+            
             const matchesSearch =
-                searchQuery === '' ||
-                video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                translatedTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 video.techniqueName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                video.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                translatedDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 video.creator.toLowerCase().includes(searchQuery.toLowerCase());
             return matchesLevel && matchesSearch;
         });
-    }, [selectedLevel, searchQuery]);
+    }, [selectedLevel, searchQuery, t]);
 
     if (selectedVideo) {
         return <VideoDetail video={selectedVideo} onBack={() => setSelectedVideo(null)} />;
@@ -165,10 +179,7 @@ export const VideoTutorials: React.FC = () => {
                             key={level.id}
                             onClick={() => setSelectedLevel(level.id)}
                             variant={selectedLevel === level.id ? "default" : "outline"}
-                            className={selectedLevel === level.id
-                                ? 'bg-primary-600 hover:bg-primary-700 text-white border-primary-600 shadow-md'
-                                : 'bg-neutral-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 border-neutral-200 dark:border-gray-600 hover:bg-neutral-100 dark:hover:bg-gray-700 hover:border-neutral-300 dark:hover:border-gray-500'
-                            }
+                            size="sm"
                         >
                             {level.name}
                         </Button>

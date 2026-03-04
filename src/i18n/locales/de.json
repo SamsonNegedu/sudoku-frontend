@@ -272,11 +272,56 @@
     "legalNoticeTitle": "Rechtlicher Hinweis:",
     "legalNotice": "Alle Videos sind von Bildungserstellern kuratiert und mit korrekter Zuordnung eingebettet. Jedes Video behält die Rechte seines ursprünglichen Erstellers. Wir ermutigen dich, diese Ersteller zu unterstützen, indem du ihre Kanäle besuchst.",
     "backToVideos": "Zurück zu Videos",
+    "techniqueInsight": "Technik-Einblick",
     "levels": {
       "beginner": "Anfänger",
       "intermediate": "Fortgeschritten",
       "advanced": "Erweitert",
       "expert": "Experte"
+    },
+    "techniqueNotes": {
+      "naked_single": "Nackte Einzel sind die Grundlage des Sudoku-Lösens. Wenn eine Zelle nur einen möglichen Kandidaten hat, nachdem Zahlen eliminiert wurden, die in ihrer Zeile, Spalte und Box erscheinen, muss dieser Kandidat die Antwort sein. Diese Technik trainiert dein Auge, Zellen mit begrenzten Möglichkeiten zu erkennen—eine Fähigkeit, die mit der Übung automatisch wird.",
+      "hidden_single": "Versteckte Einzel offenbaren sich durch Ausschluss statt durch Eliminierung. Wenn eine Ziffer nur in einer Zelle innerhalb einer Zeile, Spalte oder Box erscheinen kann—selbst wenn diese Zelle mehrere Kandidaten hat—muss sie dorthin. Diese Technik verändert deine Perspektive von \"was kann diese Zelle sein?\" zu \"wo muss diese Ziffer hin?\" und ist entscheidend, um über Anfänger-Rätsel hinauszukommen.",
+      "hidden_pair": "Versteckte Paare sind subtil aber kraftvoll. Wenn zwei Ziffern nur in denselben zwei Zellen innerhalb einer Einheit erscheinen können, bilden diese Zellen ein gesperrtes Paar—selbst wenn sie andere Kandidaten enthalten. Die Schlüsselerkenntnis: Sobald du das Paar identifiziert hast, kannst du alle anderen Kandidaten aus diesen beiden Zellen eliminieren. Diese Technik erfordert Geduld beim systematischen Scannen, aber sie öffnet viele mittelschwere Rätsel.",
+      "naked_pair": "Nackte Paare sind leichter zu erkennen als ihre versteckten Gegenstücke. Wenn zwei Zellen in derselben Einheit genau dieselben zwei Kandidaten enthalten, sind diese Ziffern in diesen Zellen gesperrt. Dies schafft eine mächtige Eliminierungsmöglichkeit: Entferne diese beiden Kandidaten aus allen anderen Zellen in der Einheit. Die Schönheit dieser Technik liegt in ihrer Einfachheit—sobald du das Paar siehst, sind die Eliminierungen sofort und sicher.",
+      "pointing_pair": "Zeigende Paare nutzen die Schnittstelle zwischen Boxen und Linien aus. Wenn ein Kandidat in einer Box auf eine einzelne Zeile oder Spalte beschränkt ist, \"zeigt\" er nach außen und ermöglicht es dir, diesen Kandidaten aus dem Rest dieser Linie außerhalb der Box zu eliminieren. Diese Technik verbindet lokale Box-Logik mit globalen Zeilen-/Spalten-Einschränkungen und ist daher für mittelschweres Lösen unerlässlich.",
+      "x_wing": "Der X-Wing ist deine erste Begegnung mit \"Fisch\"-Mustern—eine Klasse fortgeschrittener Techniken basierend auf geometrischen Einschränkungen. Wenn ein Kandidat in genau zwei Positionen in jeder von zwei Zeilen (oder Spalten) erscheint und ein Rechteck bildet, entsteht ein gesperrtes Muster. Dies erzwingt Eliminierungen in den senkrechten Linien. Das Beherrschen des X-Wing öffnet die Tür zum Verständnis komplexerer Fischmuster wie Swordfish und Jellyfish.",
+      "swordfish": "Swordfish erweitert die X-Wing-Logik auf drei Dimensionen. Wenn ein Kandidat in genau zwei oder drei Positionen über drei Zeilen (oder Spalten) erscheint und ein 3×3-Muster bildet, entsteht eine komplexe gesperrte Struktur. Das Muster mag einschüchternd wirken, aber es folgt demselben Prinzip wie X-Wing: geometrische Einschränkungen erzwingen Eliminierungen. Das Erkennen von Swordfish erfordert systematisches Scannen, aber einen zu finden fühlt sich an, als würde man versteckte Architektur im Rätsel entdecken.",
+      "xy_wing": "XY-Wing ist eine kettenbasierte Technik, die logische Deduktion über drei bi-werte Zellen verwendet. Das Muster bildet eine \"Pivot\"-Zelle, die mit zwei \"Flügel\"-Zellen verbunden ist und eine erzwingende Kette bildet: Wenn der Pivot X ist, eliminiert ein Flügel einen Kandidaten; wenn der Pivot Y ist, eliminiert der andere Flügel denselben Kandidaten. In jedem Fall ist die Eliminierung sicher. Diese Technik markiert deinen Übergang von der Mustererkennung zum logischen Kettendenken."
+    },
+    "videos": {
+      "video_naked_single_1": {
+        "title": "Sudoku Grundlagen - Nackte Einzel",
+        "description": "Lerne die grundlegende Technik der Nackten Einzel mit klaren Schritt-für-Schritt-Beispielen."
+      },
+      "video_hidden_single_1": {
+        "title": "Versteckte Einzel im Sudoku finden",
+        "description": "Meistere die Technik der Versteckten Einzel - eine der wichtigsten Sudoku-Strategien."
+      },
+      "video_hidden_pair_1": {
+        "title": "Versteckte Paare im Sudoku - Fortgeschrittene Technik",
+        "description": "Lerne, wie man Versteckte Paare findet und verwendet, um Kandidaten zu eliminieren und schwierigere Sudoku-Rätsel zu lösen."
+      },
+      "video_naked_pair_1": {
+        "title": "Fortgeschrittenes Sudoku: Nackte Paare Strategie",
+        "description": "Lerne, wie man Nackte Paare verwendet, um Kandidaten zu eliminieren und schwierigere Rätsel zu lösen."
+      },
+      "video_pointing_pair_1": {
+        "title": "Zeigende Paare / Box-Linien-Reduktion",
+        "description": "Verstehe, wie Kandidaten zwischen Boxen und Zeilen/Spalten ausgerichtet werden."
+      },
+      "video_x_wing_1": {
+        "title": "Sudoku-Lösungstipp - X-Wing-Technik",
+        "description": "Meistere das mächtige X-Wing-Muster für fortgeschrittenes Sudoku-Lösen."
+      },
+      "video_swordfish_1": {
+        "title": "Experten-Sudoku: Swordfish-Muster",
+        "description": "Lerne den Swordfish - eine Erweiterung des X-Wing für drei Zeilen und Spalten."
+      },
+      "video_xy_wing_1": {
+        "title": "Swordfish, XY Wing, Eindeutigkeitstest in EINEM Puzzle",
+        "description": "Meistere die komplexe XY-Wing-Technik mit klaren Erklärungen."
+      }
     }
   }
 }

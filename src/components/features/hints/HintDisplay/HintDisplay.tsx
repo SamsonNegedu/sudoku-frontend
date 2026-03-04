@@ -20,12 +20,14 @@ export const HintDisplay: React.FC<HintDisplayProps> = ({
 
   return (
     <div
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)] lg:w-full pointer-events-auto animate-in slide-in-from-top-4 fade-in duration-300"
+      className="fixed top-[4.5rem] left-1/2 -translate-x-1/2 z-[60] max-w-md w-[calc(100%-1rem)] 
+                 lg:right-1 lg:left-auto lg:-translate-x-1/2 lg:top-24 lg:max-w-lg
+                 pointer-events-auto animate-in slide-in-from-top-2 fade-in duration-50"
       role="alert"
       aria-live="polite"
     >
-      <Card className={`${getHintColor(hint)} border-2 shadow-2xl`}>
-        <div className="p-4">
+      <Card className={`${getHintColor(hint)} border-2 shadow-xl`}>
+        <div className="p-2 lg:p-4">
           <HintHeader hint={hint} onClose={onClose} />
           <HintContent hint={hint} onClose={onClose} />
         </div>

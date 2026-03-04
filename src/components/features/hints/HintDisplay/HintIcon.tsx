@@ -9,8 +9,8 @@ interface HintIconProps {
 export const HintIcon: React.FC<HintIconProps> = ({ hint }) => {
     if (hint.autoFill) {
         return (
-            <div className="w-5 h-5 flex items-center justify-center text-success-600 dark:text-success-400">
-                <span className="text-lg">✨</span>
+            <div className="w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center text-success-600 dark:text-success-400">
+                <span className="text-base lg:text-lg">✨</span>
             </div>
         );
     }
@@ -18,18 +18,18 @@ export const HintIcon: React.FC<HintIconProps> = ({ hint }) => {
     switch (hint.type) {
         case 'cell':
             return (
-                <div className="w-5 h-5 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                    <span className="text-lg">💡</span>
+                <div className="w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <span className="text-base lg:text-lg">💡</span>
                 </div>
             );
         case 'technique':
-            return <InfoCircledIcon className="w-5 h-5 text-primary-600 dark:text-primary-500" />;
+            return <InfoCircledIcon className="w-4 h-4 lg:w-5 lg:h-5 text-primary-600 dark:text-primary-500" />;
         case 'note':
-            return <Pencil2Icon className="w-5 h-5 text-primary-600 dark:text-primary-500" />;
+            return <Pencil2Icon className="w-4 h-4 lg:w-5 lg:h-5 text-primary-600 dark:text-primary-500" />;
         default:
             return (
-                <div className="w-5 h-5 flex items-center justify-center text-gray-600 dark:text-gray-400">
-                    <span className="text-lg">💡</span>
+                <div className="w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                    <span className="text-base lg:text-lg">💡</span>
                 </div>
             );
     }
