@@ -22,18 +22,18 @@ export const NumberButton: React.FC<NumberButtonProps> = ({
     const isDisabled = disabled || isCompleted;
 
     return (
-        <div className="relative">
+        <div className="relative flex-shrink-0">
             <Button
                 onClick={() => onClick(number)}
                 disabled={isDisabled}
                 variant={isCompleted ? "secondary" : "default"}
-                size="lg"
+                size="icon"
                 className={cn(
-                    "w-11 h-11 sm:w-16 sm:h-16 font-bold text-base sm:text-xl transition-all duration-200",
-                    !isCompleted && !disabled && "hover:scale-105 active:scale-95 hover:shadow-lg",
+                    "!p-0 w-9 h-9 sm:w-16 sm:h-16 font-semibold text-base sm:text-xl transition-all duration-200 rounded-md sm:rounded-xl",
+                    !isCompleted && !disabled && "hover:scale-105 active:scale-95 hover:shadow-md",
                     isCompleted && "dark:bg-gray-600 dark:text-gray-300 opacity-60 cursor-not-allowed",
                     disabled && !isCompleted && "dark:bg-gray-700 dark:text-gray-100",
-                    inputMode === 'pencil' && !isCompleted && "italic ring-2 ring-success-500 ring-offset-2 dark:ring-offset-gray-800"
+                    inputMode === 'pencil' && !isCompleted && "italic ring-1 ring-success-500 dark:ring-offset-gray-800"
                 )}
                 aria-label={
                     isCompleted

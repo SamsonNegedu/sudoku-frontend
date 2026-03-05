@@ -1,10 +1,13 @@
-import React, { useEffect, useCallback, useState, useRef } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useMemo } from 'react';
 import { useGameStore } from '../../../../stores/gameStore';
+import { useAnalyticsStore } from '../../../../stores/analyticsStore';
 import { useGameAnalytics } from '../../../../hooks/useGameAnalytics';
 import { useGameInteraction } from '../../../../hooks/useGameInteraction';
 import { LoadingSpinner } from '../../../common';
 import { GameLoadingView, GamePauseOverlay, GamePlayView } from '../GameViews';
+import { MobileCompletionSheet } from '../../completion/MobileCompletionSheet';
 import { KeyboardShortcutsModal } from '../../../modals';
+import { DifficultyConfigManager } from '../../../../config/difficulty';
 import type { Difficulty, Hint } from '../../../../types';
 
 interface KeyboardShortcutsModalRef {
@@ -27,8 +30,11 @@ export const GameBoard: React.FC = () => {
         getHint,
         clearHintHighlights,
         getCompletedNumbers,
+        showCompletionAnimation,
+        hideCompletionAnimation,
     } = useGameStore();
 
+    const { currentGameAnalytics, getProgressData } = useAnalyticsStore();
 
     // Get analytics functions
     const { recordHintUsage } = useGameAnalytics();
@@ -92,6 +98,61 @@ export const GameBoard: React.FC = () => {
     const handleUndo = useCallback(() => {
         undoMove();
     }, [undoMove]);
+
+    // Calculate completion stats
+    const completionStats = useMemo(() => {
+        if (!currentGame?.isCompleted) return null;
+
+        // Format completion time
+        const formatTime = () => {
+            if (!currentGame.startTime) return '0:00';
+            const start = new Date(currentGame.startTime).getTime();
+            const end = currentGame.currentTime ? new Date(currentGame.currentTime).getTime() : Date.now();
+            const totalPaused = currentGame.totalPausedTime || 0;
+            const elapsed = Math.max(0, Math.floor((end - start - totalPaused) / 1000));
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        };
+
+        // Get accuracy from analytics
+        const accuracy = currentGameAnalytics?.accuracy || 0;
+        const totalMoves = currentGameAnalytics?.moves.length || 0;
+
+        // Check if personal best
+        const progressData = getProgressData(currentGame.difficulty);
+        const isPersonalBest = progressData && currentGame.currentTime ? (() => {
+            const currentTime = new Date(currentGame.currentTime).getTime() - new Date(currentGame.startTime).getTime() - (currentGame.totalPausedTime || 0);
+            return currentTime <= progressData.bestTime;
+        })() : false;
+
+        return {
+            completionTime: formatTime(),
+            accuracy,
+            totalMoves,
+            isPersonalBest,
+        };
+    }, [currentGame, currentGameAnalytics, getProgressData]);
+
+    // Handle completion dismissal (for mobile backdrop tap)
+    const handleDismissCompletion = useCallback(() => {
+        hideCompletionAnimation();
+    }, [hideCompletionAnimation]);
+
+    // Handle start new game from completion
+    const handleStartNewGameFromCompletion = useCallback(() => {
+        hideCompletionAnimation();
+        startNewGame(currentGame?.difficulty || 'beginner');
+    }, [hideCompletionAnimation, startNewGame, currentGame?.difficulty]);
+
+    // Handle try harder difficulty
+    const handleTryHarder = useCallback(() => {
+        hideCompletionAnimation();
+        const nextDifficulty = DifficultyConfigManager.getNextDifficulty(currentGame?.difficulty || 'beginner');
+        if (nextDifficulty) {
+            startNewGame(nextDifficulty);
+        }
+    }, [hideCompletionAnimation, startNewGame, currentGame?.difficulty]);
 
     // Prevent body scrolling when game is paused
     useEffect(() => {
@@ -158,7 +219,35 @@ export const GameBoard: React.FC = () => {
                 onResume={resumeGame}
                 getCompletedNumbers={getCompletedNumbers}
                 shortcutsModalRef={shortcutsModalRef}
+                showCompletionAnimation={showCompletionAnimation}
+                completionTime={completionStats?.completionTime}
+                accuracy={completionStats?.accuracy}
+                totalMoves={completionStats?.totalMoves}
+                isPersonalBest={completionStats?.isPersonalBest}
+                onStartNewGame={handleStartNewGameFromCompletion}
+                onTryHarder={handleTryHarder}
+                onDismissCompletion={handleDismissCompletion}
             />
+
+            {/* Mobile Completion Modal - Rendered at root level like pause overlay */}
+            {showCompletionAnimation && currentGame.isCompleted && (
+                <MobileCompletionSheet
+                    isVisible={showCompletionAnimation}
+                    difficulty={currentGame.difficulty}
+                    completionTime={completionStats?.completionTime || '0:00'}
+                    mistakes={currentGame.mistakes}
+                    maxMistakes={currentGame.maxMistakes}
+                    hintsUsed={currentGame.hintsUsed}
+                    maxHints={currentGame.maxHints}
+                    accuracy={completionStats?.accuracy}
+                    totalMoves={completionStats?.totalMoves}
+                    isPersonalBest={completionStats?.isPersonalBest}
+                    onStartNewGame={handleStartNewGameFromCompletion}
+                    onTryHarder={handleTryHarder}
+                    onDismiss={handleDismissCompletion}
+                />
+            )}
+
             <KeyboardShortcutsModal ref={shortcutsModalRef} />
         </>
     );

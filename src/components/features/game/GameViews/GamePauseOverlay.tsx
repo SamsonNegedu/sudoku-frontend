@@ -17,18 +17,20 @@ export const GamePauseOverlay: React.FC<GamePauseOverlayProps> = ({
 
     return (
         <>
-            {/* Heavy backdrop to completely hide the grid - prevents cheating */}
+            {/* Heavy backdrop to completely hide the grid - prevents cheating and blocks all interactions */}
             <div
-                className="fixed inset-0 bg-black/30 backdrop-blur-md z-[50] pointer-events-none
+                className="fixed inset-0 bg-black/30 backdrop-blur-md z-[50] cursor-default
                            animate-in fade-in duration-300"
                 style={{ top: '4rem' }}
+                onClick={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
             />
 
             {/* Compact pause banner */}
-            <div className="fixed left-0 right-0 z-[65] pointer-events-none" style={{ top: '4rem' }}>
-                <div className="max-w-4xl mx-auto px-2 sm:px-4">
+            <div className="fixed left-0 right-0 z-[65]" style={{ top: '4rem' }}>
+                <div className="max-w-2xl mx-auto px-2 sm:px-4">
                     <div
-                        className="bg-card border-2 border-primary rounded-lg shadow-2xl pointer-events-auto
+                        className="bg-card border-2 border-primary rounded-lg shadow-2xl
                                    animate-in slide-in-from-top-4 fade-in duration-300"
                     >
                         <div className="p-4 sm:p-5">

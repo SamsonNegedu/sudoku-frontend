@@ -205,15 +205,10 @@ function App() {
                   </div>
                 )}
 
-                {/* Completion Animation */}
+                {/* Completion Animation - Confetti only, stats shown in sidebar */}
                 {currentGame && (
                   <CompletionAnimation
                     isVisible={showCompletionAnimation}
-                    onAnimationComplete={handleCompletionAnimationEnd}
-                    onStartNewGame={handleStartNewGameFromModal}
-                    difficulty={currentGame.difficulty}
-                    completionTime={formatCompletionTime()}
-                    mistakes={currentGame.mistakes || 0}
                   />
                 )}
 

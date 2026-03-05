@@ -4,6 +4,7 @@ import { GridIcon, LightningBoltIcon, ExclamationTriangleIcon, CursorTextIcon, Q
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { Difficulty } from '../../../../types/';
+import { GameSidebarCompleted } from './GameSidebarCompleted';
 
 interface KeyboardShortcutsModalRef {
   open: () => void;
@@ -18,6 +19,14 @@ interface GameSidebarProps {
   mistakes: number;
   maxMistakes: number;
   shortcutsModalRef?: React.RefObject<KeyboardShortcutsModalRef>;
+  isCompleted?: boolean;
+  completionTime?: string;
+  accuracy?: number;
+  totalMoves?: number;
+  isPersonalBest?: boolean;
+  onStartNewGame?: () => void;
+  onTryHarder?: () => void;
+  onViewStats?: () => void;
 }
 
 export const GameSidebar: React.FC<GameSidebarProps> = ({
@@ -28,17 +37,46 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
   mistakes,
   maxMistakes,
   shortcutsModalRef,
+  isCompleted = false,
+  completionTime,
+  accuracy,
+  totalMoves,
+  isPersonalBest,
+  onStartNewGame,
+  onTryHarder,
+  onViewStats,
 }) => {
   const { t } = useTranslation();
+
+  // Show completion view if game is completed
+  if (isCompleted && completionTime && onStartNewGame) {
+    return (
+      <GameSidebarCompleted
+        difficulty={difficulty}
+        completionTime={completionTime}
+        mistakes={mistakes}
+        maxMistakes={maxMistakes}
+        hintsUsed={hintsUsed}
+        maxHints={maxHints}
+        accuracy={accuracy}
+        totalMoves={totalMoves}
+        isPersonalBest={isPersonalBest}
+        onStartNewGame={onStartNewGame}
+        onTryHarder={onTryHarder}
+        onViewStats={onViewStats}
+      />
+    );
+  }
+
   return (
     <div className="w-full lg:w-80 space-y-6">
       {/* Game Info Section */}
-      <Card className="hidden lg:block shadow-lg">
-        <CardHeader className="bg-neutral-50 dark:bg-gray-800 pb-4">
-          <CardTitle>{t('game.gameInfo')}</CardTitle>
+      <Card className="hidden lg:block shadow-lg overflow-hidden">
+        <CardHeader className="bg-neutral-100 dark:bg-gray-700/90 border-b border-neutral-200 dark:border-gray-600 pb-4 pt-5 px-6">
+          <CardTitle className="text-base font-bold">{t('game.gameInfo')}</CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-3 px-6 pt-6 pb-6">
+        <CardContent className="space-y-3 px-6 pt-5 pb-6 bg-card">
           {/* Difficulty Card */}
           <div className="group p-4 rounded-lg border bg-card hover:bg-accent transition-all shadow-sm">
             <div className="flex items-center justify-between mb-2">

@@ -51,7 +51,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
 
     return (
         <TooltipProvider delayDuration={300}>
-            <div className="flex justify-center items-center gap-1.5 sm:gap-3">
+            <div className="flex justify-center items-center gap-3 sm:gap-3">
                 {/* Undo Button */}
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -102,7 +102,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                                 variant="outline"
                                 size="icon"
                                 className={cn(
-                                    "w-12 h-12 sm:w-16 sm:h-16 transition-all duration-200 bg-white dark:bg-gray-800",
+                                    "w-10 h-10 sm:w-16 sm:h-16 transition-all duration-200 bg-white dark:bg-gray-800",
                                     disabled && "opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500",
                                     !disabled && inputMode === 'pencil' && "border-2 border-success-500 text-success-600 hover:bg-success-50 hover:scale-105 active:scale-95 hover:shadow-lg dark:hover:bg-success-950/30 dark:text-success-400 dark:border-success-500",
                                     !disabled && inputMode === 'pen' && "border-2 border-primary-600 text-primary-600 hover:bg-primary-50 hover:scale-105 active:scale-95 hover:shadow-lg dark:hover:bg-primary-950/30 dark:text-primary-500 dark:border-primary-500"

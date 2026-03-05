@@ -142,7 +142,17 @@
     "newPuzzle": "New Puzzle",
     "time": "Time",
     "mistakes": "Mistakes",
-    "performance": "Performance"
+    "performance": "Performance",
+    "yourPerformance": "Your Performance",
+    "accuracy": "Accuracy",
+    "totalMoves": "Total Moves",
+    "personalBest": "Personal Best!",
+    "tryHarder": "Next Difficulty",
+    "viewStats": "View Full Stats",
+    "close": "Close",
+    "viewDetails": "View Details",
+    "hideDetails": "Hide Details",
+    "tapToDismiss": "Tap outside to dismiss"
   },
   "mistakes": {
     "tooManyMistakes": "Too Many Mistakes",

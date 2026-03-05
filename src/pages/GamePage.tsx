@@ -47,14 +47,6 @@ export function GamePage() {
       {currentGame && (
         <CompletionAnimation
           isVisible={showCompletionAnimation}
-          onAnimationComplete={() => hideCompletionAnimation()}
-          onStartNewGame={() => {
-            // Start a new game with the same difficulty
-            startNewGame(currentGame.difficulty);
-          }}
-          difficulty={currentGame.difficulty}
-          completionTime={formatCompletionTime()}
-          mistakes={currentGame.mistakes || 0}
         />
       )}
 

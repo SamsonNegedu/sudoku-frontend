@@ -7,14 +7,14 @@ interface ConfettiEffectProps {
 export const ConfettiEffect: React.FC<ConfettiEffectProps> = ({ isVisible }) => {
     if (!isVisible) return null;
 
-    // Subtle, brand-consistent colors using semantic palette
+    // Success-themed confetti colors for celebration
     const confettiColors = [
-        'rgb(59 130 246)',   // primary-500
-        'rgb(96 165 250)',   // primary-400
-        'rgb(147 197 253)',  // primary-300
-        'rgb(219 234 254)',  // primary-100
-        'rgb(107 114 128)',  // neutral-500
-        'rgb(156 163 175)',  // neutral-400
+        'rgb(34 197 94)',    // success-500
+        'rgb(74 222 128)',   // success-400
+        'rgb(134 239 172)',  // success-300
+        'rgb(187 247 208)',  // success-200
+        'rgb(220 252 231)',  // success-100
+        'rgb(107 114 128)',  // neutral-500 (accent)
     ];
 
     return (

@@ -39,12 +39,12 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     onResume,
 }) => {
     return (
-        <div className="dark:bg-gray-800 rounded-xl px-2 sm:px-4 py-3 sm:py-4 shadow-sm border border-neutral-200 dark:border-gray-700">
+        <div className="dark:bg-gray-800 rounded-xl px-3 sm:px-4 py-3 sm:py-4 shadow-sm border border-neutral-200 dark:border-gray-700 inline-block sm:block">
             {/* Mode indicator */}
             <ModeIndicator inputMode={inputMode} />
 
             {/* Two-row layout: Controls on top, Numbers on bottom */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3 sm:gap-4 items-center">
                 {/* Top Row: Control buttons */}
                 <ControlButtons
                     onUndo={onUndo}

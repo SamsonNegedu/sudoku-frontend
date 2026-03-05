@@ -9,8 +9,8 @@ export const GridSkeleton: React.FC = () => {
                 <Card className="overflow-hidden shadow-xl p-0">
                     <div className="sudoku-grid-container bg-white dark:bg-gray-800 rounded-2xl overflow-hidden">
                         {Array.from({ length: 81 }).map((_, index) => (
-                            <Skeleton 
-                                key={index} 
+                            <Skeleton
+                                key={index}
                                 className="aspect-square w-full h-full rounded-none"
                             />
                         ))}

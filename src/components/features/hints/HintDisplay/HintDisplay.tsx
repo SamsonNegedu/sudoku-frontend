@@ -22,7 +22,7 @@ export const HintDisplay: React.FC<HintDisplayProps> = ({
     <div
       className="fixed top-[4.5rem] left-1/2 -translate-x-1/2 z-[60] max-w-md w-[calc(100%-1rem)] 
                  lg:right-1 lg:left-auto lg:-translate-x-1/2 lg:top-24 lg:max-w-lg
-                 pointer-events-auto animate-in slide-in-from-top-2 fade-in duration-50"
+                 pointer-events-auto"
       role="alert"
       aria-live="polite"
     >

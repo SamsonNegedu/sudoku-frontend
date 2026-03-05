@@ -25,16 +25,16 @@ export const MistakesModal: React.FC<MistakesModalProps> = ({
     return (
         <>
             {/* Backdrop - click to continue */}
-            <div 
+            <div
                 className="fixed inset-0 bg-black/20 dark:bg-black/30 z-[65] backdrop-blur-sm
                            animate-in fade-in duration-300"
                 onClick={onContinue}
             />
-            
+
             {/* Banner */}
             <div className="fixed top-0 left-0 right-0 z-[70] pointer-events-none">
-                <div className="max-w-4xl mx-auto px-2 sm:px-4 pt-2 sm:pt-4">
-                    <div 
+                <div className="max-w-2xl mx-auto px-2 sm:px-4 pt-2 sm:pt-4">
+                    <div
                         className="bg-error-50 dark:bg-error-900 border-2 border-error-500 dark:border-error-600 
                                    rounded-lg shadow-2xl pointer-events-auto
                                    animate-in slide-in-from-top-4 fade-in duration-300"
@@ -75,7 +75,7 @@ export const MistakesModal: React.FC<MistakesModalProps> = ({
                                     {t('mistakes.continueUnlimited')}
                                 </Button>
                             </div>
-                            
+
                             {/* Hint text */}
                             <p className="text-xs text-error-600 dark:text-error-400 text-center mt-2">
                                 Click outside to continue playing

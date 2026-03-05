@@ -28,9 +28,9 @@ export const IconButton: React.FC<IconButtonProps> = ({
     'data-testid': dataTestId,
 }) => {
     const sizeClasses = {
-        sm: 'w-[2.75rem] h-[2.75rem]',
-        md: 'w-12 h-12 sm:w-16 sm:h-16',
-        lg: 'w-16 h-16 sm:w-20 sm:h-20',
+        sm: 'w-9 h-9',
+        md: 'w-10 h-10 sm:w-16 sm:h-16',
+        lg: 'w-12 h-12 sm:w-20 sm:h-20',
     }[size];
 
     const colorClasses = disabled

@@ -30,6 +30,15 @@ interface GamePlayViewProps {
     onResume: () => void;
     getCompletedNumbers: () => number[];
     shortcutsModalRef?: React.RefObject<KeyboardShortcutsModalRef>;
+    showCompletionAnimation?: boolean;
+    completionTime?: string;
+    accuracy?: number;
+    totalMoves?: number;
+    isPersonalBest?: boolean;
+    onStartNewGame?: () => void;
+    onTryHarder?: () => void;
+    onViewStats?: () => void;
+    onDismissCompletion?: () => void;
 }
 
 export const GamePlayView: React.FC<GamePlayViewProps> = ({
@@ -50,6 +59,15 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
     onResume,
     getCompletedNumbers,
     shortcutsModalRef,
+    showCompletionAnimation = false,
+    completionTime,
+    accuracy,
+    totalMoves,
+    isPersonalBest,
+    onStartNewGame,
+    onTryHarder,
+    onViewStats,
+    onDismissCompletion,
 }) => {
     // Auto-scroll on mobile to make header sticky immediately on mount
     useEffect(() => {
@@ -82,7 +100,7 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
             />
 
             {/* Main Game Area */}
-            <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 pt-4 sm:pt-6 lg:pt-8 pb-4 sm:pb-6">
+            <div className={`max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 pt-4 sm:pt-6 lg:pt-8 pb-4 sm:pb-6 ${currentGame.isPaused ? 'pointer-events-none' : ''}`}>
                 <div className="flex flex-col gap-2 sm:gap-6 lg:gap-8">
                     {/* Ultra-Compact Mobile Timer */}
                     <MobileGameHeader currentGame={currentGame} />
@@ -104,7 +122,7 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
 
                             {/* Number Pad - Directly below grid, matched width */}
                             <div className="w-full flex justify-center">
-                                <div className="w-full max-w-[46rem]">
+                                <div className="w-auto sm:w-full max-w-[46rem]">
                                     <NumberPad
                                         onNumberClick={onNumberClick}
                                         onClear={onClearCell}
@@ -136,6 +154,14 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
                             mistakes={currentGame.mistakes}
                             maxMistakes={currentGame.maxMistakes}
                             shortcutsModalRef={shortcutsModalRef}
+                            isCompleted={currentGame.isCompleted}
+                            completionTime={completionTime}
+                            accuracy={accuracy}
+                            totalMoves={totalMoves}
+                            isPersonalBest={isPersonalBest}
+                            onStartNewGame={onStartNewGame}
+                            onTryHarder={onTryHarder}
+                            onViewStats={onViewStats}
                         />
                     </div>
                 </div>
