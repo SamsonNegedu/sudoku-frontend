@@ -55,8 +55,8 @@
     "difficulty": "Difficulty"
   },
   "controls": {
-    "penMode": "Pen Mode",
-    "pencilMode": "Pencil Mode", 
+    "penMode": "Number Mode",
+    "pencilMode": "Note Mode", 
     "currentMode": "Current: {{mode}} Mode"
   },
   "hints": {
@@ -259,7 +259,7 @@
   "tips": {
     "quickTips": "Quick Tips",
     "spaceToggle": "Use",
-    "toggleMode": "to toggle pen/pencil mode",
+    "toggleMode": "to toggle number/note mode",
     "pressKey": "Press",
     "undoMoves": "to undo moves",
     "clickCells": "Click cells to select and highlight related numbers",

@@ -16,8 +16,8 @@ export const CelebrationHeader: React.FC<CelebrationHeaderProps> = ({
             <div className="relative space-y-4">
                 {/* Icon */}
                 <div className="flex justify-center">
-                    <div className="p-4 bg-success-50 dark:bg-success-900/20 rounded-full border-2 border-success-200 dark:border-success-800">
-                        <CheckCircledIcon className="w-10 h-10 text-success-600 dark:text-success-400" />
+                    <div className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-full border-2 border-primary-200 dark:border-primary-800">
+                        <CheckCircledIcon className="w-10 h-10 text-primary-600 dark:text-primary-400" />
                     </div>
                 </div>
 

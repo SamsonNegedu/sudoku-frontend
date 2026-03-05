@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SudokuGrid } from '../GameBoard';
 import { NumberPad } from '../NumberPad';
 import { GameSidebar } from '../GameSidebar';
@@ -67,27 +67,6 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
     onTryHarder,
     onViewStats,
 }) => {
-    // Auto-scroll on mobile to make header sticky immediately on mount
-    useEffect(() => {
-        const isMobile = window.innerWidth < 1024; // lg breakpoint
-        if (isMobile) {
-            // Small delay to ensure DOM is ready
-            setTimeout(() => {
-                window.scrollTo({ top: 1, behavior: 'smooth' });
-            }, 100);
-        }
-    }, []);
-
-    // Auto-scroll when game is resumed on mobile
-    useEffect(() => {
-        const isMobile = window.innerWidth < 1024; // lg breakpoint
-        if (isMobile && !currentGame.isPaused) {
-            setTimeout(() => {
-                window.scrollTo({ top: 70, behavior: 'smooth' });
-            }, 100);
-        }
-    }, [currentGame.isPaused]);
-
     return (
         <PageLayout className="bg-neutral-50 dark:bg-neutral-900">
             {/* Hint Display Overlay */}

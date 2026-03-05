@@ -55,8 +55,8 @@
     "difficulty": "Schwierigkeit"
   },
   "controls": {
-    "penMode": "Stift-Modus",
-    "pencilMode": "Bleistift-Modus",
+    "penMode": "Zahlenmodus",
+    "pencilMode": "Notizenмodus",
     "currentMode": "Aktuell: {{mode}}-Modus"
   },
   "hints": {

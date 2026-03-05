@@ -129,10 +129,10 @@
     --ring: 217 91% 60%;                        /* Focus ring (blue) */
     
     /* Game-specific colors */
-    --cell-bg: 217 33% 17%;                     /* Dark cell background */
-    --cell-fixed: 215 28% 25%;                  /* Slightly lighter for fixed cells */
+    --cell-bg: 215 25% 20%;                     /* Slightly lighter dark cell background */
+    --cell-fixed: 215 20% 35%;                  /* More distinct lighter for fixed cells */
     --cell-selected: 217 91% 60%;               /* Blue for selected cell */
-    --cell-highlighted: 221 83% 27%;            /* Dark blue for highlighted */
+    --cell-highlighted: 185 30% 25%;            /* Teal-gray for highlighted */
     --cell-error: 0 63% 31%;                    /* Dark red for errors */
     --cell-hint: 32 95% 44%;                    /* Amber for hints */
   }
@@ -196,17 +196,22 @@
     justify-content: center;
   }
 
-  /* Smooth hover effect */
-  .sudoku-cell:hover:not([data-selected="true"]):not([data-fixed="true"]) {
+  /* Smooth hover effect - exclude fixed and correct cells */
+  .sudoku-cell:hover:not([data-selected="true"]):not([data-fixed="true"]):not([data-correct="true"]) {
     background-color: rgb(249 250 251) !important; /* bg-neutral-50 */
     transform: translateY(-1px);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.05) !important;
   }
 
-  .dark .sudoku-cell:hover:not([data-selected="true"]):not([data-fixed="true"]) {
-    background-color: rgb(31 41 55) !important; /* dark bg-gray-800 */
+  .dark .sudoku-cell:hover:not([data-selected="true"]):not([data-fixed="true"]):not([data-correct="true"]) {
+    background-color: rgb(45 55 72) !important; /* Lighter gray for better visibility */
     transform: translateY(-1px);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  /* Correct cells have a subtle locked appearance */
+  .sudoku-cell[data-correct="true"]:not([data-fixed="true"]) {
+    cursor: default;
   }
 
   /* Subtle click effect */
@@ -226,10 +231,10 @@
   }
   .dark div.sudoku-cell[data-fixed="true"],
   .dark .sudoku-cell[data-fixed="true"] {
-    background-color: rgb(55 65 81) !important;
-    background: rgb(55 65 81) !important;
+    background-color: rgb(71 85 105) !important; /* Slate-600 - lighter and more distinct */
+    background: rgb(71 85 105) !important;
     font-weight: 600 !important;
-    color: rgb(229 231 235) !important;
+    color: rgb(241 245 249) !important; /* Slate-100 - brighter text */
   }
 
   /* Related (row/col/box): light blue */
@@ -240,15 +245,15 @@
   }
   .dark div.sudoku-cell[data-highlighted="true"]:not([data-selected="true"]),
   .dark .sudoku-cell[data-highlighted="true"]:not([data-selected="true"]) {
-    background-color: rgb(30 58 138) !important;
-    background: rgb(30 58 138) !important;
+    background-color: rgb(30 64 75) !important; /* Darker teal-blue for subtle highlight */
+    background: rgb(30 64 75) !important;
   }
   .sudoku-cell[data-highlighted="true"] .sudoku-cell-notes {
     color: rgb(17 24 39) !important;
     font-weight: 500 !important;
   }
   .dark .sudoku-cell[data-highlighted="true"] .sudoku-cell-notes {
-    color: rgb(219 234 254) !important;
+    color: rgb(209 213 219) !important; /* More neutral gray for better readability */
   }
 
   /* Same number: slightly darker blue to distinguish from just "related" */
@@ -260,16 +265,16 @@
   }
   .dark div.sudoku-cell[data-same-number="true"]:not([data-selected="true"]),
   .dark .sudoku-cell[data-same-number="true"]:not([data-selected="true"]) {
-    background-color: rgb(37 99 235) !important; /* bg-blue-600 */
-    background: rgb(37 99 235) !important;
-    border-color: rgb(59 130 246) !important;
+    background-color: rgb(21 94 117) !important; /* Cyan-800 - more muted, distinct from selected */
+    background: rgb(21 94 117) !important;
+    border-color: rgb(14 116 144) !important; /* Cyan-700 border - subtle */
   }
   .sudoku-cell[data-same-number="true"] .sudoku-cell-notes {
     color: rgb(17 24 39) !important;
     font-weight: 500 !important;
   }
   .dark .sudoku-cell[data-same-number="true"] .sudoku-cell-notes {
-    color: rgb(219 234 254) !important;
+    color: rgb(224 242 254) !important; /* Cyan-100 - brighter for better contrast */
   }
 
   /* Selected */
@@ -281,6 +286,15 @@
     color: white !important;
     font-weight: 600 !important;
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  }
+  .dark div.sudoku-cell[data-selected="true"],
+  .dark .sudoku-cell[data-selected="true"] {
+    background-color: rgb(37 99 235) !important; /* Brighter blue-600 */
+    background: rgb(37 99 235) !important;
+    border: 3px solid rgb(96 165 250) !important; /* Thicker, bright blue-400 border */
+    color: white !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3), 0 4px 12px rgba(59, 130, 246, 0.4) !important; /* Glow effect */
   }
   .sudoku-cell[data-selected="true"] .sudoku-cell-notes {
     color: rgb(248 250 252) !important;

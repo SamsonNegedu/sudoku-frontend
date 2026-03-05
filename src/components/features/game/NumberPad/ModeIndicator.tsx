@@ -10,9 +10,9 @@ export const ModeIndicator: React.FC<ModeIndicatorProps> = ({ inputMode }) => {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col items-center mb-3 space-y-1">
-            <div className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${inputMode === 'pen'
-                ? 'bg-primary-100/60 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300'
-                : 'bg-success-100/60 dark:bg-success-900/40 text-success-700 dark:text-success-300'
+            <div className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 ${inputMode === 'pen'
+                ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+                : 'bg-primary-500 dark:bg-primary-600 text-white border border-primary-600 dark:border-primary-700'
                 }`}>
                 {inputMode === 'pen' ? (
                     <>

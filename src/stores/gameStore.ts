@@ -318,6 +318,9 @@ export const useGameStore = create<GameStore>()(
 
         const cell = state.currentGame.board[row][col];
         if (cell.isFixed) return;
+        
+        // Prevent overwriting correct values (unless clearing)
+        if (cell.isCorrect && value !== null) return;
 
         // Reset hint tracking when user makes a move
         await gameEngineService.resetHintTracking();
@@ -480,6 +483,9 @@ export const useGameStore = create<GameStore>()(
 
         const cell = state.currentGame.board[row][col];
         if (cell.isFixed) return;
+        
+        // Prevent clearing correct values
+        if (cell.isCorrect) return;
 
         // Reset hint tracking when user makes a move
         await gameEngineService.resetHintTracking();

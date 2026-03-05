@@ -95,30 +95,21 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                 {/* Pencil/Note Mode Toggle - CENTER POSITION with enhanced visual feedback */}
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <div className="relative">
-                            <Button
-                                onClick={onToggleNote}
-                                disabled={disabled}
-                                variant="outline"
-                                size="icon"
-                                className={cn(
-                                    "w-10 h-10 sm:w-16 sm:h-16 transition-all duration-200 bg-white dark:bg-gray-800",
-                                    disabled && "opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500",
-                                    !disabled && inputMode === 'pencil' && "border-2 border-success-500 text-success-600 hover:bg-success-50 hover:scale-105 active:scale-95 hover:shadow-lg dark:hover:bg-success-950/30 dark:text-success-400 dark:border-success-500",
-                                    !disabled && inputMode === 'pen' && "border-2 border-primary-600 text-primary-600 hover:bg-primary-50 hover:scale-105 active:scale-95 hover:shadow-lg dark:hover:bg-primary-950/30 dark:text-primary-500 dark:border-primary-500"
-                                )}
-                                aria-label={t('controls.currentMode', { mode: inputMode === 'pen' ? t('controls.penMode') : t('controls.pencilMode') })}
-                            >
-                                {inputMode === 'pen' ? <Pencil1Icon className="w-5 h-5 sm:w-6 sm:h-6" /> : <Pencil2Icon className="w-5 h-5 sm:w-6 sm:h-6" />}
-                            </Button>
-                            {/* Enhanced mode status badge */}
-                            <div className={cn(
-                                "absolute -top-1.5 -right-1.5 text-[9px] sm:text-[10px] font-bold rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center shadow-lg border-2 border-white dark:border-gray-800 transition-all duration-200 text-white",
-                                inputMode === 'pencil' ? 'bg-success-500 scale-110' : 'bg-primary-600'
-                            )}>
-                                {inputMode === 'pencil' ? 'ON' : 'OFF'}
-                            </div>
-                        </div>
+                        <Button
+                            onClick={onToggleNote}
+                            disabled={disabled}
+                            variant="outline"
+                            size="icon"
+                            className={cn(
+                                "w-10 h-10 sm:w-16 sm:h-16 transition-all duration-200",
+                                disabled && "opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-800",
+                                !disabled && inputMode === 'pencil' && "border-2 border-primary-500 bg-primary-500 text-white hover:bg-primary-600 hover:border-primary-600 hover:scale-105 active:scale-95 hover:shadow-lg dark:bg-primary-600 dark:border-primary-600 dark:hover:bg-primary-700",
+                                !disabled && inputMode === 'pen' && "border-2 border-gray-300 bg-white text-gray-600 hover:bg-gray-50 hover:scale-105 active:scale-95 hover:shadow-lg dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+                            )}
+                            aria-label={t('controls.currentMode', { mode: inputMode === 'pen' ? t('controls.penMode') : t('controls.pencilMode') })}
+                        >
+                            {inputMode === 'pen' ? <Pencil1Icon className="w-5 h-5 sm:w-6 sm:h-6" /> : <Pencil2Icon className="w-5 h-5 sm:w-6 sm:h-6" />}
+                        </Button>
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>{t('controls.currentMode', { mode: inputMode === 'pen' ? t('controls.penMode') : t('controls.pencilMode') })} (Space)</p>
@@ -164,7 +155,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
                                     <div>
                                         <IconButton
                                             onClick={onResume || (() => { })}
-                                            color="green"
+                                            color="blue"
                                             size="md"
                                             aria-label={t('game.resume')}
                                         >

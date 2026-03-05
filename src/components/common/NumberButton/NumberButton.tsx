@@ -34,7 +34,8 @@ export const NumberButton: React.FC<NumberButtonProps> = ({
                     !isCompleted && !disabled && "hover:scale-105 active:scale-95 hover:shadow-md",
                     isCompleted && "dark:bg-gray-600 dark:text-gray-300 opacity-60 cursor-not-allowed",
                     disabled && !isCompleted && "dark:bg-gray-700 dark:text-gray-100",
-                    inputMode === 'pencil' && !isCompleted && "italic border-success-500 dark:border-success-500 bg-success-50 dark:bg-success-950"
+                    inputMode === 'pen' && !isCompleted && !disabled && "text-neutral-800 dark:text-gray-50 dark:bg-gray-700 dark:border-gray-500",
+                    inputMode === 'pencil' && !isCompleted && "italic text-neutral-700 dark:text-gray-200"
                 )}
                 aria-label={
                     isCompleted
@@ -52,7 +53,7 @@ export const NumberButton: React.FC<NumberButtonProps> = ({
                 {number}
             </Button>
             {isCompleted && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-success-500 dark:bg-success-600 rounded-full text-[10px] text-white flex items-center justify-center font-bold shadow-md border-2 border-white dark:border-gray-800">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 dark:bg-primary-600 rounded-full text-[10px] text-white flex items-center justify-center font-bold shadow-md border-2 border-white dark:border-gray-800">
                     ✓
                 </span>
             )}

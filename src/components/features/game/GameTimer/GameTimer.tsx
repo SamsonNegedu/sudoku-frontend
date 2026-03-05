@@ -105,24 +105,24 @@ export const GameTimer: React.FC<GameTimerProps> = ({
         <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5">
                 <StopwatchIcon className={`w-4 h-4 ${isPaused
-                    ? 'text-amber-600 dark:text-amber-400'
+                    ? 'text-gray-500 dark:text-gray-400'
                     : isCompleted
-                        ? 'text-success-600 dark:text-success-400'
+                        ? 'text-primary-600 dark:text-primary-400'
                         : 'text-primary-500 dark:text-primary-500'
                     }`} />
                 <span className={`text-sm font-mono font-bold tabular-nums ${isPaused
-                    ? 'text-amber-800 dark:text-amber-300'
+                    ? 'text-gray-600 dark:text-gray-400'
                     : isCompleted
-                        ? 'text-success-700 dark:text-success-300'
+                        ? 'text-primary-700 dark:text-primary-300'
                         : 'text-primary-500 dark:text-primary-500'
                     }`}>
                     {formatTime(elapsedTime)}
                 </span>
                 {isPaused && !isCompleted && (
-                    <PauseIcon className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                    <PauseIcon className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
                 )}
                 {isCompleted && (
-                    <CheckCircledIcon className="w-3.5 h-3.5 text-success-600 dark:text-success-400" />
+                    <CheckCircledIcon className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400" />
                 )}
             </div>
             {/* Subtle progress bar - shows completion based on filled cells */}

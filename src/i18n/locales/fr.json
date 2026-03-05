@@ -55,8 +55,8 @@
     "difficulty": "Difficulté"
   },
   "controls": {
-    "penMode": "Mode Stylo",
-    "pencilMode": "Mode Crayon",
+    "penMode": "Mode Nombre",
+    "pencilMode": "Mode Note",
     "currentMode": "Actuel : Mode {{mode}}"
   },
   "hints": {

@@ -69,16 +69,16 @@ export const MobileGameHeader: React.FC<MobileGameHeaderProps> = ({ currentGame 
                             variant={currentGame.mistakes > 0 ? "destructive" : "outline"}
                             className={`gap-1 ${currentGame.mistakes > 0
                                 ? 'bg-error-50 dark:bg-error-950/30 border-error-200 dark:border-error-800'
-                                : 'bg-success-50 dark:bg-success-950/30 border-success-200 dark:border-success-800'
+                                : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600'
                                 }`}
                         >
                             <ExclamationTriangleIcon className={`w-3 h-3 ${currentGame.mistakes > 0
                                 ? 'text-error-600 dark:text-error-400'
-                                : 'text-success-600 dark:text-success-400'
+                                : 'text-gray-600 dark:text-gray-400'
                                 }`} />
                             <span className={currentGame.mistakes > 0
                                 ? 'text-error-700 dark:text-error-300'
-                                : 'text-success-700 dark:text-success-300'
+                                : 'text-gray-700 dark:text-gray-300'
                             }>
                                 {currentGame.mistakes}{currentGame.mistakeLimitDisabled ? '/∞' : `/${currentGame.maxMistakes}`}
                             </span>

@@ -73,14 +73,14 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
     return (
         <div className="hidden lg:block w-full lg:w-80 space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
             {/* Celebration Header */}
-            <Card className="shadow-xl border-2 border-success-500 dark:border-success-700/50 bg-success-50 dark:bg-gray-800">
+            <Card className="shadow-xl border-2 border-primary-500 dark:border-primary-600/50 bg-primary-50 dark:bg-gray-800">
                 <CardHeader className="pb-4 text-center">
                     <div className="flex justify-center mb-3">
-                        <div className="p-3 bg-success-100 dark:bg-success-900/20 rounded-full border-2 border-success-300 dark:border-success-800/50 animate-in zoom-in duration-300">
-                            <CheckCircledIcon className="w-8 h-8 text-success-600 dark:text-success-500" />
+                        <div className="p-3 bg-primary-100 dark:bg-primary-900/20 rounded-full border-2 border-primary-300 dark:border-primary-800/50 animate-in zoom-in duration-300">
+                            <CheckCircledIcon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
                         </div>
                     </div>
-                    <CardTitle className="text-xl font-bold text-success-700 dark:text-success-400">
+                    <CardTitle className="text-xl font-bold text-primary-700 dark:text-primary-300">
                         {t('completion.puzzleSolved')}
                     </CardTitle>
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2 mt-1">
@@ -93,8 +93,8 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
             {/* Stats Section */}
             <Card className="shadow-lg animate-in fade-in slide-in-from-right-4 duration-500" style={{ animationDelay: '100ms' }}>
                 <CardHeader className="bg-neutral-50 dark:bg-gray-800 pb-4">
-                    <CardTitle className="flex items-center gap-2 text-success-700 dark:text-success-400">
-                        <BarChartIcon className="w-5 h-5 text-success-600 dark:text-success-500" />
+                    <CardTitle className="flex items-center gap-2 text-primary-700 dark:text-primary-300">
+                        <BarChartIcon className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                         {t('completion.yourPerformance')}
                     </CardTitle>
                 </CardHeader>
@@ -104,7 +104,7 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <TimerIcon className="w-4 h-4 text-success-600 dark:text-success-500" />
+                                <TimerIcon className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                                 <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                                     {t('completion.time')}
                                 </span>
@@ -112,7 +112,7 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
                             <span className="text-lg font-bold tabular-nums">{completionTime}</span>
                         </div>
                         {isPersonalBest && (
-                            <div className="flex items-center gap-1.5 text-xs font-semibold text-success-700 dark:text-success-400 bg-success-100 dark:bg-success-900/20 px-2 py-1 rounded-md border border-success-300 dark:border-success-800/50">
+                            <div className="flex items-center gap-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 bg-primary-100 dark:bg-primary-900/20 px-2 py-1 rounded-md border border-primary-300 dark:border-primary-800/50">
                                 <TrophyIcon className="w-3.5 h-3.5" />
                                 <span>{t('completion.personalBest')}</span>
                             </div>
@@ -131,7 +131,7 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
                                 </div>
                                 <span className="text-lg font-bold tabular-nums">{Math.round(accuracy)}%</span>
                             </div>
-                            <ProgressBar value={accuracy} max={100} color="green" />
+                            <ProgressBar value={accuracy} max={100} color="blue" />
                             {totalMoves > 0 && (
                                 <p className="text-xs text-muted-foreground">
                                     {Math.round((accuracy / 100) * totalMoves)}/{totalMoves} correct first try
@@ -144,28 +144,28 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <LightningBoltIcon className="w-4 h-4 text-success-600 dark:text-success-500" />
+                                <LightningBoltIcon className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                                 <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                                     {t('game.hintsUsed')}
                                 </span>
                             </div>
                             <span className="text-lg font-bold tabular-nums">{hintsUsed} / {maxHints}</span>
                         </div>
-                        <ProgressBar value={hintsUsed} max={maxHints} color="green" />
+                        <ProgressBar value={hintsUsed} max={maxHints} color="blue" />
                     </div>
 
                     {/* Mistakes */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <ExclamationTriangleIcon className="w-4 h-4 text-success-600 dark:text-success-500" />
+                                <ExclamationTriangleIcon className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                                 <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                                     {t('game.mistakes')}
                                 </span>
                             </div>
                             <span className="text-lg font-bold tabular-nums">{mistakes} / {maxMistakes}</span>
                         </div>
-                        <ProgressBar value={mistakes} max={maxMistakes} color="green" />
+                        <ProgressBar value={mistakes} max={maxMistakes} color="blue" />
                     </div>
 
                     {/* Total Moves */}
@@ -187,7 +187,7 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
                     <Button
                         onClick={onStartNewGame}
                         size="lg"
-                        className="w-full bg-success-600 hover:bg-success-700 dark:bg-success-700/80 dark:hover:bg-success-700 text-white font-semibold shadow-md transition-all duration-200 gap-2"
+                        className="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-semibold shadow-md transition-all duration-200 gap-2"
                     >
                         <RocketIcon className="w-4 h-4" />
                         {t('completion.newPuzzle')}
@@ -202,7 +202,7 @@ export const GameSidebarCompleted: React.FC<GameSidebarCompletedProps> = ({
                             }}
                             size="default"
                             variant="outline"
-                            className="w-full font-medium transition-all duration-200 gap-2 border-success-300 dark:border-success-800/50 text-success-700 dark:text-success-400 hover:bg-success-50 dark:hover:bg-success-900/20 hover:border-success-400 dark:hover:border-success-700/70"
+                            className="w-full font-medium transition-all duration-200 gap-2"
                         >
                             <ArrowUpIcon className="w-4 h-4" />
                             <span>Try <span className="capitalize">{t(`difficulty.${nextDifficulty}`)}</span></span>

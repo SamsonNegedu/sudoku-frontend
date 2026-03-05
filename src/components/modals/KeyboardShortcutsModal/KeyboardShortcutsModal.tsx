@@ -15,7 +15,7 @@ const shortcuts: Shortcut[] = [
     { key: 'Shift + Tab', description: 'Move to previous cell', category: 'Navigation' },
 
     // Input
-    { key: '1-9', description: 'Enter number (pen mode) or note (pencil mode)', category: 'Input' },
+    { key: '1-9', description: 'Enter number or note (depending on mode)', category: 'Input' },
     { key: 'Delete / Backspace', description: 'Clear selected cell', category: 'Input' },
     { key: 'Space', description: 'Toggle between Pen and Pencil mode', category: 'Input' },
 

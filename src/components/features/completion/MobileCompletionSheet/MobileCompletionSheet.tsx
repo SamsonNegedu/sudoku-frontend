@@ -84,11 +84,11 @@ export const MobileCompletionSheet: React.FC<MobileCompletionModalProps> = ({
                     {/* Header */}
                     <div className="px-6 pt-6 pb-4 text-center">
                         <div className="flex justify-center mb-3">
-                            <div className="p-3 bg-success-100 dark:bg-success-900/20 rounded-full border-2 border-success-300 dark:border-success-800/50">
-                                <CheckCircledIcon className="w-8 h-8 text-success-600 dark:text-success-500" />
+                            <div className="p-3 bg-primary-100 dark:bg-primary-900/20 rounded-full border-2 border-primary-300 dark:border-primary-800/50">
+                                <CheckCircledIcon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
                             </div>
                         </div>
-                        <h2 className="text-xl font-bold text-success-700 dark:text-success-400">
+                        <h2 className="text-xl font-bold text-primary-700 dark:text-primary-300">
                             {t('completion.puzzleSolved')}
                         </h2>
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2 mt-1">
@@ -101,7 +101,7 @@ export const MobileCompletionSheet: React.FC<MobileCompletionModalProps> = ({
                     <div className="px-6 pb-5">
                         {/* Personal Best Badge */}
                         {isPersonalBest && (
-                            <div className="flex items-center justify-center gap-2 text-sm font-semibold text-success-700 dark:text-success-400 bg-success-100 dark:bg-success-900/20 px-3 py-2 rounded-lg border border-success-300 dark:border-success-800/50 mb-4">
+                            <div className="flex items-center justify-center gap-2 text-sm font-semibold text-primary-700 dark:text-primary-300 bg-primary-100 dark:bg-primary-900/20 px-3 py-2 rounded-lg border border-primary-300 dark:border-primary-800/50 mb-4">
                                 <TrophyIcon className="w-4 h-4" />
                                 <span>{t('completion.personalBest')}</span>
                             </div>
@@ -110,22 +110,22 @@ export const MobileCompletionSheet: React.FC<MobileCompletionModalProps> = ({
                         {/* Stats Grid - 3 equal columns */}
                         <div className="grid grid-cols-3 gap-2.5">
                             {/* Time */}
-                            <div className="p-3 rounded-lg bg-success-50 dark:bg-gray-700/50 border border-success-200 dark:border-gray-600 text-center">
-                                <TimerIcon className="w-5 h-5 text-success-600 dark:text-success-500 mx-auto mb-1.5" />
+                            <div className="p-3 rounded-lg bg-neutral-50 dark:bg-gray-700/50 border border-neutral-200 dark:border-gray-600 text-center">
+                                <TimerIcon className="w-5 h-5 text-primary-600 dark:text-primary-400 mx-auto mb-1.5" />
                                 <div className="text-[10px] text-muted-foreground mb-1">{t('completion.time')}</div>
                                 <div className="text-lg font-bold tabular-nums">{completionTime}</div>
                             </div>
 
                             {/* Hints */}
                             <div className="p-3 rounded-lg bg-neutral-50 dark:bg-gray-700/50 border border-neutral-200 dark:border-gray-600 text-center">
-                                <LightningBoltIcon className="w-5 h-5 text-success-600 dark:text-success-500 mx-auto mb-1.5" />
+                                <LightningBoltIcon className="w-5 h-5 text-primary-600 dark:text-primary-400 mx-auto mb-1.5" />
                                 <div className="text-[10px] text-muted-foreground mb-1">{t('game.hints')}</div>
                                 <div className="text-lg font-bold tabular-nums">{hintsUsed}/{maxHints}</div>
                             </div>
 
                             {/* Mistakes */}
                             <div className="p-3 rounded-lg bg-neutral-50 dark:bg-gray-700/50 border border-neutral-200 dark:border-gray-600 text-center">
-                                <ExclamationTriangleIcon className="w-5 h-5 text-success-600 dark:text-success-500 mx-auto mb-1.5" />
+                                <ExclamationTriangleIcon className="w-5 h-5 text-primary-600 dark:text-primary-400 mx-auto mb-1.5" />
                                 <div className="text-[10px] text-muted-foreground mb-1">{t('game.mistakes')}</div>
                                 <div className="text-lg font-bold tabular-nums">{mistakes}/{maxMistakes}</div>
                             </div>
@@ -138,7 +138,7 @@ export const MobileCompletionSheet: React.FC<MobileCompletionModalProps> = ({
                         <Button
                             onClick={onStartNewGame}
                             size="lg"
-                            className="w-full bg-success-600 hover:bg-success-700 dark:bg-success-700/80 dark:hover:bg-success-700 text-white font-semibold shadow-md transition-all duration-200 gap-2"
+                            className="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white font-semibold shadow-md transition-all duration-200 gap-2"
                         >
                             <RocketIcon className="w-4 h-4" />
                             {t('completion.newPuzzle')}
@@ -150,7 +150,7 @@ export const MobileCompletionSheet: React.FC<MobileCompletionModalProps> = ({
                                 onClick={onTryHarder}
                                 size="default"
                                 variant="outline"
-                                className="w-full font-medium transition-all duration-200 gap-2 border-success-300 dark:border-success-800/50 text-success-700 dark:text-success-400 hover:bg-success-50 dark:hover:bg-success-900/20"
+                                className="w-full font-medium transition-all duration-200 gap-2"
                             >
                                 <ArrowUpIcon className="w-4 h-4" />
                                 <span>Try <span className="capitalize">{t(`difficulty.${nextDifficulty}`)}</span></span>

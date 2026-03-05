@@ -70,6 +70,8 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
         {
             // Default state - no inline background colors
             'hover:bg-neutral-50': !isFixed && !isSelected && !isHighlighted && isCorrect === null,
+            // Correct cells get a subtle cursor change
+            'cursor-default': isCorrect && !isFixed,
         }
     );
 

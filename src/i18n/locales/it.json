@@ -55,8 +55,8 @@
     "difficulty": "Difficoltà"
   },
   "controls": {
-    "penMode": "Modalità Penna",
-    "pencilMode": "Modalità Matita",
+    "penMode": "Modalità Numero",
+    "pencilMode": "Modalità Nota",
     "currentMode": "Attuale: Modalità {{mode}}"
   },
   "hints": {

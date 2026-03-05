@@ -55,8 +55,8 @@
     "difficulty": "Dificultad"
   },
   "controls": {
-    "penMode": "Modo Bolígrafo",
-    "pencilMode": "Modo Lápiz",
+    "penMode": "Modo Número",
+    "pencilMode": "Modo Nota",
     "currentMode": "Actual: Modo {{mode}}"
   },
   "hints": {
