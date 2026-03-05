@@ -41,7 +41,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
                 ? 'border-success-500 text-success-600 hover:bg-success-50 hover:border-success-600 hover:scale-105 active:scale-95 dark:hover:bg-success-950/30 dark:text-success-400 dark:border-success-500'
                 : color === 'amber'
                     ? 'border-hint-500 text-hint-600 hover:bg-hint-50 hover:border-hint-600 hover:scale-105 active:scale-95 dark:hover:bg-hint-950/30 dark:text-hint-400 dark:border-hint-500'
-                    : 'border-primary-600 text-primary-600 hover:bg-primary-50 hover:border-primary-700 hover:scale-105 active:scale-95 dark:hover:bg-primary-950/30 dark:text-primary-500 dark:border-primary-500';
+                    : 'text-primary-600 hover:bg-primary-50 hover:border-primary-700 hover:scale-105 active:scale-95 dark:hover:bg-primary-950/30 dark:text-primary-500 dark:border-primary-500';
 
     return (
         <Button

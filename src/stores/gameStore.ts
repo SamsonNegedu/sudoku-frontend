@@ -350,6 +350,9 @@ export const useGameStore = create<GameStore>()(
           isIncorrect: value !== null ? !isCorrect : false,
         };
 
+        // Track affected cells for undo
+        const affectedCellNotes: { row: number; col: number; previousNotes: number[] }[] = [];
+
         // If a value was placed (not cleared), remove that number from notes in same row, column, and box
         if (value !== null) {
           // Helper function to get box index
@@ -375,6 +378,13 @@ export const useGameStore = create<GameStore>()(
                 (isSameRow || isSameCol || isSameBox) &&
                 currentCell.notes.includes(value)
               ) {
+                // Track the previous notes before removing
+                affectedCellNotes.push({
+                  row: r,
+                  col: c,
+                  previousNotes: [...currentCell.notes],
+                });
+
                 // Remove the note from this cell
                 newBoard[r][c] = {
                   ...currentCell,
@@ -394,6 +404,7 @@ export const useGameStore = create<GameStore>()(
           timestamp: new Date(),
           previousValue,
           previousNotes,
+          affectedCellNotes: affectedCellNotes.length > 0 ? affectedCellNotes : undefined,
         };
 
         // Handle mistakes
@@ -511,7 +522,7 @@ export const useGameStore = create<GameStore>()(
 
         const moves = [...state.currentGame.moves];
         const lastMove = moves.pop()!;
-        const { row, col, previousValue, previousNotes } = lastMove;
+        const { row, col, previousValue, previousNotes, affectedCellNotes } = lastMove;
 
         const newBoard = [...state.currentGame.board];
         newBoard[row][col] = {
@@ -527,6 +538,16 @@ export const useGameStore = create<GameStore>()(
               ? previousValue !== state.currentGame.solution[row][col]
               : false,
         };
+
+        // Restore notes in affected cells
+        if (affectedCellNotes && affectedCellNotes.length > 0) {
+          for (const affectedCell of affectedCellNotes) {
+            newBoard[affectedCell.row][affectedCell.col] = {
+              ...newBoard[affectedCell.row][affectedCell.col],
+              notes: [...affectedCell.previousNotes],
+            };
+          }
+        }
 
         set({
           currentGame: {

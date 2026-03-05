@@ -165,7 +165,8 @@
     "restartDescription": "Reset this puzzle to try again with the same numbers",
     "continueLabel": "Continue",
     "continueDescription": "Keep playing without mistake limits",
-    "disableNote": "This will disable the mistake limit for this game only"
+    "disableNote": "This will disable the mistake limit for this game only",
+    "clickOutsideToContinue": "Click outside to continue playing"
   },
   "analytics": {
     "title": "Game Analytics",

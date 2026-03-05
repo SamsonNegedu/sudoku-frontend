@@ -59,7 +59,6 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
     onResume,
     getCompletedNumbers,
     shortcutsModalRef,
-    showCompletionAnimation = false,
     completionTime,
     accuracy,
     totalMoves,
@@ -67,7 +66,6 @@ export const GamePlayView: React.FC<GamePlayViewProps> = ({
     onStartNewGame,
     onTryHarder,
     onViewStats,
-    onDismissCompletion,
 }) => {
     // Auto-scroll on mobile to make header sticky immediately on mount
     useEffect(() => {

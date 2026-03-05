@@ -155,7 +155,8 @@
     "restartDescription": "Dieses Rätsel zurücksetzen und mit denselben Zahlen erneut versuchen",
     "continueLabel": "Fortfahren",
     "continueDescription": "Ohne Fehlerlimit weiterspielen",
-    "disableNote": "Dies deaktiviert das Fehlerlimit nur für dieses Spiel"
+    "disableNote": "Dies deaktiviert das Fehlerlimit nur für dieses Spiel",
+    "clickOutsideToContinue": "Klicken Sie außerhalb, um weiterzuspielen"
   },
   "analytics": {
     "title": "Spiel-Statistiken",

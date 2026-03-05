@@ -155,7 +155,8 @@
     "restartDescription": "Riavvia questo puzzle per riprovare con gli stessi numeri",
     "continueLabel": "Continua",
     "continueDescription": "Continua a giocare senza limite di errori",
-    "disableNote": "Questo disabiliterà il limite di errori solo per questa partita"
+    "disableNote": "Questo disabiliterà il limite di errori solo per questa partita",
+    "clickOutsideToContinue": "Fai clic all'esterno per continuare a giocare"
   },
   "analytics": {
     "title": "Statistiche di Gioco",

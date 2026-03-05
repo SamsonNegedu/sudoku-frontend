@@ -55,6 +55,7 @@ export interface GameMove {
   timestamp: Date;
   previousValue: number | null;
   previousNotes: number[];
+  affectedCellNotes?: { row: number; col: number; previousNotes: number[] }[];
 }
 
 // Puzzle data

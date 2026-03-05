@@ -21,33 +21,33 @@ export const NumberGrid: React.FC<NumberGridProps> = ({
 
     return (
         <TooltipProvider delayDuration={300}>
-            <div className="inline-flex gap-1 sm:gap-3 flex-nowrap">
+            <div className="inline-flex gap-1.5 sm:gap-3 flex-nowrap">
                 {numbers.map((number) => {
-                const isCompleted = completedNumbers.includes(number);
-                const tooltipText = isCompleted 
-                    ? `Number ${number} completed (9/9 placed)` 
-                    : `Press ${number} to ${inputMode === 'pen' ? 'place' : 'add note'}`;
+                    const isCompleted = completedNumbers.includes(number);
+                    const tooltipText = isCompleted
+                        ? `Number ${number} completed (9/9 placed)`
+                        : `Press ${number} to ${inputMode === 'pen' ? 'place' : 'add note'}`;
 
-                return (
-                    <Tooltip key={number}>
-                        <TooltipTrigger asChild>
-                            <div>
-                                <NumberButton
-                                    number={number}
-                                    onClick={onNumberClick}
-                                    disabled={disabled}
-                                    isCompleted={isCompleted}
-                                    inputMode={inputMode}
-                                    selectedCell={selectedCell}
-                                />
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{tooltipText}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                );
-            })}
+                    return (
+                        <Tooltip key={number}>
+                            <TooltipTrigger asChild>
+                                <div>
+                                    <NumberButton
+                                        number={number}
+                                        onClick={onNumberClick}
+                                        disabled={disabled}
+                                        isCompleted={isCompleted}
+                                        inputMode={inputMode}
+                                        selectedCell={selectedCell}
+                                    />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>{tooltipText}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    );
+                })}
             </div>
         </TooltipProvider>
     );

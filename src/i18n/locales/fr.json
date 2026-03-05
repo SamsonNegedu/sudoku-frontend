@@ -155,7 +155,8 @@
     "restartDescription": "Redémarrer ce puzzle pour réessayer avec les mêmes chiffres",
     "continueLabel": "Continuer",
     "continueDescription": "Continuer à jouer sans limite d'erreurs",
-    "disableNote": "Ceci désactivera la limite d'erreurs pour ce jeu uniquement"
+    "disableNote": "Ceci désactivera la limite d'erreurs pour ce jeu uniquement",
+    "clickOutsideToContinue": "Cliquez à l'extérieur pour continuer à jouer"
   },
   "analytics": {
     "title": "Statistiques de Jeu",
