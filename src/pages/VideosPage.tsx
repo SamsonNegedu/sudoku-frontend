@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import { PageLayout, PageHeader } from '../components/layout'
@@ -7,6 +7,8 @@ import { VideoTutorials } from '../components/features/videos'
 export function VideosPage() {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const params = useParams({ strict: false })
+    const videoId = params?.videoId as string | undefined
 
     return (
         <PageLayout>
@@ -24,7 +26,7 @@ export function VideosPage() {
             </PageHeader>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <VideoTutorials />
+                <VideoTutorials initialVideoId={videoId} />
             </div>
         </PageLayout>
     )
