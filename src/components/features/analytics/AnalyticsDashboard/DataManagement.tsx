@@ -17,12 +17,12 @@ export const DataManagement: React.FC<DataManagementProps> = ({ onClearAllData }
     };
 
     return (
-        <div className="bg-error-50 dark:bg-error-950/30 border border-error-200 dark:border-error-800 rounded-lg p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-semibold text-error-800 dark:text-error-300 mb-2">
+        <div className="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-700 rounded-lg p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-error-800 dark:text-error-400 mb-2">
                 {t('analytics.dataManagement')}
             </h2>
 
-            <p className="text-error-700 dark:text-error-200 text-xs sm:text-sm mb-3 sm:mb-4">
+            <p className="text-error-700 dark:text-error-300 text-xs sm:text-sm mb-3 sm:mb-4">
                 {t('analytics.permanentWarning')}
             </p>
 

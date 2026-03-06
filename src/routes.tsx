@@ -39,12 +39,20 @@ const videosRoute = createRoute({
   component: VideosPage,
 })
 
+// Individual Video route
+const videoDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/videos/$videoId',
+  component: VideosPage,
+})
+
 // Create route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
   gameRoute,
   analyticsRoute,
   videosRoute,
+  videoDetailRoute,
 ])
 
 // Create and export router

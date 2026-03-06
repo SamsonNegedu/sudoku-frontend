@@ -8,21 +8,27 @@ export function PWAInstallPrompt() {
   const platformInfo = pwaService.getPlatformInfo();
 
   useEffect(() => {
-    const unsubscribe = pwaService.onInstallAvailable((canInstall) => {
-      setShowPrompt(canInstall);
-    });
-
     setIsIOSSafari(pwaService.isIOSSafari());
 
+    // Check if we should hide the prompt based on localStorage
     const installShownBefore = localStorage.getItem('pwa-install-prompt-shown');
+    let shouldHidePrompt = false;
+    
     if (installShownBefore) {
       const shownDate = new Date(installShownBefore);
       const daysSinceShown = (Date.now() - shownDate.getTime()) / (1000 * 60 * 60 * 24);
       
       if (daysSinceShown < 7) {
-        setShowPrompt(false);
+        shouldHidePrompt = true;
       }
     }
+
+    // Only subscribe to install events if we shouldn't hide the prompt
+    const unsubscribe = pwaService.onInstallAvailable((canInstall) => {
+      if (!shouldHidePrompt) {
+        setShowPrompt(canInstall);
+      }
+    });
 
     return unsubscribe;
   }, []);

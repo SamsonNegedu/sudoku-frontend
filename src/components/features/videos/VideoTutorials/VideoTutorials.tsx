@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from '@tanstack/react-router';
 import { TextField } from '@radix-ui/themes';
 import { MagnifyingGlassIcon, PlayIcon } from '@radix-ui/react-icons';
 import { TechniqueVideo } from '../../learning/TechniqueDetail';
@@ -15,14 +16,19 @@ const useTranslatedVideo = (video: VideoTutorial) => {
     };
 };
 
-const VideoDetail: React.FC<{ video: VideoTutorial; onBack: () => void }> = ({ video, onBack }) => {
+const VideoDetail: React.FC<{ video: VideoTutorial }> = ({ video }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const translatedVideo = useTranslatedVideo(video);
+    
+    const handleBack = () => {
+        navigate({ to: '/videos' });
+    };
     
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <Button
-                onClick={onBack}
+                onClick={handleBack}
                 variant="ghost"
                 className="mb-6 gap-2"
             >
@@ -121,11 +127,32 @@ const VideoGrid: React.FC<{
     );
 };
 
-export const VideoTutorials: React.FC = () => {
+interface VideoTutorialsProps {
+    initialVideoId?: string;
+}
+
+export const VideoTutorials: React.FC<VideoTutorialsProps> = ({ initialVideoId }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [selectedLevel, setSelectedLevel] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedVideo, setSelectedVideo] = useState<VideoTutorial | null>(null);
+
+    // Handle initial video ID from URL
+    useEffect(() => {
+        if (initialVideoId) {
+            const video = videoTutorials.find(v => v.id === initialVideoId);
+            if (video) {
+                setSelectedVideo(video);
+            } else {
+                // Video not found, redirect to videos list
+                setSelectedVideo(null);
+            }
+        } else {
+            // No video ID in URL, show the list
+            setSelectedVideo(null);
+        }
+    }, [initialVideoId]);
 
     const levels = [
         { id: 'all', name: t('videoTutorials.allLevels') },
@@ -153,8 +180,13 @@ export const VideoTutorials: React.FC = () => {
         });
     }, [selectedLevel, searchQuery, t]);
 
+    const handleSelectVideo = (video: VideoTutorial) => {
+        setSelectedVideo(video);
+        navigate({ to: `/videos/${video.id}` });
+    };
+
     if (selectedVideo) {
-        return <VideoDetail video={selectedVideo} onBack={() => setSelectedVideo(null)} />;
+        return <VideoDetail video={selectedVideo} />;
     }
 
     return (
@@ -198,7 +230,7 @@ export const VideoTutorials: React.FC = () => {
                 ) : (
                     <VideoGrid
                         filteredVideos={filteredVideos}
-                        onSelectVideo={setSelectedVideo}
+                        onSelectVideo={handleSelectVideo}
                     />
                 )}
             </div>
