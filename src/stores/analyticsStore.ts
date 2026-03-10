@@ -51,15 +51,34 @@ const calculateOverallStats = (gamesPlayed: GameAnalytics[]): OverallStats => {
 
   // Calculate average time per game (only for completed games to avoid skewing with incomplete games)
   const completedGamesWithTime = gamesPlayed.filter(
-    game => game.completed && game.duration !== undefined
+    game => game.completed && game.duration !== undefined && game.duration > 0
   );
-  const averageTimePerGame =
-    completedGamesWithTime.length > 0
-      ? completedGamesWithTime.reduce(
-          (sum, game) => sum + (game.duration || 0),
-          0
-        ) / completedGamesWithTime.length
-      : 0;
+  
+  // Calculate average, but use median if we have outliers (games > 2 hours)
+  let averageTimePerGame = 0;
+  if (completedGamesWithTime.length > 0) {
+    const MAX_REASONABLE_DURATION = 2 * 60 * 60 * 1000; // 2 hours
+    const hasOutliers = completedGamesWithTime.some(
+      game => game.duration! > MAX_REASONABLE_DURATION
+    );
+    
+    if (hasOutliers && completedGamesWithTime.length >= 3) {
+      // Use median to avoid outlier skew
+      const sortedDurations = completedGamesWithTime
+        .map(game => game.duration!)
+        .sort((a, b) => a - b);
+      const mid = Math.floor(sortedDurations.length / 2);
+      averageTimePerGame = sortedDurations.length % 2 === 0
+        ? (sortedDurations[mid - 1] + sortedDurations[mid]) / 2
+        : sortedDurations[mid];
+    } else {
+      // Use mean average
+      averageTimePerGame = completedGamesWithTime.reduce(
+        (sum, game) => sum + game.duration!,
+        0
+      ) / completedGamesWithTime.length;
+    }
+  }
 
   // Calculate improvement trend (last 5 games vs previous 5 games accuracy)
   let improvementTrend = 0;
@@ -1072,12 +1091,36 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
                 )
               : Infinity;
 
-          // Calculate average time from all games (including incomplete for overall play time)
-          const averageTime =
-            games.length > 0
-              ? games.reduce((sum, game) => sum + (game.duration || 0), 0) /
-                games.length
-              : 0;
+          // Calculate average time from completed games only (to match overall stats calculation)
+          const gamesWithDuration = games.filter(
+            game => game.completed && game.duration && game.duration > 0
+          );
+          
+          // Calculate average, but use median if we have outliers (games > 2 hours)
+          let averageTime = 0;
+          if (gamesWithDuration.length > 0) {
+            const MAX_REASONABLE_DURATION = 2 * 60 * 60 * 1000; // 2 hours
+            const hasOutliers = gamesWithDuration.some(
+              game => game.duration! > MAX_REASONABLE_DURATION
+            );
+            
+            if (hasOutliers && gamesWithDuration.length >= 3) {
+              // Use median to avoid outlier skew
+              const sortedDurations = gamesWithDuration
+                .map(game => game.duration!)
+                .sort((a, b) => a - b);
+              const mid = Math.floor(sortedDurations.length / 2);
+              averageTime = sortedDurations.length % 2 === 0
+                ? (sortedDurations[mid - 1] + sortedDurations[mid]) / 2
+                : sortedDurations[mid];
+            } else {
+              // Use mean average
+              averageTime = gamesWithDuration.reduce(
+                (sum, game) => sum + game.duration!,
+                0
+              ) / gamesWithDuration.length;
+            }
+          }
 
           // Calculate accuracy from all games
           const accuracy =

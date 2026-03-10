@@ -34,7 +34,6 @@ interface SudokuCellProps {
     onToggleNote?: () => void;
     onClear?: () => void;
     onHint?: () => void;
-    board?: SudokuBoard;
 }
 
 const SudokuCellComponent: React.FC<SudokuCellProps> = ({
@@ -125,7 +124,7 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
             {value && (
                 <div className="absolute inset-0 flex items-center justify-center">
                     <span className={cn(
-                        "sudoku-cell-number text-xl sm:text-2xl font-medium sm:font-semibold transition-colors duration-200",
+                        "sudoku-cell-number text-xl sm:text-2xl font-medium sm:font-semibold",
                         {
                             // Fixed cells - bolder, darker (puzzle numbers)
                             "font-bold text-neutral-800 dark:text-gray-100": isFixed,
@@ -178,9 +177,11 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
     // Build tooltip content
     const tooltipContent = isFixed
         ? `Fixed cell (Row ${row + 1}, Col ${col + 1})`
-        : value
-            ? `Row ${row + 1}, Col ${col + 1} • Press 1-9 to change • Del to clear`
-            : `Row ${row + 1}, Col ${col + 1}`;
+        : isCorrect
+            ? `Row ${row + 1}, Col ${col + 1} • Correct!`
+            : value
+                ? `Row ${row + 1}, Col ${col + 1} • Press 1-9 to change • Del to clear`
+                : `Row ${row + 1}, Col ${col + 1}`;
 
     const wrappedContent = (
         <TooltipProvider delayDuration={500}>
@@ -237,5 +238,20 @@ const SudokuCellComponent: React.FC<SudokuCellProps> = ({
     );
 };
 
-// Memoize the component to prevent unnecessary re-renders
-export const SudokuCell = React.memo(SudokuCellComponent);
+// Memoize the component with custom comparison to prevent unnecessary re-renders
+export const SudokuCell = React.memo(SudokuCellComponent, (prevProps, nextProps) => {
+    // Only re-render if these specific props change
+    return (
+        prevProps.cell.value === nextProps.cell.value &&
+        prevProps.cell.notes.length === nextProps.cell.notes.length &&
+        prevProps.cell.notes.every((note, i) => note === nextProps.cell.notes[i]) &&
+        prevProps.cell.isFixed === nextProps.cell.isFixed &&
+        prevProps.cell.isCorrect === nextProps.cell.isCorrect &&
+        prevProps.cell.isIncorrect === nextProps.cell.isIncorrect &&
+        prevProps.isSelected === nextProps.isSelected &&
+        prevProps.isHighlighted === nextProps.isHighlighted &&
+        prevProps.isSameNumber === nextProps.isSameNumber &&
+        prevProps.isHintTarget === nextProps.isHintTarget &&
+        prevProps.isHintFilled === nextProps.isHintFilled
+    );
+});

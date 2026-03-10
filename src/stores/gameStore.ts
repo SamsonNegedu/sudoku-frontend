@@ -358,44 +358,50 @@ export const useGameStore = create<GameStore>()(
 
         // If a value was placed (not cleared), remove that number from notes in same row, column, and box
         if (value !== null) {
-          // Helper function to get box index
-          const getBoxIndex = (r: number, c: number) =>
-            Math.floor(r / 3) * 3 + Math.floor(c / 3);
-          const boxIndex = getBoxIndex(row, col);
+          // Helper function to get box start indices
+          const boxStartRow = Math.floor(row / 3) * 3;
+          const boxStartCol = Math.floor(col / 3) * 3;
 
-          // Remove notes from same row, column, and box
+          // Optimized: Only check affected cells (row + column + box = max 27 cells instead of 81)
+          const affectedCells = new Set<string>();
+          
+          // Add cells in same row
+          for (let c = 0; c < 9; c++) {
+            if (c !== col) affectedCells.add(`${row},${c}`);
+          }
+          
+          // Add cells in same column
           for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-              // Skip the cell we just updated
-              if (r === row && c === col) continue;
-
-              const currentCell = newBoard[r][c];
-              const currentBoxIndex = getBoxIndex(r, c);
-
-              // Check if this cell is in the same row, column, or box
-              const isSameRow = r === row;
-              const isSameCol = c === col;
-              const isSameBox = currentBoxIndex === boxIndex;
-
-              if (
-                (isSameRow || isSameCol || isSameBox) &&
-                currentCell.notes.includes(value)
-              ) {
-                // Track the previous notes before removing
-                affectedCellNotes.push({
-                  row: r,
-                  col: c,
-                  previousNotes: [...currentCell.notes],
-                });
-
-                // Remove the note from this cell
-                newBoard[r][c] = {
-                  ...currentCell,
-                  notes: currentCell.notes.filter(note => note !== value),
-                };
-              }
+            if (r !== row) affectedCells.add(`${r},${col}`);
+          }
+          
+          // Add cells in same 3x3 box
+          for (let r = boxStartRow; r < boxStartRow + 3; r++) {
+            for (let c = boxStartCol; c < boxStartCol + 3; c++) {
+              if (r !== row || c !== col) affectedCells.add(`${r},${c}`);
             }
           }
+
+          // Process only affected cells
+          affectedCells.forEach(cellKey => {
+            const [r, c] = cellKey.split(',').map(Number);
+            const currentCell = newBoard[r][c];
+
+            if (currentCell.notes.includes(value)) {
+              // Track the previous notes before removing
+              affectedCellNotes.push({
+                row: r,
+                col: c,
+                previousNotes: [...currentCell.notes],
+              });
+
+              // Remove the note from this cell
+              newBoard[r][c] = {
+                ...currentCell,
+                notes: currentCell.notes.filter(note => note !== value),
+              };
+            }
+          });
         }
 
         // Create move record

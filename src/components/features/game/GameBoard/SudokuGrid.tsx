@@ -72,13 +72,25 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
         return currentCell.value === selectedCellValue;
     }, [selectedCell, selectedCellValue, board]);
 
-    // Memoize event handlers
-    const handleCellClick = useCallback((row: number, col: number) => {
-        onCellClick(row, col);
+    // Create stable event handler references per cell to prevent re-renders
+    const cellClickHandlers = useMemo(() => {
+        const handlers: Record<string, () => void> = {};
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                handlers[`${r}-${c}`] = () => onCellClick(r, c);
+            }
+        }
+        return handlers;
     }, [onCellClick]);
 
-    const handleCellKeyDown = useCallback((row: number, col: number, event: React.KeyboardEvent) => {
-        onCellKeyDown(row, col, event);
+    const cellKeyDownHandlers = useMemo(() => {
+        const handlers: Record<string, (event: React.KeyboardEvent) => void> = {};
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                handlers[`${r}-${c}`] = (event: React.KeyboardEvent) => onCellKeyDown(r, c, event);
+            }
+        }
+        return handlers;
     }, [onCellKeyDown]);
 
     return (
@@ -91,20 +103,22 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
                 >
                     {board.map((row, rowIndex) => (
                         <div key={rowIndex} role="row" className="contents">
-                            {row.map((cell, colIndex) => (
-                                <SudokuCell
-                                    key={`${rowIndex}-${colIndex}`}
-                                    cell={cell}
-                                    isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
-                                    isHighlighted={isCellHighlighted(rowIndex, colIndex)}
-                                    isSameNumber={hasSameNumber(rowIndex, colIndex)}
-                                    isHintTarget={isHintTarget(rowIndex, colIndex)}
-                                    isHintFilled={isHintFilled(rowIndex, colIndex)}
-                                    onClick={() => handleCellClick(rowIndex, colIndex)}
-                                    onKeyDown={(event) => handleCellKeyDown(rowIndex, colIndex, event)}
-                                    board={board}
-                                />
-                            ))}
+                            {row.map((cell, colIndex) => {
+                                const cellKey = `${rowIndex}-${colIndex}`;
+                                return (
+                                    <SudokuCell
+                                        key={cellKey}
+                                        cell={cell}
+                                        isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
+                                        isHighlighted={isCellHighlighted(rowIndex, colIndex)}
+                                        isSameNumber={hasSameNumber(rowIndex, colIndex)}
+                                        isHintTarget={isHintTarget(rowIndex, colIndex)}
+                                        isHintFilled={isHintFilled(rowIndex, colIndex)}
+                                        onClick={cellClickHandlers[cellKey]}
+                                        onKeyDown={cellKeyDownHandlers[cellKey]}
+                                    />
+                                );
+                            })}
                         </div>
                     ))}
                 </div>
@@ -113,5 +127,11 @@ const SudokuGridComponent: React.FC<SudokuGridProps> = ({
     );
 };
 
-// Memoize the component to prevent unnecessary re-renders
-export const SudokuGrid = React.memo(SudokuGridComponent);
+// Memoize the component with custom comparison for better performance
+export const SudokuGrid = React.memo(SudokuGridComponent, (prevProps, nextProps) => {
+    // Only re-render if board reference changes or selected cell changes
+    if (prevProps.board !== nextProps.board) return false;
+    if (prevProps.selectedCell?.row !== nextProps.selectedCell?.row) return false;
+    if (prevProps.selectedCell?.col !== nextProps.selectedCell?.col) return false;
+    return true;
+});

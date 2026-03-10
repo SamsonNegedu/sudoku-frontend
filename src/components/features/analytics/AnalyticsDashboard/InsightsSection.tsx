@@ -26,8 +26,8 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({ insights }) =>
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-neutral-200 dark:border-gray-700 p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-neutral-200 dark:border-gray-600 p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">
                 {t('analytics.insightsRecommendations')}
             </h2>
             <div className="space-y-3">
@@ -40,12 +40,12 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({ insights }) =>
                     return (
                         <div
                             key={index}
-                            className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)} dark:bg-opacity-20`}
+                            className={`p-3 rounded-lg border-l-4 ${getInsightStyles(insight.type)}`}
                         >
                             <div className="text-sm sm:text-base font-medium text-neutral-900 dark:text-gray-100">
                                 {title}
                             </div>
-                            <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-400">
+                            <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-300">
                                 {description}
                             </div>
                         </div>

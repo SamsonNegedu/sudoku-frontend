@@ -1,6 +1,6 @@
 export { AnalyticsDashboard } from './AnalyticsDashboard';
 export { OverviewStats } from './OverviewStats';
-export { DifficultyProgress } from './DifficultyProgress';
+export { PerformanceTrends } from './PerformanceTrends';
 export { TechniqueAnalysis } from './TechniqueAnalysis';
 export { InsightsSection } from './InsightsSection';
 export { RecentGames } from './RecentGames';
